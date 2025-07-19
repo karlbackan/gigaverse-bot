@@ -1,0 +1,19 @@
+{
+  "name": "gigaverse-bot",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/bot.mjs",
+    "dev": "node --watch src/bot.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fireballgg/gigaverse-sdk": "^0.0.1-alpha.1",
+    "dotenv": "^17.2.0"
+  }
+}
