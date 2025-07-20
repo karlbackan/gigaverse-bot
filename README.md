@@ -34,8 +34,26 @@ npm install
 ```
 
 3. Create a `.env` file in the root directory:
+
+For single account:
 ```env
 JWT_TOKEN=your_jwt_token_here
+```
+
+For multiple accounts:
+```env
+JWT_TOKEN_1=first_account_token_here
+JWT_TOKEN_2=second_account_token_here
+JWT_TOKEN_3=third_account_token_here
+JWT_TOKEN_4=fourth_account_token_here
+JWT_TOKEN_5=fifth_account_token_here
+
+# Optional: Custom names
+ACCOUNT_NAME_1=Main Account
+ACCOUNT_NAME_2=Alt Account 1
+ACCOUNT_NAME_3=Alt Account 2
+ACCOUNT_NAME_4=Alt Account 3
+ACCOUNT_NAME_5=Alt Account 4
 ```
 
 ## Getting Your JWT Token
@@ -49,12 +67,29 @@ JWT_TOKEN=your_jwt_token_here
 
 ## Usage
 
-Start the bot:
+### Single Account Mode
+
+Start the bot with a single account:
 ```bash
 npm start
 ```
 
-Or run in development mode with auto-restart:
+### Multi-Account Mode
+
+Run the interactive menu for multiple accounts:
+```bash
+npm run menu
+```
+
+The menu provides options to:
+- Check all accounts status (validate JWT tokens)
+- Run a single selected account
+- Run all valid accounts sequentially
+- Continuous mode (cycle through accounts)
+
+### Development Mode
+
+Run in development mode with auto-restart:
 ```bash
 npm run dev
 ```

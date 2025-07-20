@@ -78,6 +78,13 @@ export class DungeonPlayer {
         return true;
       } else {
         console.error('Failed to start dungeon:', response);
+        
+        // Check for specific error handling action error
+        if (response?.message === 'Error handling action' || response?.data?.message === 'Error handling action') {
+          console.log('\n⚠️  API rejected dungeon start - possible cooldown or state issue');
+          console.log('Will wait before trying again...');
+        }
+        
         return false;
       }
     } catch (error) {

@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/bot.mjs",
+    "menu": "node menu.mjs",
     "dev": "node --watch src/bot.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
