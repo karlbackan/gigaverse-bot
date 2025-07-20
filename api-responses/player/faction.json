@@ -1,0 +1,33 @@
+{
+  "entities": [
+    {
+      "_id": "67adc4c8f3037db13a607fe6",
+      "docId": "60661774335345403368436870970814559663073396849196120007290573660091721663261",
+      "tableName": "FactionSystem",
+      "tableId": "0x8aaa91e87fb88c33976d0265143f7b45bd84eb2b244aac4ebdfbc3f144ba84b6",
+      "colSetData": {
+        "NOOB_TOKEN_CID": {
+          "block_number": 1665105,
+          "log_index": 28,
+          "transaction_index": 3
+        },
+        "PLAYER_CID": {
+          "block_number": 1665105,
+          "log_index": 27,
+          "transaction_index": 3
+        },
+        "FACTION_CID": {
+          "block_number": 1665105,
+          "log_index": 26,
+          "transaction_index": 3
+        }
+      },
+      "NOOB_TOKEN_CID": 1648,
+      "createdAt": "2025-02-13T10:09:12.368Z",
+      "updatedAt": "2025-02-13T10:09:14.646Z",
+      "__v": 0,
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "FACTION_CID": 7
+    }
+  ]
+}

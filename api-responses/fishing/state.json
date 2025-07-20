@@ -1,0 +1,631 @@
+{
+  "gameState": {
+    "_id": "6861abfcf4701d9821dd22f0",
+    "docId": "829766",
+    "docType": "FISHING_GAME",
+    "data": {
+      "deckCardData": [
+        {
+          "id": 1,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            1,
+            2,
+            3
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": false
+        },
+        {
+          "id": 2,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            4,
+            5,
+            6
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": false
+        },
+        {
+          "id": 3,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            7,
+            8,
+            9
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": false
+        },
+        {
+          "id": 4,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            1,
+            4,
+            7
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": false
+        },
+        {
+          "id": 5,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            2,
+            5,
+            8
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": false
+        },
+        {
+          "id": 6,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            3,
+            6,
+            9
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": false
+        },
+        {
+          "id": 7,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            1,
+            3,
+            7,
+            9
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 6
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -3
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": true
+        },
+        {
+          "id": 8,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 5
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -5
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 1,
+          "isDayCard": false,
+          "earnable": true
+        },
+        {
+          "id": 9,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8,
+            9
+          ],
+          "critZones": [],
+          "hitEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 2
+            }
+          ],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -4
+            }
+          ],
+          "critEffects": [],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": true
+        },
+        {
+          "id": 10,
+          "startingAmount": 1,
+          "manaCost": 1,
+          "hitZones": [],
+          "critZones": [
+            5
+          ],
+          "hitEffects": [],
+          "missEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": -5
+            }
+          ],
+          "critEffects": [
+            {
+              "type": "FISH_HP",
+              "amount": 10
+            }
+          ],
+          "unlockLevel": 0,
+          "rarity": 0,
+          "isDayCard": false,
+          "earnable": true
+        }
+      ],
+      "playerMaxHp": 6,
+      "playerHp": 1,
+      "fishHp": 18,
+      "fishMaxHp": 18,
+      "fishPosition": [
+        1,
+        2
+      ],
+      "previousFishPosition": [
+        2,
+        1
+      ],
+      "fullDeck": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "nextCardIndex": 6,
+      "cardInDrawPile": 4,
+      "hand": [
+        10
+      ],
+      "discard": [
+        7,
+        1,
+        2,
+        4,
+        3
+      ],
+      "jebaitorTriggered": false,
+      "day": 20268,
+      "week": 25,
+      "cardChosenId": -1
+    },
+    "COMPLETE_CID": true,
+    "LEVEL_CID": 0,
+    "ID_CID": "1",
+    "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+    "DAY_CID": 20268,
+    "createdAt": "2025-06-29T21:11:24.285Z",
+    "updatedAt": "2025-06-29T21:11:40.772Z",
+    "__v": 0,
+    "SUCCESS_CID": false
+  },
+  "dayDoc": {
+    "_id": "684cbeee81defcd67d80612f",
+    "docId": "DayCount#0xbc68abe3bfd01a35050d46fe8659475e1eab59f0#player-day-data",
+    "UINT256_CID": 0,
+    "ID_CID": "player-day-data",
+    "TIMESTAMP_CID": 20288,
+    "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+    "DOC_TYPE_CID": "DayCount",
+    "createdAt": "2025-06-14T00:14:38.320Z",
+    "updatedAt": "2025-07-19T15:09:45.506Z",
+    "__v": 0,
+    "data": {
+      "deck": []
+    }
+  },
+  "maxPerDay": 10,
+  "maxPerDayJuiced": 20,
+  "node0Energy": 12,
+  "node1Energy": 16,
+  "node2Energy": 20,
+  "node0Weights": [
+    9500,
+    400,
+    90,
+    10,
+    0,
+    0,
+    0
+  ],
+  "node1Weights": [
+    4000,
+    600,
+    100,
+    20,
+    5,
+    0,
+    0
+  ],
+  "node2Weights": [
+    3000,
+    800,
+    120,
+    25,
+    10,
+    1,
+    0
+  ],
+  "qualityWeights": [
+    1009,
+    0,
+    0,
+    0,
+    0
+  ],
+  "unlockLvlsPerQuality": [
+    0,
+    10,
+    20,
+    30,
+    45
+  ],
+  "skillLevel": 0,
+  "exchangeRates": [
+    {
+      "id": 262,
+      "tier": 1,
+      "baseVal": 4,
+      "value": 2
+    },
+    {
+      "id": 263,
+      "tier": 3,
+      "baseVal": 10,
+      "value": 10
+    },
+    {
+      "id": 264,
+      "tier": 5,
+      "baseVal": 4,
+      "value": 6
+    },
+    {
+      "id": 265,
+      "tier": 2,
+      "baseVal": 4,
+      "value": 3
+    },
+    {
+      "id": 266,
+      "tier": 4,
+      "baseVal": 10,
+      "value": 12
+    },
+    {
+      "id": 267,
+      "tier": 1,
+      "baseVal": 10,
+      "value": 5
+    },
+    {
+      "id": 268,
+      "tier": 3,
+      "baseVal": 4,
+      "value": 4
+    },
+    {
+      "id": 269,
+      "tier": 5,
+      "baseVal": 10,
+      "value": 15
+    },
+    {
+      "id": 270,
+      "tier": 4,
+      "baseVal": 4,
+      "value": 5
+    },
+    {
+      "id": 271,
+      "tier": 1,
+      "baseVal": 60,
+      "value": 30
+    },
+    {
+      "id": 272,
+      "tier": 3,
+      "baseVal": 4,
+      "value": 4
+    },
+    {
+      "id": 273,
+      "tier": 5,
+      "baseVal": 10,
+      "value": 15
+    },
+    {
+      "id": 274,
+      "tier": 2,
+      "baseVal": 10,
+      "value": 7
+    },
+    {
+      "id": 275,
+      "tier": 4,
+      "baseVal": 30,
+      "value": 37
+    },
+    {
+      "id": 276,
+      "tier": 1,
+      "baseVal": 30,
+      "value": 15
+    },
+    {
+      "id": 277,
+      "tier": 3,
+      "baseVal": 30,
+      "value": 30
+    },
+    {
+      "id": 278,
+      "tier": 5,
+      "baseVal": 60,
+      "value": 90
+    },
+    {
+      "id": 279,
+      "tier": 2,
+      "baseVal": 60,
+      "value": 45
+    },
+    {
+      "id": 280,
+      "tier": 1,
+      "baseVal": 60,
+      "value": 30
+    },
+    {
+      "id": 281,
+      "tier": 3,
+      "baseVal": 30,
+      "value": 30
+    },
+    {
+      "id": 282,
+      "tier": 5,
+      "baseVal": 30,
+      "value": 45
+    },
+    {
+      "id": 283,
+      "tier": 2,
+      "baseVal": 100,
+      "value": 75
+    },
+    {
+      "id": 284,
+      "tier": 4,
+      "baseVal": 60,
+      "value": 75
+    },
+    {
+      "id": 285,
+      "tier": 1,
+      "baseVal": 150,
+      "value": 75
+    },
+    {
+      "id": 286,
+      "tier": 3,
+      "baseVal": 30,
+      "value": 30
+    },
+    {
+      "id": 287,
+      "tier": 5,
+      "baseVal": 60,
+      "value": 90
+    },
+    {
+      "id": 288,
+      "tier": 2,
+      "baseVal": 150,
+      "value": 112
+    },
+    {
+      "id": 289,
+      "tier": 4,
+      "baseVal": 100,
+      "value": 125
+    },
+    {
+      "id": 290,
+      "tier": 3,
+      "baseVal": 100,
+      "value": 100
+    },
+    {
+      "id": 291,
+      "tier": 3,
+      "baseVal": 150,
+      "value": 150
+    },
+    {
+      "id": 292,
+      "tier": 1,
+      "baseVal": 250,
+      "value": 125
+    },
+    {
+      "id": 293,
+      "tier": 4,
+      "baseVal": 250,
+      "value": 312
+    },
+    {
+      "id": 294,
+      "tier": 2,
+      "baseVal": 250,
+      "value": 187
+    },
+    {
+      "id": 295,
+      "tier": 5,
+      "baseVal": 100,
+      "value": 150
+    },
+    {
+      "id": 296,
+      "tier": 3,
+      "baseVal": 100,
+      "value": 100
+    },
+    {
+      "id": 297,
+      "tier": 1,
+      "baseVal": 150,
+      "value": 75
+    },
+    {
+      "id": 298,
+      "tier": 0,
+      "baseVal": 10,
+      "value": 0
+    }
+  ]
+}

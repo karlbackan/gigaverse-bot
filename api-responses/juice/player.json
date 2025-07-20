@@ -1,0 +1,105 @@
+{
+  "juiceData": {
+    "isJuiced": true,
+    "juicedSeconds": 8738112,
+    "_id": "6813fa1f0f21eda829f477a2",
+    "docId": "1075624516115483713902558503015598357553305311728",
+    "tableName": "GigaJuiceSystem",
+    "TIMESTAMP_CID": 1761691670,
+    "createdAt": "2025-05-01T22:47:59.812Z",
+    "updatedAt": "2025-05-01T22:47:59.812Z"
+  },
+  "purchases": [
+    {
+      "_id": "6813fa1f25006db4cbaddfe6",
+      "docId": "16572535177021802014489719381989795362859383807742179718709849520189723364813",
+      "tableName": "GigaJuiceSystem",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "createdAt": "2025-05-01T22:47:59.807Z",
+      "updatedAt": "2025-05-02T12:48:53.108Z",
+      "TIMESTAMP_CID": 1746139670,
+      "UINT256_CID": 2609,
+      "ETH_MINT_PRICE_CID": 38000000000000000,
+      "ID_CID": "4",
+      "importProcessed": true,
+      "importProcessedAt": "1970-01-21T05:02:19.781Z",
+      "analyticsProcessed": true,
+      "NAME_CID": "JUICE TANK",
+      "LOOT_ID_CID_array": [
+        236,
+        238,
+        237,
+        240
+      ],
+      "LOOT_AMOUNT_CID_array": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "referrals": [],
+  "listings": [
+    {
+      "_id": "681378f09263ad7732468f67",
+      "docId": "1",
+      "tableName": "GigaJuiceSystem",
+      "ETH_MINT_PRICE_CID": 4000000000000000,
+      "createdAt": "2025-05-01T13:36:48.743Z",
+      "updatedAt": "2025-05-01T13:38:11.475Z",
+      "TIME_BETWEEN_CID": 604800,
+      "NAME_CID": "JUICE SHOT",
+      "LOOT_ID_CID_array": [],
+      "LOOT_AMOUNT_CID_array": [],
+      "START_TIMESTAMP_CID": 0,
+      "END_TIMESTAMP_CID": 0,
+      "OFFERING_NAME": "UNKNOWN OFFERING"
+    },
+    {
+      "_id": "6813787c9263ad7732468f3f",
+      "docId": "2",
+      "tableName": "GigaJuiceSystem",
+      "ETH_MINT_PRICE_CID": 10000000000000000,
+      "createdAt": "2025-05-01T13:34:52.370Z",
+      "updatedAt": "2025-05-01T13:37:33.125Z",
+      "TIME_BETWEEN_CID": 2592000,
+      "NAME_CID": "JUICE BOX",
+      "LOOT_ID_CID_array": [],
+      "LOOT_AMOUNT_CID_array": [],
+      "START_TIMESTAMP_CID": 0,
+      "END_TIMESTAMP_CID": 0,
+      "OFFERING_NAME": "UNKNOWN OFFERING"
+    },
+    {
+      "_id": "6813788ed3b0ed29a1610065",
+      "docId": "3",
+      "tableName": "GigaJuiceSystem",
+      "ETH_MINT_PRICE_CID": 23000000000000000,
+      "createdAt": "2025-05-01T13:35:10.488Z",
+      "updatedAt": "2025-05-01T13:37:45.674Z",
+      "TIME_BETWEEN_CID": 7776000,
+      "NAME_CID": "JUICE CARTON",
+      "LOOT_ID_CID_array": [],
+      "LOOT_AMOUNT_CID_array": [],
+      "START_TIMESTAMP_CID": 0,
+      "END_TIMESTAMP_CID": 0,
+      "OFFERING_NAME": "UNKNOWN OFFERING"
+    },
+    {
+      "_id": "6813789dd3b0ed29a161006a",
+      "docId": "4",
+      "tableName": "GigaJuiceSystem",
+      "ETH_MINT_PRICE_CID": 38000000000000000,
+      "createdAt": "2025-05-01T13:35:25.265Z",
+      "updatedAt": "2025-05-01T13:37:56.319Z",
+      "TIME_BETWEEN_CID": 15552000,
+      "NAME_CID": "JUICE TANK",
+      "LOOT_ID_CID_array": [],
+      "LOOT_AMOUNT_CID_array": [],
+      "START_TIMESTAMP_CID": 0,
+      "END_TIMESTAMP_CID": 0,
+      "OFFERING_NAME": "UNKNOWN OFFERING"
+    }
+  ]
+}

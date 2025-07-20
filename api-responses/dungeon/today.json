@@ -1,0 +1,48 @@
+{
+  "dayProgressEntities": [
+    {
+      "_id": "67b58fbaae88b27b19e03231",
+      "docId": "DayCount#0xbc68abe3bfd01a35050d46fe8659475e1eab59f0#Dungeon#1",
+      "UINT256_CID": 2,
+      "ID_CID": "1",
+      "TIMESTAMP_CID": 20288,
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "DOC_TYPE_CID": "DayCount",
+      "createdAt": "2025-02-19T08:00:58.105Z",
+      "updatedAt": "2025-07-19T18:54:44.380Z",
+      "__v": 0
+    }
+  ],
+  "dungeonDataEntities": [
+    {
+      "ID_CID": 1,
+      "NAME_CID": "Dungetron 5000",
+      "ENERGY_CID": 40,
+      "UINT256_CID": 10,
+      "CHECKPOINT_CID": -1,
+      "juicedMaxRunsPerDay": 12,
+      "entryData": [],
+      "gearEnabled": true
+    },
+    {
+      "ID_CID": 2,
+      "NAME_CID": "Gigus Dungeon",
+      "ENERGY_CID": 200,
+      "UINT256_CID": 30,
+      "CHECKPOINT_CID": -1,
+      "juicedMaxRunsPerDay": 30,
+      "entryData": [],
+      "gearEnabled": true
+    },
+    {
+      "ID_CID": 3,
+      "NAME_CID": "Dungetron Underhaul",
+      "ENERGY_CID": 40,
+      "UINT256_CID": 8,
+      "CHECKPOINT_CID": 2,
+      "juicedMaxRunsPerDay": 9,
+      "entryData": [],
+      "gearEnabled": true
+    }
+  ]
+}

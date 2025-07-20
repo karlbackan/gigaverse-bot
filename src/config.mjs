@@ -10,6 +10,7 @@ export const config = {
   // Bot Settings
   dungeonType: 1, // Dungetron 5000 (Normal mode)
   underhaulDungeonType: 3, // Dungetron Underhaul (Fallback when hitting limits)
+  autoSwitchToUnderhaul: process.env.AUTO_SWITCH_UNDERHAUL !== 'false', // Set to false to disable
   energyThreshold: parseInt(process.env.ENERGY_THRESHOLD || '40'),
   repairThreshold: parseInt(process.env.REPAIR_THRESHOLD || '30'),
   minEnergyToRun: parseInt(process.env.MIN_ENERGY_TO_RUN || '40'),

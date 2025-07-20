@@ -1,0 +1,178 @@
+{
+  "entities": [
+    {
+      "_id": "67ad3524aca9948f55999e75",
+      "docId": "88697056041126825621326140387910491232221473549547769352516339860958290307762",
+      "tableName": "GameItems",
+      "tableId": "0xa6ece734f20310c441daec80768668ffd0649e14bbd0ab181cf9ad511b7e60de",
+      "colSetData": {
+        "BALANCE_CID": {
+          "block_number": 1668835,
+          "log_index": 56,
+          "transaction_index": 7
+        },
+        "ID_CID": {
+          "block_number": 1629155,
+          "log_index": 255,
+          "transaction_index": 10
+        },
+        "PLAYER_CID": {
+          "block_number": 1629155,
+          "log_index": 254,
+          "transaction_index": 10
+        }
+      },
+      "BALANCE_CID": 0,
+      "createdAt": "2025-02-12T23:56:20.924Z",
+      "updatedAt": "2025-02-13T11:12:56.578Z",
+      "__v": 0,
+      "ID_CID": "1",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0"
+    },
+    {
+      "_id": "6809b939630139f63dd305ee",
+      "docId": "38662337390481066140846885533504554719338943180539311866070855667374946391414",
+      "tableName": "GameItems",
+      "tableId": "0xa6ece734f20310c441daec80768668ffd0649e14bbd0ab181cf9ad511b7e60de",
+      "colSetData": {
+        "BALANCE_CID": {
+          "block_number": 7483179,
+          "log_index": 42,
+          "transaction_index": 8
+        },
+        "ID_CID": {
+          "block_number": 7482846,
+          "log_index": 18,
+          "transaction_index": 1
+        },
+        "PLAYER_CID": {
+          "block_number": 7482846,
+          "log_index": 17,
+          "transaction_index": 1
+        }
+      },
+      "BALANCE_CID": 0,
+      "createdAt": "2025-04-24T04:08:25.127Z",
+      "updatedAt": "2025-04-24T04:14:01.838Z",
+      "__v": 0,
+      "ID_CID": "70",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0"
+    },
+    {
+      "_id": "6809b9a8630139f63dd3064f",
+      "docId": "46355238488804079602046525558127002795696777063225543713074071948672009720365",
+      "tableName": "GameItems",
+      "tableId": "0xa6ece734f20310c441daec80768668ffd0649e14bbd0ab181cf9ad511b7e60de",
+      "colSetData": {
+        "ID_CID": {
+          "block_number": 7482960,
+          "log_index": 20,
+          "transaction_index": 3
+        },
+        "BALANCE_CID": {
+          "block_number": 7483179,
+          "log_index": 45,
+          "transaction_index": 8
+        },
+        "PLAYER_CID": {
+          "block_number": 7482960,
+          "log_index": 19,
+          "transaction_index": 3
+        }
+      },
+      "ID_CID": "18",
+      "createdAt": "2025-04-24T04:10:16.514Z",
+      "updatedAt": "2025-04-24T04:14:01.626Z",
+      "__v": 0,
+      "BALANCE_CID": 0,
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0"
+    },
+    {
+      "_id": "6809b9b98757e5b8d5efccc8",
+      "docId": "107092615620915714802846813031599339887047946352470268339654339180620452696735",
+      "tableName": "GameItems",
+      "tableId": "0xa6ece734f20310c441daec80768668ffd0649e14bbd0ab181cf9ad511b7e60de",
+      "colSetData": {
+        "BALANCE_CID": {
+          "block_number": 7483179,
+          "log_index": 48,
+          "transaction_index": 8
+        },
+        "ID_CID": {
+          "block_number": 7482976,
+          "log_index": 5,
+          "transaction_index": 0
+        },
+        "PLAYER_CID": {
+          "block_number": 7482976,
+          "log_index": 4,
+          "transaction_index": 0
+        }
+      },
+      "BALANCE_CID": 0,
+      "createdAt": "2025-04-24T04:10:33.104Z",
+      "updatedAt": "2025-04-24T04:14:01.831Z",
+      "__v": 0,
+      "ID_CID": "68",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0"
+    },
+    {
+      "_id": "6809b9ef8757e5b8d5efccdb",
+      "docId": "71433613460303990033844751586207348205620223494633674261901970774174539666363",
+      "tableName": "GameItems",
+      "tableId": "0xa6ece734f20310c441daec80768668ffd0649e14bbd0ab181cf9ad511b7e60de",
+      "colSetData": {
+        "BALANCE_CID": {
+          "block_number": 7483179,
+          "log_index": 51,
+          "transaction_index": 8
+        },
+        "PLAYER_CID": {
+          "block_number": 7483026,
+          "log_index": 19,
+          "transaction_index": 3
+        },
+        "ID_CID": {
+          "block_number": 7483026,
+          "log_index": 20,
+          "transaction_index": 3
+        }
+      },
+      "BALANCE_CID": 0,
+      "createdAt": "2025-04-24T04:11:27.862Z",
+      "updatedAt": "2025-04-24T04:14:01.580Z",
+      "__v": 0,
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "ID_CID": "17"
+    },
+    {
+      "_id": "6809b9f9c0342e5a01d05c4e",
+      "docId": "22746451899602218903297595833194748246960611832663410744003169015876635169304",
+      "tableName": "GameItems",
+      "tableId": "0xa6ece734f20310c441daec80768668ffd0649e14bbd0ab181cf9ad511b7e60de",
+      "colSetData": {
+        "ID_CID": {
+          "block_number": 7483039,
+          "log_index": 11,
+          "transaction_index": 1
+        },
+        "PLAYER_CID": {
+          "block_number": 7483039,
+          "log_index": 10,
+          "transaction_index": 1
+        },
+        "BALANCE_CID": {
+          "block_number": 7483179,
+          "log_index": 54,
+          "transaction_index": 8
+        }
+      },
+      "ID_CID": "15",
+      "createdAt": "2025-04-24T04:11:37.447Z",
+      "updatedAt": "2025-04-24T04:14:01.626Z",
+      "__v": 0,
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "BALANCE_CID": 0
+    }
+  ]
+}

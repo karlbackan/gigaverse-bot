@@ -1,0 +1,274 @@
+{
+  "success": true,
+  "message": "Dungeon state",
+  "data": {
+    "run": {
+      "_id": "687be9f59b06dc1432e8b808",
+      "DUNGEON_ID_CID": 12270906,
+      "userId": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "players": [
+        {
+          "id": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+          "rock": {
+            "startingATK": 20,
+            "startingDEF": 4,
+            "currentATK": 21,
+            "currentDEF": 8,
+            "currentCharges": 2,
+            "maxCharges": 3
+          },
+          "paper": {
+            "startingATK": 3,
+            "startingDEF": 4,
+            "currentATK": 3,
+            "currentDEF": 8,
+            "currentCharges": 3,
+            "maxCharges": 3
+          },
+          "scissor": {
+            "startingATK": 5,
+            "startingDEF": 4,
+            "currentATK": 9,
+            "currentDEF": 9,
+            "currentCharges": 3,
+            "maxCharges": 3
+          },
+          "health": {
+            "current": 28,
+            "starting": 12,
+            "currentMax": 28,
+            "startingMax": 12
+          },
+          "shield": {
+            "current": 18,
+            "starting": 2,
+            "currentMax": 18,
+            "startingMax": 2
+          },
+          "equipment": [
+            {
+              "docId": "",
+              "RARITY_CID": 1,
+              "UINT256_CID": 1,
+              "UINT256_CID_array": [
+                0,
+                0,
+                2,
+                2
+              ],
+              "selectedVal1": 0,
+              "selectedVal2": 2,
+              "boonTypeString": "UpgradeRock"
+            },
+            {
+              "docId": "",
+              "RARITY_CID": 0,
+              "UINT256_CID": 9,
+              "UINT256_CID_array": [
+                2,
+                2,
+                null,
+                null
+              ],
+              "selectedVal1": 2,
+              "selectedVal2": 0,
+              "boonTypeString": "AddMaxHealth"
+            },
+            {
+              "docId": "",
+              "RARITY_CID": 0,
+              "UINT256_CID": 3,
+              "UINT256_CID_array": [
+                0,
+                0,
+                1,
+                1
+              ],
+              "selectedVal1": 0,
+              "selectedVal2": 1,
+              "boonTypeString": "UpgradeScissor"
+            }
+          ],
+          "lastMove": "rock",
+          "thisPlayerWin": true,
+          "otherPlayerWin": false,
+          "activeEffects": [
+            {
+              "triggerType": "OnStartDungeon",
+              "effects": [
+                {
+                  "type": "IncreaseDamage_Spell",
+                  "amount": 4
+                },
+                {
+                  "type": "IncreaseDamage_Sword",
+                  "amount": 1
+                }
+              ],
+              "playerType": "ThisPlayer"
+            },
+            {
+              "triggerType": "OnStartDungeon",
+              "effects": [
+                {
+                  "type": "IncreaseArmor_Sword",
+                  "amount": 2
+                },
+                {
+                  "type": "IncreaseArmor_Shield",
+                  "amount": 3
+                },
+                {
+                  "type": "IncreaseArmor_Spell",
+                  "amount": 3
+                }
+              ],
+              "playerType": "ThisPlayer"
+            },
+            {
+              "triggerType": "OnStartDungeon",
+              "effects": [
+                {
+                  "type": "IncreaseArmor_Random",
+                  "amount": 1
+                }
+              ],
+              "playerType": "OtherPlayer"
+            },
+            {
+              "triggerType": "OnStartDungeon",
+              "effects": [
+                {
+                  "type": "IncreaseArmor_Random",
+                  "amount": 1
+                }
+              ],
+              "playerType": "OtherPlayer"
+            }
+          ],
+          "statusEffects": [],
+          "_id": "687be9f59b06dc1432e8b809"
+        },
+        {
+          "id": "Enemy Room 4",
+          "rock": {
+            "startingATK": 4,
+            "startingDEF": 2,
+            "currentATK": 4,
+            "currentDEF": 2,
+            "currentCharges": 3,
+            "maxCharges": 3
+          },
+          "paper": {
+            "startingATK": 7,
+            "startingDEF": 2,
+            "currentATK": 7,
+            "currentDEF": 2,
+            "currentCharges": 3,
+            "maxCharges": 3
+          },
+          "scissor": {
+            "startingATK": 2,
+            "startingDEF": 4,
+            "currentATK": 2,
+            "currentDEF": 4,
+            "currentCharges": 3,
+            "maxCharges": 3
+          },
+          "health": {
+            "current": 9,
+            "starting": 9,
+            "currentMax": 9,
+            "startingMax": 9
+          },
+          "shield": {
+            "current": 6,
+            "starting": 6,
+            "currentMax": 6,
+            "startingMax": 6
+          },
+          "equipment": [],
+          "lastMove": "",
+          "thisPlayerWin": false,
+          "otherPlayerWin": false,
+          "activeEffects": [],
+          "statusEffects": [],
+          "_id": "687bee65b76ec999acbe22e1"
+        }
+      ],
+      "lootPhase": false,
+      "version": 1,
+      "lootOptions": [
+        {
+          "docId": "",
+          "RARITY_CID": 0,
+          "UINT256_CID": 3,
+          "UINT256_CID_array": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "selectedVal1": 0,
+          "selectedVal2": 1,
+          "boonTypeString": "UpgradeScissor"
+        },
+        {
+          "docId": "",
+          "RARITY_CID": 3,
+          "UINT256_CID": 1,
+          "UINT256_CID_array": [
+            4,
+            4,
+            0,
+            1
+          ],
+          "selectedVal1": 4,
+          "selectedVal2": 0,
+          "boonTypeString": "UpgradeRock"
+        },
+        {
+          "docId": "",
+          "RARITY_CID": 2,
+          "UINT256_CID": 2,
+          "UINT256_CID_array": [
+            3,
+            3,
+            0,
+            1
+          ],
+          "selectedVal1": 3,
+          "selectedVal2": 0,
+          "boonTypeString": "UpgradePaper"
+        }
+      ],
+      "createdAt": "2025-07-19T18:54:45.098Z",
+      "updatedAt": "2025-07-19T19:13:41.200Z",
+      "__v": 6
+    },
+    "entity": {
+      "_id": "687be9f49b06dc1432e8b7f4",
+      "docId": "Dungeon#12270906",
+      "COMPLETE_CID": false,
+      "LEVEL_CID": 51,
+      "GAME_ITEM_ID_CID_array": [],
+      "ID_CID": "1",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "ROOM_NUM_CID": 4,
+      "NOOB_TOKEN_CID": 1648,
+      "DUNGEON_ID_CID": 12270906,
+      "ENEMY_CID": 4,
+      "GEAR_CID_array": [
+        "GearInstance#126_1745652581",
+        "GearInstance#238_1747228096",
+        "GearInstance#228_1748550307",
+        "GearInstance#228_1751747283"
+      ],
+      "IS_JUICED_CID": true,
+      "MULTIPLIER_CID": 1,
+      "createdAt": "2025-07-19T18:54:44.394Z",
+      "updatedAt": "2025-07-19T19:10:42.879Z",
+      "__v": 0
+    }
+  }
+}

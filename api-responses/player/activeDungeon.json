@@ -1,0 +1,27 @@
+{
+  "entities": [
+    {
+      "_id": "687be9f49b06dc1432e8b7f4",
+      "docId": "Dungeon#12270906",
+      "COMPLETE_CID": false,
+      "LEVEL_CID": 51,
+      "GAME_ITEM_ID_CID_array": [],
+      "ID_CID": "1",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "ROOM_NUM_CID": 4,
+      "NOOB_TOKEN_CID": 1648,
+      "DUNGEON_ID_CID": 12270906,
+      "ENEMY_CID": 4,
+      "GEAR_CID_array": [
+        "GearInstance#126_1745652581",
+        "GearInstance#238_1747228096",
+        "GearInstance#228_1748550307",
+        "GearInstance#228_1751747283"
+      ],
+      "IS_JUICED_CID": true,
+      "MULTIPLIER_CID": 1,
+      "createdAt": "2025-07-19T18:54:44.394Z",
+      "updatedAt": "2025-07-19T19:10:42.879Z"
+    }
+  ]
+}

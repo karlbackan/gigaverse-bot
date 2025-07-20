@@ -1,0 +1,50 @@
+{
+  "accountEntity": {
+    "_id": "67adc2ca34d44992feca71f2",
+    "docId": "1075624516115483713902558503015598357553305311728",
+    "tableName": "AccountSystem",
+    "GIGA_NAME_TOKENDID_CID": "10589565821279039044779435449254105608789521076436178851413881430213516206997",
+    "createdAt": "2025-02-13T10:00:42.123Z",
+    "updatedAt": "2025-02-13T10:00:46.440Z",
+    "NOOB_TOKEN_CID": 1648
+  },
+  "usernames": [
+    {
+      "_id": "67adc2caa6ba93912baebb80",
+      "docId": "10589565821279039044779435449254105608789521076436178851413881430213516206997",
+      "tableName": "GigaNameNFT",
+      "IS_GIGA_NAME_CID": true,
+      "createdAt": "2025-02-13T10:00:42.124Z",
+      "updatedAt": "2025-02-13T10:00:46.452Z",
+      "LAST_TRANSFER_TIME_CID": 1739440837,
+      "NAME_CID": "loki",
+      "INITIALIZED_CID": true,
+      "OWNER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0"
+    }
+  ],
+  "noob": {
+    "_id": "67adc2ca6e8fa77aa90cba96",
+    "docId": "1648",
+    "tableName": "GigaNoobNFT",
+    "LEVEL_CID": 1,
+    "createdAt": "2025-02-13T10:00:42.135Z",
+    "updatedAt": "2025-02-13T10:00:46.428Z",
+    "OWNER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+    "INITIALIZED_CID": true,
+    "LAST_TRANSFER_TIME_CID": 1739440837,
+    "IS_NOOB_CID": true
+  },
+  "checkpointProgress": [
+    {
+      "_id": "680b5f78f27889e280364bde",
+      "docId": "CHECKPOINT_PROGRESS#0xbc68abe3bfd01a35050d46fe8659475e1eab59f0#2",
+      "COMPLETE_CID": true,
+      "COMPLETIONS_CID": 1,
+      "ID_CID": "2",
+      "PLAYER_CID": "0xbc68abe3bfd01a35050d46fe8659475e1eab59f0",
+      "__v": 0,
+      "createdAt": "2025-04-25T10:10:00.480Z",
+      "updatedAt": "2025-04-25T10:10:00.480Z"
+    }
+  ]
+}

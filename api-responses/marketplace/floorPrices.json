@@ -1,0 +1,1048 @@
+{
+  "entities": [
+    {
+      "GAME_ITEM_ID_CID": 1,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 2,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 3,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 4,
+      "ETH_MINT_PRICE_CID": 9000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 5,
+      "ETH_MINT_PRICE_CID": 2000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 6,
+      "ETH_MINT_PRICE_CID": 3900000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 7,
+      "ETH_MINT_PRICE_CID": 3000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 8,
+      "ETH_MINT_PRICE_CID": 7000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 9,
+      "ETH_MINT_PRICE_CID": 10000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 11,
+      "ETH_MINT_PRICE_CID": 49400000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 12,
+      "ETH_MINT_PRICE_CID": 50000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 13,
+      "ETH_MINT_PRICE_CID": 79000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 14,
+      "ETH_MINT_PRICE_CID": 64000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 15,
+      "ETH_MINT_PRICE_CID": 70000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 17,
+      "ETH_MINT_PRICE_CID": 50000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 18,
+      "ETH_MINT_PRICE_CID": 55000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 21,
+      "ETH_MINT_PRICE_CID": 28000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 22,
+      "ETH_MINT_PRICE_CID": 28000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 23,
+      "ETH_MINT_PRICE_CID": 33000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 25,
+      "ETH_MINT_PRICE_CID": 252000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 61,
+      "ETH_MINT_PRICE_CID": 54000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 66,
+      "ETH_MINT_PRICE_CID": 76000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 67,
+      "ETH_MINT_PRICE_CID": 63000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 68,
+      "ETH_MINT_PRICE_CID": 180000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 69,
+      "ETH_MINT_PRICE_CID": 164000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 70,
+      "ETH_MINT_PRICE_CID": 330000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 71,
+      "ETH_MINT_PRICE_CID": 361000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 72,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 73,
+      "ETH_MINT_PRICE_CID": 59000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 74,
+      "ETH_MINT_PRICE_CID": 58000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 75,
+      "ETH_MINT_PRICE_CID": 56000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 76,
+      "ETH_MINT_PRICE_CID": 91000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 77,
+      "ETH_MINT_PRICE_CID": 104000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 78,
+      "ETH_MINT_PRICE_CID": 57000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 79,
+      "ETH_MINT_PRICE_CID": 62000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 80,
+      "ETH_MINT_PRICE_CID": 399000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 81,
+      "ETH_MINT_PRICE_CID": 400000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 82,
+      "ETH_MINT_PRICE_CID": 441000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 83,
+      "ETH_MINT_PRICE_CID": 430000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 84,
+      "ETH_MINT_PRICE_CID": 450000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 85,
+      "ETH_MINT_PRICE_CID": 438000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 86,
+      "ETH_MINT_PRICE_CID": 468000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 88,
+      "ETH_MINT_PRICE_CID": 4700000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 92,
+      "ETH_MINT_PRICE_CID": 500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 93,
+      "ETH_MINT_PRICE_CID": 390000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 94,
+      "ETH_MINT_PRICE_CID": 290000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 95,
+      "ETH_MINT_PRICE_CID": 827000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 96,
+      "ETH_MINT_PRICE_CID": 627000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 97,
+      "ETH_MINT_PRICE_CID": 570000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 98,
+      "ETH_MINT_PRICE_CID": 1500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 99,
+      "ETH_MINT_PRICE_CID": 1580000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 101,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 102,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 103,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 104,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 105,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 106,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 107,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 108,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 109,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 110,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 111,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 112,
+      "ETH_MINT_PRICE_CID": 500000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 113,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 114,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 115,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 116,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 117,
+      "ETH_MINT_PRICE_CID": 2600000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 118,
+      "ETH_MINT_PRICE_CID": 2800000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 124,
+      "ETH_MINT_PRICE_CID": 4150000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 125,
+      "ETH_MINT_PRICE_CID": 6190000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 126,
+      "ETH_MINT_PRICE_CID": 1980000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 127,
+      "ETH_MINT_PRICE_CID": 2100000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 128,
+      "ETH_MINT_PRICE_CID": 1130000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 129,
+      "ETH_MINT_PRICE_CID": 850000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 130,
+      "ETH_MINT_PRICE_CID": 650000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 131,
+      "ETH_MINT_PRICE_CID": 685000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 132,
+      "ETH_MINT_PRICE_CID": 785000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 133,
+      "ETH_MINT_PRICE_CID": 62000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 134,
+      "ETH_MINT_PRICE_CID": 350000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 135,
+      "ETH_MINT_PRICE_CID": 310000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 136,
+      "ETH_MINT_PRICE_CID": 369000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 137,
+      "ETH_MINT_PRICE_CID": 338000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 138,
+      "ETH_MINT_PRICE_CID": 300000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 139,
+      "ETH_MINT_PRICE_CID": 310000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 140,
+      "ETH_MINT_PRICE_CID": 319000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 141,
+      "ETH_MINT_PRICE_CID": 1280000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 142,
+      "ETH_MINT_PRICE_CID": 800000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 143,
+      "ETH_MINT_PRICE_CID": 12300000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 144,
+      "ETH_MINT_PRICE_CID": 98000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 145,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 146,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 149,
+      "ETH_MINT_PRICE_CID": 690000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 150,
+      "ETH_MINT_PRICE_CID": 63000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 151,
+      "ETH_MINT_PRICE_CID": 115000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 152,
+      "ETH_MINT_PRICE_CID": 47000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 153,
+      "ETH_MINT_PRICE_CID": 110000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 154,
+      "ETH_MINT_PRICE_CID": 178000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 155,
+      "ETH_MINT_PRICE_CID": 229000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 156,
+      "ETH_MINT_PRICE_CID": 145000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 157,
+      "ETH_MINT_PRICE_CID": 292000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 158,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 159,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 160,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 161,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 162,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 163,
+      "ETH_MINT_PRICE_CID": 47000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 167,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 168,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 169,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 170,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 171,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 172,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 173,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 174,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 175,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 176,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 177,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 178,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 179,
+      "ETH_MINT_PRICE_CID": 977000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 180,
+      "ETH_MINT_PRICE_CID": 1410000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 181,
+      "ETH_MINT_PRICE_CID": 5400000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 182,
+      "ETH_MINT_PRICE_CID": 5000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 183,
+      "ETH_MINT_PRICE_CID": 5500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 184,
+      "ETH_MINT_PRICE_CID": 11000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 185,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 186,
+      "ETH_MINT_PRICE_CID": 520000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 187,
+      "ETH_MINT_PRICE_CID": 236000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 188,
+      "ETH_MINT_PRICE_CID": 6800000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 189,
+      "ETH_MINT_PRICE_CID": 4500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 190,
+      "ETH_MINT_PRICE_CID": 7500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 191,
+      "ETH_MINT_PRICE_CID": 12800000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 192,
+      "ETH_MINT_PRICE_CID": 486000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 193,
+      "ETH_MINT_PRICE_CID": 650000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 194,
+      "ETH_MINT_PRICE_CID": 6500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 195,
+      "ETH_MINT_PRICE_CID": 8000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 196,
+      "ETH_MINT_PRICE_CID": 4700000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 197,
+      "ETH_MINT_PRICE_CID": 7000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 198,
+      "ETH_MINT_PRICE_CID": 749000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 200,
+      "ETH_MINT_PRICE_CID": 588000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 202,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 203,
+      "ETH_MINT_PRICE_CID": 215000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 204,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 205,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 206,
+      "ETH_MINT_PRICE_CID": 273000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 207,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 208,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 209,
+      "ETH_MINT_PRICE_CID": 1892000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 210,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 211,
+      "ETH_MINT_PRICE_CID": 1390000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 212,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 214,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 215,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 216,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 221,
+      "ETH_MINT_PRICE_CID": 817000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 224,
+      "ETH_MINT_PRICE_CID": 840000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 227,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 228,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 232,
+      "ETH_MINT_PRICE_CID": 16900000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 233,
+      "ETH_MINT_PRICE_CID": 30000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 234,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 235,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 236,
+      "ETH_MINT_PRICE_CID": 985000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 237,
+      "ETH_MINT_PRICE_CID": 8600000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 238,
+      "ETH_MINT_PRICE_CID": 3900000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 239,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 240,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 241,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 242,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 243,
+      "ETH_MINT_PRICE_CID": 8990000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 244,
+      "ETH_MINT_PRICE_CID": 8500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 245,
+      "ETH_MINT_PRICE_CID": 7000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 246,
+      "ETH_MINT_PRICE_CID": 8990000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 247,
+      "ETH_MINT_PRICE_CID": 6000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 248,
+      "ETH_MINT_PRICE_CID": 7990000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 249,
+      "ETH_MINT_PRICE_CID": 8500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 250,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 255,
+      "ETH_MINT_PRICE_CID": 36000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 256,
+      "ETH_MINT_PRICE_CID": 36000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 261,
+      "ETH_MINT_PRICE_CID": 4000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 262,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 263,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 264,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 265,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 266,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 267,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 268,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 269,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 270,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 271,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 272,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 273,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 274,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 275,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 276,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 277,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 278,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 279,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 280,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 281,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 282,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 283,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 284,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 285,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 286,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 287,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 288,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 289,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 290,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 291,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 292,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 293,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 294,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 295,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 296,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 297,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 298,
+      "ETH_MINT_PRICE_CID": 399000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 299,
+      "ETH_MINT_PRICE_CID": 540000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 300,
+      "ETH_MINT_PRICE_CID": 60000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 301,
+      "ETH_MINT_PRICE_CID": 56000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 302,
+      "ETH_MINT_PRICE_CID": 465000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 303,
+      "ETH_MINT_PRICE_CID": 190000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 304,
+      "ETH_MINT_PRICE_CID": 187000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 305,
+      "ETH_MINT_PRICE_CID": 137000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 306,
+      "ETH_MINT_PRICE_CID": 693000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 307,
+      "ETH_MINT_PRICE_CID": 80000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 308,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 309,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 310,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 311,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 317,
+      "ETH_MINT_PRICE_CID": 4800000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 318,
+      "ETH_MINT_PRICE_CID": 3800000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 319,
+      "ETH_MINT_PRICE_CID": 2690000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 320,
+      "ETH_MINT_PRICE_CID": 2400000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 321,
+      "ETH_MINT_PRICE_CID": 2400000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 322,
+      "ETH_MINT_PRICE_CID": 5000000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 323,
+      "ETH_MINT_PRICE_CID": 19870000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 324,
+      "ETH_MINT_PRICE_CID": 18987000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 325,
+      "ETH_MINT_PRICE_CID": 19400000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 326,
+      "ETH_MINT_PRICE_CID": 18380000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 327,
+      "ETH_MINT_PRICE_CID": 4880000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 328,
+      "ETH_MINT_PRICE_CID": 7750000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 329,
+      "ETH_MINT_PRICE_CID": 5500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 330,
+      "ETH_MINT_PRICE_CID": 4500000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 331,
+      "ETH_MINT_PRICE_CID": 2390000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 332,
+      "ETH_MINT_PRICE_CID": 2390000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 333,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 369,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 370,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 371,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 372,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 373,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 387,
+      "ETH_MINT_PRICE_CID": 3687000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 388,
+      "ETH_MINT_PRICE_CID": 2100000000000000
+    },
+    {
+      "GAME_ITEM_ID_CID": 390,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 391,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 395,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 397,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 398,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 399,
+      "ETH_MINT_PRICE_CID": 0
+    },
+    {
+      "GAME_ITEM_ID_CID": 413,
+      "ETH_MINT_PRICE_CID": 4590000000000000
+    }
+  ]
+}
