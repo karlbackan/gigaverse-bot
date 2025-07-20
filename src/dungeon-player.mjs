@@ -4,6 +4,7 @@ import { DecisionEngine } from './decision-engine.mjs';
 import { sleep } from './utils.mjs';
 import { sendDungeonAction } from './dungeon-api-direct.mjs';
 import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
+import axios from 'axios';
 
 export class DungeonPlayer {
   constructor() {
@@ -11,6 +12,7 @@ export class DungeonPlayer {
     this.currentDungeon = null;
     this.isPlaying = false;
     this.consecutiveErrors = 0;
+    this.currentDungeonType = config.dungeonType; // Start with Dungetron 5000
   }
 
   // Check if we can play (energy, juice status, etc.)
@@ -35,6 +37,63 @@ export class DungeonPlayer {
         }
         return 'continue_existing';
       }
+      
+      // Check daily runs limit
+      try {
+        const api = axios.create({
+          baseURL: 'https://gigaverse.io/api',
+          headers: {
+            'Authorization': `Bearer ${config.jwtToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const todayResponse = await api.get('/game/dungeon/today');
+        const todayData = todayResponse.data;
+        
+        // Check Dungetron 5000 first (ID 1)
+        const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1");
+        const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1);
+        
+        if (dungetron5000Progress && dungetron5000Info) {
+          const runsToday = dungetron5000Progress.UINT256_CID || 0;
+          const maxRuns = isJuiced ? dungetron5000Info.juicedMaxRunsPerDay : dungetron5000Info.UINT256_CID;
+          
+          if (runsToday < maxRuns) {
+            console.log(`Dungetron 5000 runs today: ${runsToday}/${maxRuns}`);
+            this.currentDungeonType = config.dungeonType; // Use Dungetron 5000
+            return true;
+          } else {
+            console.log(`⚠️  Dungetron 5000 daily limit reached: ${runsToday}/${maxRuns}`);
+          }
+        }
+        
+        // Check Underhaul if Dungetron 5000 is full (ID 3)
+        const underhaulProgress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "3");
+        const underhaulInfo = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 3);
+        
+        if (underhaulInfo) {
+          const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
+          const underhaulMaxRuns = isJuiced ? underhaulInfo.juicedMaxRunsPerDay : underhaulInfo.UINT256_CID;
+          
+          if (underhaulRunsToday < underhaulMaxRuns) {
+            console.log(`✅ Switching to Dungetron Underhaul: ${underhaulRunsToday}/${underhaulMaxRuns} runs today`);
+            this.currentDungeonType = config.underhaulDungeonType; // Switch to Underhaul
+            return true;
+          } else {
+            console.log(`⚠️  Underhaul also at daily limit: ${underhaulRunsToday}/${underhaulMaxRuns}`);
+          }
+        }
+        
+        // Both dungeons are at their limits
+        console.log(`\n🛑 Daily limits reached for all dungeon types.`);
+        return 'daily_limit';
+        
+      } catch (error) {
+        console.log('Could not check daily limits:', error.message);
+        // Continue with default dungeon type if we can't check limits
+        return true;
+      }
 
       return true;
     } catch (error) {
@@ -46,7 +105,8 @@ export class DungeonPlayer {
   // Start a new dungeon run
   async startDungeon() {
     try {
-      console.log('Starting new Dungetron 5000 dungeon run...');
+      const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
+      console.log(`Starting new ${dungeonName} dungeon run...`);
       
       // Get current inventory for consumables
       const inventoryResponse = await getDirectInventory();
@@ -64,9 +124,8 @@ export class DungeonPlayer {
         gearInstanceIds: [] // Add gear instance IDs as expected by the API
       };
 
-      // Use direct API call
-      const dungeonId = 1; // Dungetron 5000 = ID 1
-      const response = await sendDirectAction('start_run', dungeonId, data);
+      // Use direct API call with current dungeon type
+      const response = await sendDirectAction('start_run', this.currentDungeonType, data);
       
       if (response && response.success) {
         this.currentDungeon = response.data;
@@ -119,7 +178,8 @@ export class DungeonPlayer {
       const enemy = run.players[1];
       const enemyId = entity.ENEMY_CID;
       const room = entity.ROOM_NUM_CID;
-      // Dungetron 5000 has 4 floors with 4 rooms each = 16 total rooms
+      // Room structure may vary by dungeon type
+      const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
       const floor = Math.floor((room - 1) / 4) + 1;
       const roomInFloor = ((room - 1) % 4) + 1;
       // Count turns based on total charges used (handle negative charges)
@@ -131,7 +191,7 @@ export class DungeonPlayer {
       const playerHealth = player.health.current;
       const enemyHealth = enemy.health.current;
       
-      console.log(`\n--- Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/16), Turn ${turn} ---`);
+      console.log(`\n--- Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/${totalRooms}), Turn ${turn} ---`);
       console.log(`Enemy: ${enemyId}`);
       console.log(`Player: HP ${playerHealth}/${player.health.currentMax} | Shield ${player.shield.current}/${player.shield.currentMax}`);
       console.log(`Enemy: HP ${enemyHealth}/${enemy.health.currentMax} | Shield ${enemy.shield.current}/${enemy.shield.currentMax}`);
@@ -201,9 +261,8 @@ export class DungeonPlayer {
       // Send action using direct API (bypassing SDK issues)
       let response;
       try {
-        // Use direct API with dungeonId instead of dungeonType
-        const dungeonId = 1; // Dungetron 5000 = ID 1
-        response = await sendDirectAction(action, dungeonId, {
+        // Use direct API with current dungeon type
+        response = await sendDirectAction(action, this.currentDungeonType, {
           consumables: [],
           itemId: 0,
           index: 0,
@@ -224,7 +283,7 @@ export class DungeonPlayer {
             const freshState = await getDirectDungeonState();
             if (freshState?.data?.run) {
               console.log('Retrying with fresh state...');
-              response = await sendDirectAction(action, 1, {
+              response = await sendDirectAction(action, this.currentDungeonType, {
                 consumables: [],
                 itemId: 0,
                 index: 0,
@@ -343,6 +402,11 @@ export class DungeonPlayer {
       const canPlayResult = await this.canPlay();
       if (!canPlayResult) {
         return 'wait';
+      }
+      
+      // Handle daily limit
+      if (canPlayResult === 'daily_limit') {
+        return 'daily_limit';
       }
 
       // If we're continuing an existing dungeon, skip starting a new one
@@ -524,9 +588,8 @@ export class DungeonPlayer {
       console.log(`\nSending loot action: ${lootAction}`);
       let response;
       try {
-        // Use direct API with dungeonId
-        const dungeonId = 1; // Dungetron 5000 = ID 1
-        response = await sendDirectLootAction(lootAction, dungeonId);
+        // Use direct API with current dungeon type
+        response = await sendDirectLootAction(lootAction, this.currentDungeonType);
       } catch (error) {
         console.error('Loot selection error:', error.message);
         throw error;
