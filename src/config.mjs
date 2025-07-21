@@ -9,6 +9,7 @@ export const config = {
 
   // Bot Settings
   dungeonType: process.env.DUNGEON_TYPE === 'UNDERHAUL' ? 3 : 1, // Read from env
+  isJuiced: process.env.DUNGEON_TYPE === 'JUICED', // Enable juiced mode
   underhaulDungeonType: 3, // Dungetron Underhaul (Fallback when hitting limits)
   autoSwitchToUnderhaul: process.env.AUTO_SWITCH_UNDERHAUL !== 'false', // Set to false to disable
   energyThreshold: parseInt(process.env.ENERGY_THRESHOLD || '40'),

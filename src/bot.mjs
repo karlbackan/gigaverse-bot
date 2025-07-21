@@ -126,7 +126,8 @@ console.log('Make sure you have permission to use automation with Gigaverse.');
 console.log('Using bots may violate the game\'s Terms of Service.\n');
 
 console.log('Configuration:');
-console.log(`- Dungeon: Dungetron 5000 (Regular, ${config.energyThreshold} energy)`);
+const dungeonMode = config.isJuiced ? 'Juiced' : 'Regular';
+console.log(`- Dungeon: Dungetron 5000 (${dungeonMode}, ${config.energyThreshold} energy)`);
 console.log(`- Repair threshold: ${config.repairThreshold}%`);
 console.log(`- Check interval: ${formatTime(config.checkInterval)}`);
 console.log('\nPress Ctrl+C to stop the bot.\n');

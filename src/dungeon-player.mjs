@@ -128,7 +128,8 @@ export class DungeonPlayer {
   async startDungeon() {
     try {
       const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
-      console.log(`Starting new ${dungeonName} dungeon run...`);
+      const modeText = config.isJuiced ? ' (Juiced Mode)' : '';
+      console.log(`Starting new ${dungeonName}${modeText} dungeon run...`);
       
       // Get current inventory for consumables
       const inventoryResponse = await getDirectInventory();
@@ -139,7 +140,7 @@ export class DungeonPlayer {
 
       // Prepare dungeon start data
       const data = {
-        isJuiced: false, // Regular dungeon run, not juiced
+        isJuiced: config.isJuiced || false, // Use juiced mode from config
         consumables: [], // Simplified for now
         itemId: 0, // No specific item
         index: 0,
