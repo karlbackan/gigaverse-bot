@@ -7,18 +7,19 @@ import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirec
 import axios from 'axios';
 
 export class DungeonPlayer {
-  constructor() {
+  constructor(walletAddress = null) {
     this.decisionEngine = new DecisionEngine();
     this.currentDungeon = null;
     this.isPlaying = false;
     this.consecutiveErrors = 0;
     this.currentDungeonType = config.dungeonType; // Start with Dungetron 5000
+    this.walletAddress = walletAddress; // Store wallet address for this player
   }
 
   // Check if we can play (energy, juice status, etc.)
   async canPlay() {
     try {
-      const energyData = await getDirectEnergy();
+      const energyData = await getDirectEnergy(this.walletAddress || config.walletAddress);
       const energy = energyData?.entities?.[0]?.parsedData?.energyValue || 0;
       const isJuiced = energyData?.entities?.[0]?.parsedData?.isPlayerJuiced || false;
       
@@ -29,13 +30,23 @@ export class DungeonPlayer {
       }
 
       // Check if we're already in a dungeon
-      const dungeonState = await getDirectDungeonState();
-      if (dungeonState?.data?.run) {
-        console.log('Already in an active dungeon - will continue playing');
-        if (dungeonState.data.run.lootPhase) {
-          console.log('(Currently in loot phase)');
+      try {
+        const dungeonState = await getDirectDungeonState();
+        if (dungeonState?.data?.run) {
+          console.log('Already in an active dungeon - will continue playing');
+          if (dungeonState.data.run.lootPhase) {
+            console.log('(Currently in loot phase)');
+          }
+          return 'continue_existing';
         }
-        return 'continue_existing';
+      } catch (error) {
+        // If we get a 401, the token is invalid for game endpoints
+        if (error.response?.status === 401) {
+          console.error('Token is invalid for game endpoints (401)');
+          throw error; // Re-throw to be handled by the caller
+        }
+        // For other errors, log but continue
+        console.error('Error checking dungeon state:', error.message);
       }
       
       // Check daily runs limit
@@ -103,6 +114,12 @@ export class DungeonPlayer {
       return true;
     } catch (error) {
       console.error('Error checking play eligibility:', error);
+      
+      // Re-throw 401 errors so they can be handled by the account manager
+      if (error.response?.status === 401) {
+        throw error;
+      }
+      
       return false;
     }
   }
@@ -485,6 +502,12 @@ export class DungeonPlayer {
 
     } catch (error) {
       console.error('Error during dungeon play:', error);
+      
+      // Re-throw 401 errors so they can be handled by the account manager
+      if (error.response?.status === 401) {
+        throw error;
+      }
+      
       return 'wait';
     } finally {
       this.isPlaying = false;

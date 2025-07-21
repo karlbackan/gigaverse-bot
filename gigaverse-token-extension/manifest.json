@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Gigaverse Token Extractor",
+  "version": "1.0",
+  "description": "Extract auth tokens from Gigaverse.io for bot usage",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://gigaverse.io/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

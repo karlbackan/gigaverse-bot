@@ -1,9 +1,10 @@
 import { config } from './config.mjs';
 import { JWTValidator } from './jwt-validator.mjs';
 import { DungeonPlayer } from './dungeon-player.mjs';
-import { getDirectEnergy, getDirectDungeonState } from './direct-api.mjs';
+import { getDirectEnergy, getDirectDungeonState, resetActionToken } from './direct-api.mjs';
 import { sleep } from './utils.mjs';
 import readline from 'readline';
+import dotenv from 'dotenv';
 
 export class AccountManager {
   constructor() {
@@ -17,6 +18,9 @@ export class AccountManager {
 
   // Load accounts from config
   loadAccounts() {
+    // Re-read dotenv to ensure fresh values
+    dotenv.config();
+    
     // Try to load from environment variables first
     const accounts = [];
     
@@ -149,40 +153,8 @@ export class AccountManager {
     console.clear();
     console.log(`=== RUNNING ${account.name.toUpperCase()} ===\n`);
 
-    // Set the JWT token for this account
-    process.env.JWT_TOKEN = account.token;
-    config.jwtToken = account.token;
-
-    const player = new DungeonPlayer();
-    
-    try {
-      // Check if already in dungeon
-      const dungeonState = await getDirectDungeonState();
-      if (dungeonState?.data?.run) {
-        console.log('📍 Already in an active dungeon - continuing...\n');
-      }
-
-      // Run the dungeon
-      let continueRunning = true;
-      while (continueRunning) {
-        const status = await player.playDungeon();
-        
-        if (status === 'continue_playing') {
-          console.log('\n⏳ Continuing current dungeon...\n');
-          await sleep(2000);
-        } else {
-          continueRunning = false;
-          console.log('\n✅ Dungeon session complete for this account.\n');
-        }
-      }
-
-      // Show final stats
-      const stats = player.getStatus();
-      console.log('Final stats:', stats.stats);
-
-    } catch (error) {
-      console.error('\n❌ Error running account:', error.message);
-    }
+    // Use the same logic as runAllAccounts - run until no energy
+    await this.runAccountUntilComplete(account);
 
     await this.getUserInput('\nPress Enter to return to menu...');
   }
@@ -203,10 +175,22 @@ export class AccountManager {
     }
 
     console.log(`\n🎮 Running ${validAccounts.length} valid accounts...\n`);
+    
+    // Show which accounts will be skipped
+    const invalidAccounts = results.filter(r => !r.valid);
+    if (invalidAccounts.length > 0) {
+      console.log('⚠️  Skipping invalid accounts:');
+      invalidAccounts.forEach(acc => {
+        console.log(`   - ${acc.accountName}: ${acc.error}`);
+      });
+      console.log('');
+    }
+    
     await sleep(2000);
 
     // Run each valid account
-    for (const result of validAccounts) {
+    for (let i = 0; i < validAccounts.length; i++) {
+      const result = validAccounts[i];
       const account = this.accounts.find(a => a.name === result.accountName);
       if (!account) continue;
 
@@ -216,7 +200,7 @@ export class AccountManager {
 
       await this.runAccountUntilComplete(account);
       
-      if (validAccounts.indexOf(result) < validAccounts.length - 1) {
+      if (i < validAccounts.length - 1) {
         console.log('\n⏳ Waiting 5 seconds before next account...\n');
         await sleep(5000);
       }
@@ -230,14 +214,22 @@ export class AccountManager {
   async runAccountUntilComplete(account) {
     process.env.JWT_TOKEN = account.token;
     config.jwtToken = account.token;
+    
+    // Reset action token when switching accounts
+    resetActionToken();
 
-    const player = new DungeonPlayer();
+    // Extract wallet address from token
+    const parts = account.token.split('.');
+    const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+    const walletAddress = payload.address || payload.user?.caseSensitiveAddress;
+
+    const player = new DungeonPlayer(walletAddress);
     let hasEnergy = true;
 
     while (hasEnergy) {
       try {
         // Check energy
-        const energyData = await getDirectEnergy();
+        const energyData = await getDirectEnergy(walletAddress);
         const energy = energyData?.entities?.[0]?.parsedData?.energyValue || 0;
         
         if (energy < config.energyThreshold) {
@@ -262,6 +254,14 @@ export class AccountManager {
 
       } catch (error) {
         console.error('❌ Error:', error.message);
+        
+        // If token is invalid (401), skip this account
+        if (error.response?.status === 401 || error.message?.includes('401')) {
+          console.log('⚠️  Token is invalid for game endpoints. Skipping this account.');
+          break;
+        }
+        
+        // For other errors, also break to avoid infinite loops
         break;
       }
     }
@@ -298,7 +298,7 @@ export class AccountManager {
         if (!account) continue;
 
         console.log(`\n${'='.repeat(50)}`);
-        console.log(`   RUNNING: ${account.name} (${result.energy} energy)`);
+        console.log(`   ACCOUNT: ${account.name}`);
         console.log(`${'='.repeat(50)}\n`);
 
         await this.runAccountUntilComplete(account);

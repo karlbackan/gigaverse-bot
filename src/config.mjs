@@ -8,7 +8,7 @@ export const config = {
   walletAddress: process.env.WALLET_ADDRESS,
 
   // Bot Settings
-  dungeonType: 1, // Dungetron 5000 (Normal mode)
+  dungeonType: process.env.DUNGEON_TYPE === 'UNDERHAUL' ? 3 : 1, // Read from env
   underhaulDungeonType: 3, // Dungetron Underhaul (Fallback when hitting limits)
   autoSwitchToUnderhaul: process.env.AUTO_SWITCH_UNDERHAUL !== 'false', // Set to false to disable
   energyThreshold: parseInt(process.env.ENERGY_THRESHOLD || '40'),

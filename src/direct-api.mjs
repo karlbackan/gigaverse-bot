@@ -4,13 +4,23 @@ import { config } from './config.mjs';
 // Track the action token from previous responses
 let currentActionToken = null;
 
-// Create axios instance with auth
+// Create axios instance without auth (will be added in interceptor)
 const api = axios.create({
   baseURL: 'https://gigaverse.io/api',
   headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${config.jwtToken}`
+    'Content-Type': 'application/json'
   }
+});
+
+// Add request interceptor to use current JWT token
+api.interceptors.request.use((requestConfig) => {
+  // Use current token from environment or fallback to config
+  const currentToken = process.env.JWT_TOKEN || config.jwtToken;
+  requestConfig.headers.Authorization = `Bearer ${currentToken}`;
+  
+  return requestConfig;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 // Function to explicitly reset token (for new sessions)

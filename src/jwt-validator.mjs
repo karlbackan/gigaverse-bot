@@ -5,6 +5,18 @@ export class JWTValidator {
     this.cache = new Map(); // Cache validation results for 5 minutes
   }
 
+  // Create a unique hash for the token to use as cache key
+  hashToken(token) {
+    // Simple hash function to create unique key from token
+    let hash = 0;
+    for (let i = 0; i < token.length; i++) {
+      const char = token.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return hash.toString();
+  }
+
   // Decode JWT without verification (to check expiration)
   decodeJWT(token) {
     try {
@@ -38,8 +50,8 @@ export class JWTValidator {
 
   // Validate token by making an API call
   async validateToken(token, accountName = 'Unknown') {
-    // Check cache first
-    const cacheKey = token.substring(0, 20); // Use first 20 chars as key
+    // Check cache first - use full token hash as key to avoid collisions
+    const cacheKey = this.hashToken(token);
     const cached = this.cache.get(cacheKey);
     if (cached && cached.timestamp > Date.now() - 300000) { // 5 minute cache
       return cached.result;
@@ -56,27 +68,47 @@ export class JWTValidator {
     };
 
     try {
-      // First check JWT expiration
-      if (this.isTokenExpired(token)) {
-        result.expired = true;
-        result.error = 'Token expired (JWT exp claim)';
-        this.cache.set(cacheKey, { result, timestamp: Date.now() });
-        return result;
-      }
-
+      // Skip JWT expiration check - test directly against API
+      // The JWT exp claim might not be accurate, so we'll let the API decide
+      
+      // Save original token
+      const originalToken = process.env.JWT_TOKEN;
+      
+      // Extract wallet address from token
+      const payload = this.decodeJWT(token);
+      const walletAddress = payload?.address || payload?.user?.caseSensitiveAddress;
+      
+      
       // Make API call to validate
       process.env.JWT_TOKEN = token; // Temporarily set for API call
-      const energyData = await getDirectEnergy();
+      const energyData = await getDirectEnergy(walletAddress);
       
       if (energyData?.entities?.[0]) {
-        result.valid = true;
         result.energy = energyData.entities[0].parsedData?.energyValue || 0;
         result.walletAddress = energyData.entities[0].parsedData?.walletAddress || 
                                energyData.entities[0].PLAYER_CID || 
                                'Unknown';
+        
+        // Also check if token works for game endpoints
+        try {
+          const { getDirectDungeonState } = await import('./direct-api.mjs');
+          await getDirectDungeonState();
+          result.valid = true; // Token works for both energy AND game endpoints
+        } catch (gameError) {
+          if (gameError.response?.status === 401) {
+            result.valid = false;
+            result.error = 'Token invalid for game endpoints (works for energy only)';
+          } else {
+            // Other errors don't necessarily mean invalid token
+            result.valid = true;
+          }
+        }
       } else {
         result.error = 'Invalid API response';
       }
+      
+      // Restore original token
+      process.env.JWT_TOKEN = originalToken;
     } catch (error) {
       if (error.message?.includes('401') || error.message?.includes('Unauthorized')) {
         result.expired = true;
@@ -88,8 +120,8 @@ export class JWTValidator {
       }
     }
 
-    // Cache the result
-    this.cache.set(cacheKey, { result, timestamp: Date.now() });
+    // Cache the result with hashed token key
+    this.cache.set(this.hashToken(token), { result, timestamp: Date.now() });
     return result;
   }
 
@@ -106,9 +138,12 @@ export class JWTValidator {
         console.log(`✅ Valid (Energy: ${result.energy})`);
       } else if (result.expired) {
         console.log(`❌ Expired`);
+      } else if (result.error?.includes('game endpoints')) {
+        console.log(`⚠️  Invalid for dungeons (${result.error})`);
       } else {
         console.log(`⚠️  Invalid (${result.error})`);
       }
+      
       
       results.push(result);
     }
