@@ -432,7 +432,7 @@ export class DungeonPlayer {
       // Check if we can play
       const canPlayResult = await this.canPlay();
       if (!canPlayResult) {
-        return 'wait';
+        return 'no_energy';  // Specific status for no energy
       }
       
       // Handle daily limit
@@ -497,6 +497,7 @@ export class DungeonPlayer {
         const stats = this.decisionEngine.getStatsSummary();
         console.log('\nDungeon run session complete!');
         console.log('Stats:', stats);
+        finalStatus = 'completed';  // Change to 'completed' to distinguish from no energy
       }
 
       return finalStatus;

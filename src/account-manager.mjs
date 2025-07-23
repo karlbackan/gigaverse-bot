@@ -234,13 +234,17 @@ export class AccountManager {
         if (status === 'continue_playing') {
           // Continue immediately
           await sleep(2000);
-        } else if (status === 'wait') {
+        } else if (status === 'no_energy') {
           // Not enough energy to start new game
           hasEnergy = false;
           break;
-        } else {
+        } else if (status === 'completed') {
           // Dungeon complete, check if we can run another
           console.log('\n🔄 Checking for next run...\n');
+          await sleep(5000);
+          // Loop will continue and check energy for next run
+        } else {
+          // Other statuses (wait, daily_limit, etc)
           await sleep(5000);
         }
 

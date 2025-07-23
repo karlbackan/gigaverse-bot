@@ -72,7 +72,7 @@ async function runBot() {
         shouldWait = dungeonResult !== 'continue_playing';
         
         // If we're waiting due to low energy, show the time calculation
-        if (shouldWait && dungeonResult === 'wait' && energy < config.energyThreshold) {
+        if (dungeonResult === 'no_energy') {
           // Calculate time until we have enough energy
           const regenTime = calculateEnergyRegenTime(
             energy,
