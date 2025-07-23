@@ -228,24 +228,16 @@ export class AccountManager {
 
     while (hasEnergy) {
       try {
-        // Check energy
-        const energyData = await getDirectEnergy(walletAddress);
-        const energy = energyData?.entities?.[0]?.parsedData?.energyValue || 0;
-        
-        if (energy < config.energyThreshold) {
-          console.log(`⚡ Not enough energy (${energy}/${config.energyThreshold})`);
-          hasEnergy = false;
-          break;
-        }
-
-        console.log(`⚡ Energy: ${energy}`);
-
-        // Play dungeon
+        // Play dungeon - let the player handle all energy and state checks
         const status = await player.playDungeon();
         
         if (status === 'continue_playing') {
           // Continue immediately
           await sleep(2000);
+        } else if (status === 'wait') {
+          // Not enough energy to start new game
+          hasEnergy = false;
+          break;
         } else {
           // Dungeon complete, check if we can run another
           console.log('\n🔄 Checking for next run...\n');

@@ -59,18 +59,20 @@ async function runBot() {
         // Check if we can play
         let shouldWait = true;
         
-        if (energy >= config.energyThreshold) {
-          // Play dungeon - returns whether we should wait after
-          const dungeonResult = await dungeonPlayer.playDungeon();
-          
-          if (dungeonResult === 'daily_limit') {
-            console.log('\n🛑 Daily dungeon limit reached. Stopping bot.');
-            console.log('The bot will stop checking until tomorrow.');
-            return; // Exit the bot completely
-          }
-          
-          shouldWait = dungeonResult !== 'continue_playing';
-        } else {
+        // Always try to play - let dungeon player handle energy checks
+        // It will continue existing dungeons even with low energy
+        const dungeonResult = await dungeonPlayer.playDungeon();
+        
+        if (dungeonResult === 'daily_limit') {
+          console.log('\n🛑 Daily dungeon limit reached. Stopping bot.');
+          console.log('The bot will stop checking until tomorrow.');
+          return; // Exit the bot completely
+        }
+        
+        shouldWait = dungeonResult !== 'continue_playing';
+        
+        // If we're waiting due to low energy, show the time calculation
+        if (shouldWait && dungeonResult === 'wait' && energy < config.energyThreshold) {
           // Calculate time until we have enough energy
           const regenTime = calculateEnergyRegenTime(
             energy,
