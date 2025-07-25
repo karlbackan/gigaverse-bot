@@ -19,17 +19,7 @@ export class DungeonPlayer {
   // Check if we can play (energy, juice status, etc.)
   async canPlay() {
     try {
-      const energyData = await getDirectEnergy(this.walletAddress || config.walletAddress);
-      const energy = energyData?.entities?.[0]?.parsedData?.energyValue || 0;
-      const isJuiced = energyData?.entities?.[0]?.parsedData?.isPlayerJuiced || false;
-      
-      // Check if we have enough energy (40 for regular underhaul)
-      if (energy < config.energyThreshold) {
-        console.log(`Not enough energy: ${energy}/${config.energyThreshold}`);
-        return false;
-      }
-
-      // Check if we're already in a dungeon
+      // FIRST check if we're already in a dungeon - if so, continue regardless of energy
       try {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
@@ -47,6 +37,17 @@ export class DungeonPlayer {
         }
         // For other errors, log but continue
         console.error('Error checking dungeon state:', error.message);
+      }
+      
+      // ONLY check energy if NOT in an active dungeon
+      const energyData = await getDirectEnergy(this.walletAddress || config.walletAddress);
+      const energy = energyData?.entities?.[0]?.parsedData?.energyValue || 0;
+      const isJuiced = energyData?.entities?.[0]?.parsedData?.isPlayerJuiced || false;
+      
+      // Check if we have enough energy to start a NEW dungeon
+      if (energy < config.energyThreshold) {
+        console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
+        return false;
       }
       
       // Check daily runs limit
