@@ -13,12 +13,15 @@ An automated dungeon crawler bot for Gigaverse.io that plays the Dungetron 5000 
 ## Features
 
 - **Automated Dungeon Crawling**: Plays Dungetron 5000 automatically
-- **Smart Decision Making**: Strategic weapon selection based on stats
+- **Advanced Pattern Recognition**: Tracks enemy move sequences and predicts with high accuracy
+- **Smart Decision Making**: Uses multi-factor analysis including move patterns, turn behavior, and stat correlations
+- **Statistics System**: Records all battles and analyzes enemy-specific patterns
+- **Minimal Output Mode**: Clean output focused on statistics indicators
 - **Charge Management**: Handles weapon charge regeneration mechanics
 - **Loot Optimization**: Selects best upgrades based on weighted scoring
 - **Energy Management**: Automatically starts dungeons when energy is available
 - **Error Recovery**: Resilient error handling with automatic retry
-- **Statistics Tracking**: Monitors win rate and performance
+- **Performance Tracking**: Real-time win rate and prediction confidence
 
 ## Installation
 
@@ -96,20 +99,48 @@ npm run dev
 
 ## Configuration
 
-Edit `src/config.mjs` to customize:
-- Dungeon type (default: Dungetron 5000)
-- Check interval (default: 60 seconds)
-- Repair threshold (default: 30%)
+Edit `src/config.mjs` or use environment variables to customize:
+- Dungeon type (DUNGEON_TYPE: REGULAR/JUICED/UNDERHAUL)
+- Energy threshold (ENERGY_THRESHOLD: 40 for regular, 120 for juiced)
+- Check interval (CHECK_INTERVAL: default 60000ms)
+- Repair threshold (REPAIR_THRESHOLD: default 30%)
+- Minimal output mode (MINIMAL_OUTPUT: default true)
+
+Add to `.env` file:
+```env
+# Bot Settings
+DUNGEON_TYPE=JUICED      # REGULAR, JUICED, or UNDERHAUL
+ENERGY_THRESHOLD=120     # Energy required to start
+MINIMAL_OUTPUT=true      # Clean output for statistics
+```
 
 ## How It Works
 
 The bot:
 1. Checks energy levels periodically
 2. Starts a dungeon run when enough energy is available
-3. Makes strategic decisions based on weapon stats and enemy patterns
-4. Selects optimal loot upgrades
-5. Handles charge regeneration (1 per turn, 2-turn delay when depleted)
-6. Continues until victory or defeat
+3. Analyzes enemy patterns using advanced statistics:
+   - **Move Sequences** (40% weight) - Tracks patterns like "rock-paper→scissor"
+   - **Turn-Specific** (20% weight) - Different behavior on different turns
+   - **Stat Correlations** (15% weight) - Changes based on health/shield levels
+   - **Time-Based Shifts** (15% weight) - Patterns change over days (noobId tracking)
+   - **Overall Distribution** (10% weight) - General move preferences
+4. Makes predictions when confidence exceeds 60%
+5. Selects optimal loot upgrades
+6. Handles charge regeneration (1 per turn, 2-turn delay when depleted)
+7. Continues until victory or defeat
+
+### Statistics Analysis
+
+View detailed analysis report:
+```bash
+node src/statistics-analyzer.mjs report
+```
+
+Export raw data:
+```bash
+node src/statistics-analyzer.mjs export data.json
+```
 
 ### Game Mechanics
 
@@ -141,15 +172,31 @@ The bot uses direct API calls instead of the SDK due to parameter naming issues:
 The codebase is organized as:
 - `src/bot.mjs` - Main bot loop
 - `src/dungeon-player.mjs` - Dungeon playing logic
-- `src/decision-engine.mjs` - Combat decision making
+- `src/decision-engine.mjs` - Combat decision making with prediction
+- `src/statistics-engine.mjs` - Pattern tracking and analysis
+- `src/statistics-analyzer.mjs` - Analysis and reporting tool
 - `src/direct-api.mjs` - Direct API implementation
 - `src/config.mjs` - Configuration settings
+- `data/battle-statistics.json` - Persistent statistics storage
 
 ## Troubleshooting
 
 1. **"JWT_TOKEN is required"**: Make sure you've created `.env` file with your token
 2. **"Failed to connect to API"**: Check your JWT token is valid and not expired
 3. **Token errors**: The bot automatically retries without token on first action
+4. **Too much output**: Enable minimal mode with `MINIMAL_OUTPUT=true` (default)
+5. **Low prediction confidence**: Play more games to gather enemy pattern data
+
+### Output Modes
+
+**Minimal Mode** (default):
+```
+Goblin_5 T1: rock→paper lose
+Conf:75% R20/P65/S15
+```
+
+**Verbose Mode** (MINIMAL_OUTPUT=false):
+Full combat details, weapon stats, and health/shield values
 
 ## Contributing
 

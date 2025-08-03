@@ -90,17 +90,25 @@ export class DecisionEngine {
 
     // If we have a high-confidence prediction, use it
     if (prediction && prediction.confidence > 0.6) {
-      console.log('Using statistical prediction with confidence:', prediction.confidence.toFixed(2));
-      console.log('Enemy move predictions:', {
-        rock: prediction.predictions.rock.toFixed(3),
-        paper: prediction.predictions.paper.toFixed(3),
-        scissor: prediction.predictions.scissor.toFixed(3)
-      });
-      console.log('Weapon scores:', {
-        rock: prediction.weaponScores.rock.toFixed(3),
-        paper: prediction.weaponScores.paper.toFixed(3),
-        scissor: prediction.weaponScores.scissor.toFixed(3)
-      });
+      if (config.minimalOutput) {
+        // Minimal output: Conf% R/P/S probabilities
+        const r = (prediction.predictions.rock * 100).toFixed(0);
+        const p = (prediction.predictions.paper * 100).toFixed(0);
+        const s = (prediction.predictions.scissor * 100).toFixed(0);
+        console.log(`Conf:${(prediction.confidence * 100).toFixed(0)}% R${r}/P${p}/S${s}`);
+      } else {
+        console.log('Using statistical prediction with confidence:', prediction.confidence.toFixed(2));
+        console.log('Enemy move predictions:', {
+          rock: prediction.predictions.rock.toFixed(3),
+          paper: prediction.predictions.paper.toFixed(3),
+          scissor: prediction.predictions.scissor.toFixed(3)
+        });
+        console.log('Weapon scores:', {
+          rock: prediction.weaponScores.rock.toFixed(3),
+          paper: prediction.weaponScores.paper.toFixed(3),
+          scissor: prediction.weaponScores.scissor.toFixed(3)
+        });
+      }
 
       // Select weapon with highest score that's available
       let bestWeapon = null;
@@ -118,17 +126,25 @@ export class DecisionEngine {
       if (bestWeapon) {
         // Add some randomness to avoid being too predictable (10% chance)
         if (Math.random() < 0.1) {
-          console.log('Adding randomness to avoid predictability');
+          if (!config.minimalOutput) {
+            console.log('Adding randomness to avoid predictability');
+          }
           return this.getRandomAction(availableWeapons);
         }
         return bestWeapon;
       }
-    } else if (prediction) {
+    } else if (prediction && config.minimalOutput) {
+      console.log(`Conf:${(prediction.confidence * 100).toFixed(0)}% (low)`);
+    } else if (prediction && !config.minimalOutput) {
       console.log('Low confidence prediction:', prediction.confidence.toFixed(2));
     }
 
     // Fallback to enhanced random strategy with weapon weighting
-    console.log('Using enhanced random strategy with weapon stats');
+    if (!config.minimalOutput) {
+      console.log('Using enhanced random strategy with weapon stats');
+    } else if (!prediction) {
+      console.log('No data');
+    }
     
     // Create weights based on weapon stats and charges
     let weights = { rock: 1, paper: 1, scissor: 1 };

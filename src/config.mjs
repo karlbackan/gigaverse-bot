@@ -23,6 +23,9 @@ export const config = {
 
   // Debug
   debug: process.env.DEBUG === 'true',
+  
+  // Minimal output mode for statistics analysis
+  minimalOutput: process.env.MINIMAL_OUTPUT !== 'false', // Default true
 
   // Upgrade selection weights
   upgradeWeights: {
@@ -46,5 +49,8 @@ export function validateConfig() {
   console.log('Configuration loaded successfully');
   if (config.debug) {
     console.log('Debug mode enabled');
+  }
+  if (config.minimalOutput) {
+    console.log('Minimal output mode enabled (statistics focus)');
   }
 }

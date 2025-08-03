@@ -4,12 +4,17 @@ import { DungeonPlayer } from './dungeon-player.mjs';
 import { GearManager } from './gear-manager.mjs';
 import { sleep, formatTime, calculateEnergyRegenTime } from './utils.mjs';
 
-console.log(`
+if (!config.minimalOutput) {
+  const modeText = config.isJuiced ? 'Juiced Mode (120 Energy)' : 'Regular Mode (40 Energy)';
+  console.log(`
 ╔═══════════════════════════════════════╗
 ║      Gigaverse Dungetron Bot          ║
-║        Regular Mode (40 Energy)       ║
+║       ${modeText.padEnd(32)} ║
 ╚═══════════════════════════════════════╝
 `);
+} else {
+  console.log('\nGigaverse Bot (Minimal/Stats Mode)');
+}
 
 // Initialize components
 let dungeonPlayer;
@@ -51,7 +56,9 @@ async function runBot() {
         const playerState = await getPlayerState();
         const energy = parseInt(playerState.account.energy) || 0;
         
-        console.log(`\n[${new Date().toLocaleTimeString()}] Energy: ${energy}`);
+        if (!config.minimalOutput) {
+          console.log(`\n[${new Date().toLocaleTimeString()}] Energy: ${energy}`);
+        }
 
         // Gear maintenance disabled - API not working
         // await gearManager.performMaintenance();
@@ -89,36 +96,61 @@ async function runBot() {
           // Display bot stats
           const status = dungeonPlayer.getStatus();
           if (status.stats.turnsRecorded > 0) {
-            console.log(`\nBot Stats:`);
-            console.log(`- Enemies analyzed: ${status.stats.enemiesAnalyzed}`);
-            console.log(`- Recent win rate: ${(status.stats.recentWinRate * 100).toFixed(1)}%`);
-            
-            // Show statistics report if available
-            if (status.stats.statisticsReport) {
-              const report = status.stats.statisticsReport;
-              console.log(`\nCurrent Enemy Analysis (${report.enemyId}):`);
-              console.log(`- Total battles: ${report.totalBattles}`);
-              console.log(`- Favorite move: ${report.favoriteMove}`);
+            if (config.minimalOutput) {
+              // Minimal stats line: Win% | Enemies | Last enemy info
+              const winRate = (status.stats.recentWinRate * 100).toFixed(0);
+              const enemies = status.stats.enemiesAnalyzed;
+              console.log(`\nWin:${winRate}% Enemies:${enemies}`);
               
-              if (report.strongestSequences && report.strongestSequences.length > 0) {
-                console.log(`- Best sequence prediction: After "${report.strongestSequences[0].sequence}" → ${report.strongestSequences[0].nextMove} (${(report.strongestSequences[0].probability * 100).toFixed(0)}%)`);
+              if (status.stats.statisticsReport) {
+                const report = status.stats.statisticsReport;
+                console.log(`${report.enemyId}: ${report.totalBattles} battles, fav:${report.favoriteMove}`);
+                
+                if (report.strongestSequences && report.strongestSequences.length > 0) {
+                  const seq = report.strongestSequences[0];
+                  console.log(`Seq "${seq.sequence}"→${seq.nextMove} ${(seq.probability * 100).toFixed(0)}%`);
+                }
+              }
+            } else {
+              console.log(`\nBot Stats:`);
+              console.log(`- Enemies analyzed: ${status.stats.enemiesAnalyzed}`);
+              console.log(`- Recent win rate: ${(status.stats.recentWinRate * 100).toFixed(1)}%`);
+              
+              // Show statistics report if available
+              if (status.stats.statisticsReport) {
+                const report = status.stats.statisticsReport;
+                console.log(`\nCurrent Enemy Analysis (${report.enemyId}):`);
+                console.log(`- Total battles: ${report.totalBattles}`);
+                console.log(`- Favorite move: ${report.favoriteMove}`);
+                
+                if (report.strongestSequences && report.strongestSequences.length > 0) {
+                  console.log(`- Best sequence prediction: After "${report.strongestSequences[0].sequence}" → ${report.strongestSequences[0].nextMove} (${(report.strongestSequences[0].probability * 100).toFixed(0)}%)`);
+                }
               }
             }
             
             // Export statistics every 100 battles
             if (status.stats.turnsRecorded % 100 === 0) {
               dungeonPlayer.decisionEngine.exportStatistics();
-              console.log('\n📊 Statistics exported to data/battle-statistics.json');
+              if (!config.minimalOutput) {
+                console.log('\n📊 Statistics exported to data/battle-statistics.json');
+              }
             }
           }
           
-          console.log(`\nWaiting ${formatTime(config.checkInterval)} before next check...`);
+          if (!config.minimalOutput) {
+            console.log(`\nWaiting ${formatTime(config.checkInterval)} before next check...`);
+          }
           await sleep(config.checkInterval);
         }
 
       } catch (loopError) {
-        console.error('Error in main loop:', loopError.message);
-        console.log('Retrying in 30 seconds...');
+        if (!config.minimalOutput) {
+          console.error('Error in main loop:', loopError.message);
+          console.log('Retrying in 30 seconds...');
+        } else {
+          console.error('ERR:', loopError.message);
+        }
         await sleep(30000);
       }
     }

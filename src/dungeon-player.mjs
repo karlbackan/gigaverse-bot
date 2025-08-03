@@ -20,7 +20,9 @@ export class DungeonPlayer {
     const noobId = getNoobIdFromJWT(config.jwtToken);
     if (noobId) {
       this.decisionEngine.setNoobId(noobId);
-      console.log(`Initialized with noobId: ${noobId}`);
+      if (!config.minimalOutput) {
+        console.log(`Initialized with noobId: ${noobId}`);
+      }
     }
   }
 
@@ -31,9 +33,11 @@ export class DungeonPlayer {
       try {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
-          console.log('Already in an active dungeon - will continue playing');
-          if (dungeonState.data.run.lootPhase) {
-            console.log('(Currently in loot phase)');
+          if (!config.minimalOutput) {
+            console.log('Already in an active dungeon - will continue playing');
+            if (dungeonState.data.run.lootPhase) {
+              console.log('(Currently in loot phase)');
+            }
           }
           return 'continue_existing';
         }
@@ -54,7 +58,9 @@ export class DungeonPlayer {
       
       // Check if we have enough energy to start a NEW dungeon
       if (energy < config.energyThreshold) {
-        console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
+        if (!config.minimalOutput) {
+          console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
+        }
         return false;
       }
       
@@ -138,7 +144,9 @@ export class DungeonPlayer {
     try {
       const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
       const modeText = config.isJuiced ? ' (Juiced Mode)' : '';
-      console.log(`Starting new ${dungeonName}${modeText} dungeon run...`);
+      if (!config.minimalOutput) {
+        console.log(`Starting new ${dungeonName}${modeText} dungeon run...`);
+      }
       
       // Get current inventory for consumables
       const inventoryResponse = await getDirectInventory();
@@ -161,11 +169,15 @@ export class DungeonPlayer {
       
       if (response && response.success) {
         this.currentDungeon = response.data;
-        console.log('Dungeon started successfully!');
-        const room = response.data.entity.ROOM_NUM_CID;
-        const floor = Math.floor((room - 1) / 4) + 1;
-        const roomInFloor = ((room - 1) % 4) + 1;
-        console.log(`Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/16)`);
+        if (!config.minimalOutput) {
+          console.log('Dungeon started successfully!');
+          const room = response.data.entity.ROOM_NUM_CID;
+          const floor = Math.floor((room - 1) / 4) + 1;
+          const roomInFloor = ((room - 1) % 4) + 1;
+          console.log(`Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/16)`);
+        } else {
+          console.log('\n=== NEW DUNGEON ===');
+        }
         return true;
       } else {
         console.error('Failed to start dungeon:', response);
@@ -231,40 +243,53 @@ export class DungeonPlayer {
       const playerHealth = player.health.current;
       const enemyHealth = enemy.health.current;
       
-      console.log(`\n--- Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/${totalRooms}), Turn ${turn} ---`);
-      console.log(`Enemy: ${enemyId}`);
-      console.log(`Player: HP ${playerHealth}/${player.health.currentMax} | Shield ${player.shield.current}/${player.shield.currentMax}`);
-      console.log(`Enemy: HP ${enemyHealth}/${enemy.health.currentMax} | Shield ${enemy.shield.current}/${enemy.shield.currentMax}`);
+      // Minimal output for statistics focus
+      if (!config.minimalOutput) {
+        console.log(`\n--- Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/${totalRooms}), Turn ${turn} ---`);
+        console.log(`Enemy: ${enemyId}`);
+        console.log(`Player: HP ${playerHealth}/${player.health.currentMax} | Shield ${player.shield.current}/${player.shield.currentMax}`);
+        console.log(`Enemy: HP ${enemyHealth}/${enemy.health.currentMax} | Shield ${enemy.shield.current}/${enemy.shield.currentMax}`);
+      }
       
       // Check if enemy is already dead (shouldn't happen but API might be in weird state)
       if (enemyHealth <= 0) {
-        console.log('⚠️  Enemy is already dead! This is likely a game state issue.');
-        console.log('The game should have transitioned to loot phase or next room.');
+        if (!config.minimalOutput) {
+          console.log('⚠️  Enemy is already dead! This is likely a game state issue.');
+          console.log('The game should have transitioned to loot phase or next room.');
+        }
         return 'continue'; // Let the main loop handle the transition
       }
       
-      // Show weapon stats
-      console.log(`\nWeapon Stats:`);
-      console.log(`  Rock: ${player.rock.currentATK} ATK / ${player.rock.currentDEF} DEF (${player.rock.currentCharges}/${player.rock.maxCharges} charges)`);
-      console.log(`  Paper: ${player.paper.currentATK} ATK / ${player.paper.currentDEF} DEF (${player.paper.currentCharges}/${player.paper.maxCharges} charges)`);
-      console.log(`  Scissors: ${player.scissor.currentATK} ATK / ${player.scissor.currentDEF} DEF (${player.scissor.currentCharges}/${player.scissor.maxCharges} charges)`);
+      // Show weapon stats only in verbose mode
+      if (!config.minimalOutput) {
+        console.log(`\nWeapon Stats:`);
+        console.log(`  Rock: ${player.rock.currentATK} ATK / ${player.rock.currentDEF} DEF (${player.rock.currentCharges}/${player.rock.maxCharges} charges)`);
+        console.log(`  Paper: ${player.paper.currentATK} ATK / ${player.paper.currentDEF} DEF (${player.paper.currentCharges}/${player.paper.maxCharges} charges)`);
+        console.log(`  Scissors: ${player.scissor.currentATK} ATK / ${player.scissor.currentDEF} DEF (${player.scissor.currentCharges}/${player.scissor.maxCharges} charges)`);
+      }
 
       // Check for invalid charges and warn
       let hasNegativeCharges = false;
       if (player.rock.currentCharges < 0) {
-        console.warn(`⚠️  WARNING: Rock has negative charges (${player.rock.currentCharges})`);
+        if (!config.minimalOutput) {
+          console.warn(`⚠️  WARNING: Rock has negative charges (${player.rock.currentCharges})`);
+        }
         hasNegativeCharges = true;
       }
       if (player.paper.currentCharges < 0) {
-        console.warn(`⚠️  WARNING: Paper has negative charges (${player.paper.currentCharges})`);
+        if (!config.minimalOutput) {
+          console.warn(`⚠️  WARNING: Paper has negative charges (${player.paper.currentCharges})`);
+        }
         hasNegativeCharges = true;
       }
       if (player.scissor.currentCharges < 0) {
-        console.warn(`⚠️  WARNING: Scissors has negative charges (${player.scissor.currentCharges})`);
+        if (!config.minimalOutput) {
+          console.warn(`⚠️  WARNING: Scissors has negative charges (${player.scissor.currentCharges})`);
+        }
         hasNegativeCharges = true;
       }
       
-      if (hasNegativeCharges) {
+      if (hasNegativeCharges && !config.minimalOutput) {
         console.warn('This is a known game API bug. Continuing with valid weapons...');
       }
 
@@ -321,8 +346,10 @@ export class DungeonPlayer {
         enemyStatsFull
       );
 
-      console.log(`Available weapons with charges: ${availableWeapons.join(', ')}`);
-      console.log(`Playing: ${action}`);
+      if (!config.minimalOutput) {
+        console.log(`Available weapons with charges: ${availableWeapons.join(', ')}`);
+        console.log(`Playing: ${action}`);
+      }
 
       // Send action using direct API (bypassing SDK issues)
       let response;
@@ -403,36 +430,52 @@ export class DungeonPlayer {
           weaponStats
         );
 
-        // Log result
-        console.log(`Enemy played: ${enemyMove} | Result: ${result}`);
-        
-        // Show new health/shield values
-        const newPlayerShield = response.data.run.players[0].shield.current;
-        const newEnemyShield = response.data.run.players[1].shield.current;
-        
-        console.log(`Player: HP ${newPlayerHealth} | Shield ${newPlayerShield}`);
-        console.log(`Enemy: HP ${newEnemyHealth} | Shield ${newEnemyShield}`);
+        // Minimal output: show only key stats
+        if (config.minimalOutput) {
+          // Format: Enemy Turn Player→Enemy Result
+          console.log(`${enemyId} T${turn}: ${action}→${enemyMove} ${result}`);
+        } else {
+          // Log result
+          console.log(`Enemy played: ${enemyMove} | Result: ${result}`);
+          
+          // Show new health/shield values
+          const newPlayerShield = response.data.run.players[0].shield.current;
+          const newEnemyShield = response.data.run.players[1].shield.current;
+          
+          console.log(`Player: HP ${newPlayerHealth} | Shield ${newPlayerShield}`);
+          console.log(`Enemy: HP ${newEnemyHealth} | Shield ${newEnemyShield}`);
+        }
 
         // Check if enemy is defeated
         if (newEnemyHealth <= 0) {
-          console.log('Enemy defeated!');
+          if (!config.minimalOutput) {
+            console.log('Enemy defeated!');
+          }
           // The next API call should reveal if we're entering loot phase
           // Let's check the response for loot phase indicator
           if (response.data.run.lootPhase) {
-            console.log('Entering loot phase...');
+            if (!config.minimalOutput) {
+              console.log('Entering loot phase...');
+            }
             return await this.handleLootPhase(response.data.run);
           } else if (entity.COMPLETE_CID) {
-            console.log('\n🎉 Dungeon completed successfully!');
+            if (!config.minimalOutput) {
+              console.log('\n🎉 Dungeon completed successfully!');
+            }
             return 'completed';
           } else {
-            console.log('Moving to next room...');
+            if (!config.minimalOutput) {
+              console.log('Moving to next room...');
+            }
             return 'next_room';
           }
         }
         
         // Check if player is defeated
         if (newPlayerHealth <= 0) {
-          console.log('\n💀 Dungeon failed!');
+          if (!config.minimalOutput) {
+            console.log('\n💀 Dungeon failed!');
+          }
           return 'failed';
         }
 
@@ -509,11 +552,15 @@ export class DungeonPlayer {
           continuePlay = false;
           finalStatus = 'wait';
         } else if (result === 'completed') {
-          console.log('Dungeon completed!');
+          if (!config.minimalOutput) {
+            console.log('Dungeon completed!');
+          }
           continuePlay = false;
           finalStatus = 'wait'; // Wait after completion
         } else if (result === 'failed') {
-          console.log('Dungeon failed!');
+          if (!config.minimalOutput) {
+            console.log('Dungeon failed!');
+          }
           continuePlay = false;
           finalStatus = 'wait'; // Wait after failure
         } else if (result === 'corrupted') {
@@ -539,8 +586,14 @@ export class DungeonPlayer {
       // Only log final stats if dungeon is actually done
       if (finalStatus === 'wait') {
         const stats = this.decisionEngine.getStatsSummary();
-        console.log('\nDungeon run session complete!');
-        console.log('Stats:', stats);
+        if (!config.minimalOutput) {
+          console.log('\nDungeon run session complete!');
+          console.log('Stats:', stats);
+        } else {
+          // Minimal completion message
+          const result = this.currentDungeon?.entity?.COMPLETE_CID ? 'WIN' : 'LOSS';
+          console.log(`\n=== DUNGEON ${result} ===`);
+        }
         finalStatus = 'completed';  // Change to 'completed' to distinguish from no energy
       }
 
@@ -564,7 +617,9 @@ export class DungeonPlayer {
   async handleLootPhase(run) {
     try {
       const lootOptions = run.lootOptions || [];
-      console.log(`\n🎁 LOOT PHASE - ${lootOptions.length} upgrade options:`);
+      if (!config.minimalOutput) {
+        console.log(`\n🎁 LOOT PHASE - ${lootOptions.length} upgrade options:`);
+      }
       
       // Display all loot options
       lootOptions.forEach((option, index) => {
@@ -663,8 +718,12 @@ export class DungeonPlayer {
       const lootAction = ['loot_one', 'loot_two', 'loot_three', 'loot_four'][selectedIndex];
       const selectedOption = bestUpgrade.option;
       
-      console.log(`\n➡️  Selecting Option ${selectedIndex + 1}: ${selectedOption.boonTypeString} (Best score: ${bestUpgrade.score.toFixed(2)})`);
-      console.log(`  (Array index ${selectedIndex} -> action ${lootAction})`);
+      if (config.minimalOutput) {
+        console.log(`Loot: ${selectedOption.boonTypeString}`);
+      } else {
+        console.log(`\n➡️  Selecting Option ${selectedIndex + 1}: ${selectedOption.boonTypeString} (Best score: ${bestUpgrade.score.toFixed(2)})`);
+        console.log(`  (Array index ${selectedIndex} -> action ${lootAction})`);
+      }
       
       // Send loot selection using direct API
       console.log(`\nSending loot action: ${lootAction}`);
