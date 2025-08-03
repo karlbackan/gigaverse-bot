@@ -92,6 +92,24 @@ async function runBot() {
             console.log(`\nBot Stats:`);
             console.log(`- Enemies analyzed: ${status.stats.enemiesAnalyzed}`);
             console.log(`- Recent win rate: ${(status.stats.recentWinRate * 100).toFixed(1)}%`);
+            
+            // Show statistics report if available
+            if (status.stats.statisticsReport) {
+              const report = status.stats.statisticsReport;
+              console.log(`\nCurrent Enemy Analysis (${report.enemyId}):`);
+              console.log(`- Total battles: ${report.totalBattles}`);
+              console.log(`- Favorite move: ${report.favoriteMove}`);
+              
+              if (report.strongestSequences && report.strongestSequences.length > 0) {
+                console.log(`- Best sequence prediction: After "${report.strongestSequences[0].sequence}" → ${report.strongestSequences[0].nextMove} (${(report.strongestSequences[0].probability * 100).toFixed(0)}%)`);
+              }
+            }
+            
+            // Export statistics every 100 battles
+            if (status.stats.turnsRecorded % 100 === 0) {
+              dungeonPlayer.decisionEngine.exportStatistics();
+              console.log('\n📊 Statistics exported to data/battle-statistics.json');
+            }
           }
           
           console.log(`\nWaiting ${formatTime(config.checkInterval)} before next check...`);
@@ -132,6 +150,10 @@ const dungeonMode = config.isJuiced ? 'Juiced' : 'Regular';
 console.log(`- Dungeon: Dungetron 5000 (${dungeonMode}, ${config.energyThreshold} energy)`);
 console.log(`- Repair threshold: ${config.repairThreshold}%`);
 console.log(`- Check interval: ${formatTime(config.checkInterval)}`);
+console.log('\nStatistics & Analysis:');
+console.log('- Statistics are saved automatically every 10 battles');
+console.log('- To view analysis: node src/statistics-analyzer.mjs report');
+console.log('- To export data: node src/statistics-analyzer.mjs export data.json');
 console.log('\nPress Ctrl+C to stop the bot.\n');
 
 // Start the bot

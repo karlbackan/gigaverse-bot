@@ -4,6 +4,7 @@ import { DecisionEngine } from './decision-engine.mjs';
 import { sleep } from './utils.mjs';
 import { sendDungeonAction } from './dungeon-api-direct.mjs';
 import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
+import { getNoobIdFromJWT } from './jwt-utils.mjs';
 import axios from 'axios';
 
 export class DungeonPlayer {
@@ -14,6 +15,13 @@ export class DungeonPlayer {
     this.consecutiveErrors = 0;
     this.currentDungeonType = config.dungeonType; // Start with Dungetron 5000
     this.walletAddress = walletAddress; // Store wallet address for this player
+    
+    // Set noobId in decision engine
+    const noobId = getNoobIdFromJWT(config.jwtToken);
+    if (noobId) {
+      this.decisionEngine.setNoobId(noobId);
+      console.log(`Initialized with noobId: ${noobId}`);
+    }
   }
 
   // Check if we can play (energy, juice status, etc.)
@@ -278,13 +286,39 @@ export class DungeonPlayer {
         scissor: player.scissor.currentCharges
       };
       
+      // Prepare full stats for decision engine
+      const playerStats = {
+        health: playerHealth,
+        maxHealth: player.health.currentMax,
+        healthPercent: (playerHealth / player.health.currentMax) * 100,
+        shield: player.shield.current,
+        maxShield: player.shield.currentMax,
+        shieldPercent: player.shield.currentMax > 0 ? (player.shield.current / player.shield.currentMax) * 100 : 0,
+        weapons: {
+          rock: { attack: player.rock.currentATK, defense: player.rock.currentDEF },
+          paper: { attack: player.paper.currentATK, defense: player.paper.currentDEF },
+          scissor: { attack: player.scissor.currentATK, defense: player.scissor.currentDEF }
+        }
+      };
+      
+      const enemyStatsFull = {
+        health: enemyHealth,
+        maxHealth: enemy.health.currentMax,
+        healthPercent: (enemyHealth / enemy.health.currentMax) * 100,
+        shield: enemy.shield.current,
+        maxShield: enemy.shield.currentMax,
+        shieldPercent: enemy.shield.currentMax > 0 ? (enemy.shield.current / enemy.shield.currentMax) * 100 : 0
+      };
+      
       const action = await this.decisionEngine.makeDecision(
         enemyId,
         turn,
         playerHealth,
         enemyHealth,
         availableWeapons,
-        weaponCharges
+        weaponCharges,
+        playerStats,
+        enemyStatsFull
       );
 
       console.log(`Available weapons with charges: ${availableWeapons.join(', ')}`);
@@ -351,13 +385,22 @@ export class DungeonPlayer {
         else if (action === enemyMove) result = 'draw';
         else result = 'lose';
         
-        // Record the result
+        // Record the result with full stats
+        const weaponStats = {
+          rock: { attack: player.rock.currentATK, defense: player.rock.currentDEF, charges: player.rock.currentCharges },
+          paper: { attack: player.paper.currentATK, defense: player.paper.currentDEF, charges: player.paper.currentCharges },
+          scissor: { attack: player.scissor.currentATK, defense: player.scissor.currentDEF, charges: player.scissor.currentCharges }
+        };
+        
         this.decisionEngine.recordTurn(
           enemyId,
           turn,
           action,
           enemyMove,
-          result
+          result,
+          playerStats,
+          enemyStatsFull,
+          weaponStats
         );
 
         // Log result

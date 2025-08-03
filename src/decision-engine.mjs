@@ -1,5 +1,6 @@
 import { initializeFireballApi } from './api.mjs';
 import { config } from './config.mjs';
+import { StatisticsEngine } from './statistics-engine.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -27,216 +28,159 @@ export class DecisionEngine {
     this.enemyPatterns = new Map();
     this.turnHistory = [];
     this.dungeonHistory = [];
+    this.statisticsEngine = new StatisticsEngine();
+    this.currentEnemyId = null;
+    this.currentNoobId = null;
   }
 
-  // Analyze enemy patterns from historical data
-  async analyzeEnemyPatterns(enemyId) {
-    try {
-      // Check cache first
-      if (this.enemyPatterns.has(enemyId)) {
-        return this.enemyPatterns.get(enemyId);
-      }
-
-      // Statistics disabled - no Hasura JWT available
-      return null;
-
-      // Get recent encounters with this enemy
-      const encounters = await fireballApi.getEncountersLoot({
-        filter: { enemyId },
-        limit: 200
-      });
-
-      if (!encounters || encounters.length === 0) {
-        return null;
-      }
-
-      // Count enemy actions
-      const patterns = {
-        rock: 0,
-        paper: 0,
-        scissor: 0,
-        total: 0
-      };
-
-      // Analyze by turn number
-      const turnPatterns = {};
-
-      encounters.forEach(encounter => {
-        if (encounter.enemyAction) {
-          patterns[encounter.enemyAction]++;
-          patterns.total++;
-
-          // Track patterns by turn
-          const turn = encounter.turn || 0;
-          if (!turnPatterns[turn]) {
-            turnPatterns[turn] = { rock: 0, paper: 0, scissor: 0 };
-          }
-          turnPatterns[turn][encounter.enemyAction]++;
-        }
-      });
-
-      // Calculate probabilities
-      const probabilities = {
-        rock: patterns.rock / patterns.total,
-        paper: patterns.paper / patterns.total,
-        scissor: patterns.scissor / patterns.total
-      };
-
-      const analysis = {
-        patterns,
-        probabilities,
-        turnPatterns,
-        favoriteAction: Object.entries(probabilities).sort((a, b) => b[1] - a[1])[0][0]
-      };
-
-      // Cache the analysis
-      this.enemyPatterns.set(enemyId, analysis);
-
-      return analysis;
-    } catch (error) {
-      console.error(`Failed to analyze enemy ${enemyId}:`, error);
-      return null;
-    }
-  }
-
-  // Get player's recent performance
-  async analyzePlayerPerformance() {
-    try {
-      const fireballApi = initializeFireballApi();
-      if (!fireballApi) {
-        return null;
-      }
-      const recentDungeons = await fireballApi.getTodayDungeons(new Date().toISOString());
-      
-      const performance = {
-        wins: 0,
-        losses: 0,
-        draws: 0,
-        damageDealt: 0,
-        damageTaken: 0
-      };
-
-      recentDungeons.forEach(dungeon => {
-        if (dungeon.status === 'completed') {
-          performance.wins++;
-          performance.damageDealt += dungeon.totalDamageDealt || 0;
-        } else if (dungeon.status === 'failed') {
-          performance.losses++;
-          performance.damageTaken += dungeon.totalDamageTaken || 0;
-        }
-      });
-
-      return performance;
-    } catch (error) {
-      console.error('Failed to analyze player performance:', error);
-      return null;
-    }
+  // Set current noobId for tracking time-based patterns
+  setNoobId(noobId) {
+    this.currentNoobId = noobId;
   }
 
   // Make decision based on all available data
-  async makeDecision(enemyId, turn, playerHealth, enemyHealth, availableWeapons = null, weaponCharges = null) {
+  async makeDecision(enemyId, turn, playerHealth, enemyHealth, availableWeapons = null, weaponCharges = null, playerStats = null, enemyStats = null) {
     if (config.debug) {
       console.log(`Making decision for enemy ${enemyId}, turn ${turn}`);
     }
 
-    // Get enemy analysis
-    const enemyAnalysis = await this.analyzeEnemyPatterns(enemyId);
-    
-    // Default strategy if no data - but still consider charges
-    if (!enemyAnalysis || enemyAnalysis.patterns.total < 10) {
-      // Use equal weights but apply charge bonus
-      let weights = { rock: 1, paper: 1, scissor: 1 };
-      
-      // Apply charge-based adjustments even for random strategy
-      if (weaponCharges) {
-        const maxCharges = Math.max(weaponCharges.rock || 0, weaponCharges.paper || 0, weaponCharges.scissor || 0);
-        if (maxCharges > 0) {
-          // Add 10-20% weight bonus for weapons with more charges
-          if (weaponCharges.rock > 0) {
-            weights.rock *= (1 + 0.1 * (weaponCharges.rock / maxCharges));
-          }
-          if (weaponCharges.paper > 0) {
-            weights.paper *= (1 + 0.1 * (weaponCharges.paper / maxCharges));
-          }
-          if (weaponCharges.scissor > 0) {
-            weights.scissor *= (1 + 0.1 * (weaponCharges.scissor / maxCharges));
+    this.currentEnemyId = enemyId;
+
+    // Prepare player and enemy stats for analysis
+    const processedPlayerStats = {
+      health: playerHealth,
+      healthPercent: playerStats?.healthPercent || (playerHealth / (playerStats?.maxHealth || 100)) * 100,
+      shield: playerStats?.shield || 0,
+      shieldPercent: playerStats?.shieldPercent || 0
+    };
+
+    const processedEnemyStats = {
+      health: enemyHealth,
+      healthPercent: enemyStats?.healthPercent || (enemyHealth / (enemyStats?.maxHealth || 100)) * 100,
+      shield: enemyStats?.shield || 0,
+      shieldPercent: enemyStats?.shieldPercent || 0
+    };
+
+    // Prepare weapon stats
+    const weaponStats = {
+      rock: { attack: 0, defense: 0, charges: weaponCharges?.rock || 0 },
+      paper: { attack: 0, defense: 0, charges: weaponCharges?.paper || 0 },
+      scissor: { attack: 0, defense: 0, charges: weaponCharges?.scissor || 0 }
+    };
+
+    // Get weapon stats from player data if available
+    if (playerStats?.weapons) {
+      weaponStats.rock.attack = playerStats.weapons.rock?.attack || 0;
+      weaponStats.rock.defense = playerStats.weapons.rock?.defense || 0;
+      weaponStats.paper.attack = playerStats.weapons.paper?.attack || 0;
+      weaponStats.paper.defense = playerStats.weapons.paper?.defense || 0;
+      weaponStats.scissor.attack = playerStats.weapons.scissor?.attack || 0;
+      weaponStats.scissor.defense = playerStats.weapons.scissor?.defense || 0;
+    }
+
+    // Get prediction from statistics engine
+    const prediction = this.statisticsEngine.predictNextMove(
+      enemyId,
+      turn,
+      processedPlayerStats,
+      processedEnemyStats,
+      weaponStats,
+      this.currentNoobId
+    );
+
+    // If we have a high-confidence prediction, use it
+    if (prediction && prediction.confidence > 0.6) {
+      console.log('Using statistical prediction with confidence:', prediction.confidence.toFixed(2));
+      console.log('Enemy move predictions:', {
+        rock: prediction.predictions.rock.toFixed(3),
+        paper: prediction.predictions.paper.toFixed(3),
+        scissor: prediction.predictions.scissor.toFixed(3)
+      });
+      console.log('Weapon scores:', {
+        rock: prediction.weaponScores.rock.toFixed(3),
+        paper: prediction.weaponScores.paper.toFixed(3),
+        scissor: prediction.weaponScores.scissor.toFixed(3)
+      });
+
+      // Select weapon with highest score that's available
+      let bestWeapon = null;
+      let bestScore = -Infinity;
+
+      for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
+        if ((!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0) {
+          if (score > bestScore) {
+            bestScore = score;
+            bestWeapon = weapon;
           }
         }
       }
-      
-      return this.getWeightedRandomAction(weights, availableWeapons);
+
+      if (bestWeapon) {
+        // Add some randomness to avoid being too predictable (10% chance)
+        if (Math.random() < 0.1) {
+          console.log('Adding randomness to avoid predictability');
+          return this.getRandomAction(availableWeapons);
+        }
+        return bestWeapon;
+      }
+    } else if (prediction) {
+      console.log('Low confidence prediction:', prediction.confidence.toFixed(2));
     }
 
-    // Check turn-specific patterns
-    if (enemyAnalysis.turnPatterns[turn]) {
-      const turnPattern = enemyAnalysis.turnPatterns[turn];
-      const mostLikely = Object.entries(turnPattern)
-        .sort((a, b) => b[1] - a[1])[0][0];
-      
-      // Counter the most likely action for this turn
-      const counter = actionWins[mostLikely];
-      
-      if (config.debug) {
-        console.log(`Turn ${turn} pattern suggests enemy will play ${mostLikely}, countering with ${counter}`);
-      }
-      
-      // Add some randomness to avoid being predictable
-      if (Math.random() > 0.8) {
-        return this.getRandomAction(availableWeapons);
-      }
-      
-      // Check if counter weapon is available
-      if (availableWeapons && !availableWeapons.includes(counter)) {
-        return this.getRandomAction(availableWeapons);
-      }
-      
-      return counter;
-    }
-
-    // Use overall probabilities
-    const weights = {
-      rock: enemyAnalysis.probabilities.scissor,    // Rock beats scissor
-      paper: enemyAnalysis.probabilities.rock,       // Paper beats rock
-      scissor: enemyAnalysis.probabilities.paper     // Scissor beats paper
-    };
-
-    // Add health-based adjustments
-    const healthRatio = playerHealth / (playerHealth + enemyHealth);
-    if (healthRatio < 0.3) {
-      // Low health - play more defensively (paper)
-      weights.paper *= 1.5;
-    } else if (healthRatio > 0.7) {
-      // High health - play more aggressively (rock/scissor)
-      weights.rock *= 1.2;
-      weights.scissor *= 1.2;
-    }
-
-    // Add charge-based adjustments - slight preference for weapons with more charges
+    // Fallback to enhanced random strategy with weapon weighting
+    console.log('Using enhanced random strategy with weapon stats');
+    
+    // Create weights based on weapon stats and charges
+    let weights = { rock: 1, paper: 1, scissor: 1 };
+    
+    // Apply charge-based adjustments
     if (weaponCharges) {
       const maxCharges = Math.max(weaponCharges.rock || 0, weaponCharges.paper || 0, weaponCharges.scissor || 0);
       if (maxCharges > 0) {
-        // Add 5-15% weight bonus based on relative charge amount
+        // Prefer weapons with more charges
         if (weaponCharges.rock > 0) {
-          weights.rock *= (1 + 0.05 * (weaponCharges.rock / maxCharges));
+          weights.rock *= (1 + 0.2 * (weaponCharges.rock / maxCharges));
         }
         if (weaponCharges.paper > 0) {
-          weights.paper *= (1 + 0.05 * (weaponCharges.paper / maxCharges));
+          weights.paper *= (1 + 0.2 * (weaponCharges.paper / maxCharges));
         }
         if (weaponCharges.scissor > 0) {
-          weights.scissor *= (1 + 0.05 * (weaponCharges.scissor / maxCharges));
+          weights.scissor *= (1 + 0.2 * (weaponCharges.scissor / maxCharges));
         }
       }
     }
 
-    // Log decision factors if debug enabled
-    if (config.debug) {
-      console.log('Decision weights:', weights);
-      if (weaponCharges) {
-        console.log('Weapon charges:', weaponCharges);
+    // Apply attack stat weighting
+    if (weaponStats) {
+      const maxAttack = Math.max(
+        weaponStats.rock.attack,
+        weaponStats.paper.attack,
+        weaponStats.scissor.attack
+      );
+      
+      if (maxAttack > 0) {
+        // Give up to 30% bonus for attack stats
+        weights.rock *= (1 + 0.3 * (weaponStats.rock.attack / maxAttack));
+        weights.paper *= (1 + 0.3 * (weaponStats.paper.attack / maxAttack));
+        weights.scissor *= (1 + 0.3 * (weaponStats.scissor.attack / maxAttack));
       }
     }
 
-    // Choose action based on weights
+    // Apply health-based strategy adjustments
+    const healthRatio = playerHealth / (playerHealth + enemyHealth);
+    if (healthRatio < 0.3) {
+      // Low health - slightly prefer defensive play (paper)
+      weights.paper *= 1.2;
+    } else if (healthRatio > 0.7) {
+      // High health - slightly prefer aggressive play
+      weights.rock *= 1.1;
+      weights.scissor *= 1.1;
+    }
+
+    if (config.debug) {
+      console.log('Fallback weights:', weights);
+    }
+
     return this.getWeightedRandomAction(weights, availableWeapons);
   }
 
@@ -285,7 +229,7 @@ export class DecisionEngine {
   }
 
   // Record turn result for learning
-  recordTurn(enemyId, turn, playerAction, enemyAction, result) {
+  recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats = null, enemyStats = null, weaponStats = null) {
     this.turnHistory.push({
       enemyId,
       turn,
@@ -299,6 +243,20 @@ export class DecisionEngine {
     if (this.turnHistory.length > 1000) {
       this.turnHistory.shift();
     }
+
+    // Record to statistics engine
+    this.statisticsEngine.recordBattle({
+      enemyId,
+      turn,
+      playerAction,
+      enemyAction,
+      result,
+      playerStats,
+      enemyStats,
+      weaponStats,
+      noobId: this.currentNoobId,
+      timestamp: Date.now()
+    });
   }
 
   // Get statistics summary
@@ -306,7 +264,8 @@ export class DecisionEngine {
     const summary = {
       enemiesAnalyzed: this.enemyPatterns.size,
       turnsRecorded: this.turnHistory.length,
-      recentWinRate: 0
+      recentWinRate: 0,
+      statisticsReport: null
     };
 
     if (this.turnHistory.length > 0) {
@@ -315,6 +274,22 @@ export class DecisionEngine {
       summary.recentWinRate = wins / recentTurns.length;
     }
 
+    // Get report from statistics engine
+    if (this.currentEnemyId) {
+      summary.statisticsReport = this.statisticsEngine.getAnalysisReport(this.currentEnemyId);
+    }
+
     return summary;
+  }
+
+  // Get full analysis report
+  getFullAnalysisReport() {
+    return this.statisticsEngine.getAnalysisReport();
+  }
+
+  // Export statistics data
+  exportStatistics() {
+    this.statisticsEngine.saveData();
+    console.log('Statistics data exported');
   }
 }

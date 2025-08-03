@@ -1,0 +1,112 @@
+{
+  "lastUpdated": 1754257248204,
+  "enemyStats": [
+    [
+      "TestEnemy1",
+      {
+        "firstSeen": 1754257248203,
+        "lastSeen": 1754257248203,
+        "totalBattles": 9,
+        "moves": {
+          "rock": 3,
+          "paper": 3,
+          "scissor": 3
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "paper-scissor": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p80_e60": {
+            "rock": 3,
+            "paper": 3,
+            "scissor": 3
+          }
+        },
+        "noobIdPatterns": {
+          "12300": {
+            "rock": 3,
+            "paper": 3,
+            "scissor": 3
+          }
+        }
+      }
+    ],
+    [
+      "TestEnemy2",
+      {
+        "firstSeen": 1754257248203,
+        "lastSeen": 1754257248203,
+        "totalBattles": 1,
+        "moves": {
+          "rock": 1,
+          "paper": 0,
+          "scissor": 0
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {},
+        "statCorrelations": {
+          "p80_e60": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "12300": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        }
+      }
+    ]
+  ],
+  "moveSequences": [
+    [
+      "TestEnemy1",
+      [
+        "rock",
+        "paper",
+        "scissor"
+      ]
+    ],
+    [
+      "TestEnemy2",
+      [
+        "rock"
+      ]
+    ]
+  ]
+}
