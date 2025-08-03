@@ -436,4 +436,8 @@ export class StatisticsEngine {
       enemies: new Map()
     };
   }
+
+  exportStatistics() {
+    this.saveData();
+  }
 }

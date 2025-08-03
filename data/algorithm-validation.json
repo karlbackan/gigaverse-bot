@@ -1,0 +1,112 @@
+{
+  "patternDetection": {
+    "Goblin_1": {
+      "expected": "cycle",
+      "correct": true,
+      "details": "✓ Detected cycle length: 3"
+    },
+    "Goblin_2": {
+      "expected": "adaptive",
+      "correct": true,
+      "details": "✓ Adaptive behavior detected"
+    },
+    "Orc_3": {
+      "expected": "turn-based",
+      "correct": true,
+      "details": "✓ Turn-based pattern"
+    },
+    "Troll_4": {
+      "expected": "health-based",
+      "correct": false,
+      "details": "✗ Pattern not detected"
+    },
+    "Skeleton_5": {
+      "expected": "cycle",
+      "correct": false,
+      "details": "✗ Expected cycle 6, detected 8"
+    },
+    "Zombie_6": {
+      "expected": "random-weighted",
+      "correct": true,
+      "details": "✓ R:61% P:29% S:10%"
+    },
+    "Demon_7": {
+      "expected": "adaptive",
+      "correct": false,
+      "details": "✗ No adaptive behavior detected"
+    },
+    "Dragon_8": {
+      "expected": "cycle",
+      "correct": false,
+      "details": "✗ Expected cycle 4, detected 5"
+    },
+    "Vampire_9": {
+      "expected": "cycle",
+      "correct": false,
+      "details": "✗ Expected cycle 3, detected 8"
+    },
+    "Ghost_10": {
+      "expected": "cycle",
+      "correct": false,
+      "details": "✗ Expected cycle 5, detected 6"
+    }
+  },
+  "predictionAccuracy": {
+    "Goblin_1": {
+      "accuracy": 100,
+      "predictions": 90,
+      "correct": 90
+    },
+    "Goblin_2": {
+      "accuracy": 73.33333333333333,
+      "predictions": 90,
+      "correct": 66
+    },
+    "Orc_3": {
+      "accuracy": 100,
+      "predictions": 90,
+      "correct": 90
+    },
+    "Troll_4": {
+      "accuracy": 86.66666666666667,
+      "predictions": 90,
+      "correct": 78
+    },
+    "Skeleton_5": {
+      "accuracy": 100,
+      "predictions": 90,
+      "correct": 90
+    },
+    "Zombie_6": {
+      "accuracy": 0,
+      "predictions": 0,
+      "correct": 0
+    },
+    "Demon_7": {
+      "accuracy": 27.77777777777778,
+      "predictions": 90,
+      "correct": 25
+    },
+    "Dragon_8": {
+      "accuracy": 100,
+      "predictions": 90,
+      "correct": 90
+    },
+    "Vampire_9": {
+      "accuracy": 100,
+      "predictions": 90,
+      "correct": 90
+    },
+    "Ghost_10": {
+      "accuracy": 100,
+      "predictions": 90,
+      "correct": 90
+    }
+  },
+  "overallStats": {
+    "totalEnemies": 10,
+    "correctPatterns": 4,
+    "totalBattles": 42130,
+    "avgPredictionAccuracy": 0
+  }
+}

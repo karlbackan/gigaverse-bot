@@ -1,0 +1,3657 @@
+{
+  "lastUpdated": 1754260908588,
+  "enemyStats": [
+    [
+      "TestEnemy1",
+      {
+        "firstSeen": 1754257248203,
+        "lastSeen": 1754260328667,
+        "totalBattles": 18,
+        "moves": {
+          "rock": 6,
+          "paper": 6,
+          "scissor": 6
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 6,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 6,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "paper-scissor": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p80_e60": {
+            "rock": 6,
+            "paper": 6,
+            "scissor": 6
+          }
+        },
+        "noobIdPatterns": {
+          "12300": {
+            "rock": 6,
+            "paper": 6,
+            "scissor": 6
+          }
+        }
+      }
+    ],
+    [
+      "TestEnemy2",
+      {
+        "firstSeen": 1754257248203,
+        "lastSeen": 1754260328667,
+        "totalBattles": 2,
+        "moves": {
+          "rock": 2,
+          "paper": 0,
+          "scissor": 0
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {},
+        "statCorrelations": {
+          "p80_e60": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "12300": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          }
+        }
+      }
+    ],
+    [
+      "Goblin_1",
+      {
+        "firstSeen": 1754260467605,
+        "lastSeen": 1754260908452,
+        "totalBattles": 275,
+        "moves": {
+          "rock": 121,
+          "paper": 84,
+          "scissor": 70
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 60,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 59,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 59
+          },
+          "4": {
+            "rock": 59,
+            "paper": 0,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 0,
+            "paper": 24,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 11
+          },
+          "7": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "8": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 14,
+            "paper": 0,
+            "scissor": 70
+          },
+          "paper-scissor": {
+            "rock": 70,
+            "paper": 0,
+            "scissor": 0
+          },
+          "scissor-rock": {
+            "rock": 35,
+            "paper": 34,
+            "scissor": 0
+          },
+          "paper-rock": {
+            "rock": 1,
+            "paper": 13,
+            "scissor": 0
+          },
+          "rock-rock": {
+            "rock": 0,
+            "paper": 36,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 60,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 28,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 21
+          },
+          "p60_e60": {
+            "rock": 7,
+            "paper": 0,
+            "scissor": 13
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 1
+          },
+          "p40_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 5
+          },
+          "p80_e80": {
+            "rock": 0,
+            "paper": 20,
+            "scissor": 1
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 5
+          },
+          "p20_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e20": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p80_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 15,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 1
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 19
+          },
+          "p100_e0": {
+            "rock": 15,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 14,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 0,
+            "paper": 11,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 21,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e0": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 4
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 121,
+            "paper": 84,
+            "scissor": 70
+          }
+        }
+      }
+    ],
+    [
+      "Goblin_2",
+      {
+        "firstSeen": 1754260550981,
+        "lastSeen": 1754260908467,
+        "totalBattles": 318,
+        "moves": {
+          "rock": 138,
+          "paper": 90,
+          "scissor": 90
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 16,
+            "paper": 13,
+            "scissor": 21
+          },
+          "3": {
+            "rock": 17,
+            "paper": 17,
+            "scissor": 16
+          },
+          "4": {
+            "rock": 12,
+            "paper": 28,
+            "scissor": 10
+          },
+          "5": {
+            "rock": 18,
+            "paper": 11,
+            "scissor": 16
+          },
+          "6": {
+            "rock": 11,
+            "paper": 9,
+            "scissor": 15
+          },
+          "7": {
+            "rock": 6,
+            "paper": 8,
+            "scissor": 12
+          },
+          "8": {
+            "rock": 8,
+            "paper": 4,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-rock": {
+            "rock": 18,
+            "paper": 11,
+            "scissor": 24
+          },
+          "rock-paper": {
+            "rock": 16,
+            "paper": 12,
+            "scissor": 9
+          },
+          "paper-paper": {
+            "rock": 13,
+            "paper": 10,
+            "scissor": 9
+          },
+          "paper-scissor": {
+            "rock": 14,
+            "paper": 4,
+            "scissor": 5
+          },
+          "scissor-rock": {
+            "rock": 17,
+            "paper": 14,
+            "scissor": 17
+          },
+          "rock-scissor": {
+            "rock": 21,
+            "paper": 13,
+            "scissor": 12
+          },
+          "scissor-scissor": {
+            "rock": 13,
+            "paper": 4,
+            "scissor": 4
+          },
+          "paper-rock": {
+            "rock": 18,
+            "paper": 12,
+            "scissor": 5
+          },
+          "scissor-paper": {
+            "rock": 6,
+            "paper": 10,
+            "scissor": 5
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 16,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 9,
+            "scissor": 2
+          },
+          "p0_e80": {
+            "rock": 0,
+            "paper": 5,
+            "scissor": 4
+          },
+          "p60_e60": {
+            "rock": 9,
+            "paper": 1,
+            "scissor": 11
+          },
+          "p40_e60": {
+            "rock": 10,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p40_e20": {
+            "rock": 5,
+            "paper": 1,
+            "scissor": 7
+          },
+          "p0_e20": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 9
+          },
+          "p40_e100": {
+            "rock": 6,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 0,
+            "paper": 13,
+            "scissor": 5
+          },
+          "p20_e60": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 2
+          },
+          "p0_e60": {
+            "rock": 3,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p20_e40": {
+            "rock": 0,
+            "paper": 5,
+            "scissor": 3
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 12,
+            "scissor": 5
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 5,
+            "scissor": 4
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 21
+          },
+          "p60_e20": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 8
+          },
+          "p20_e20": {
+            "rock": 6,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 11,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 5
+          },
+          "p40_e0": {
+            "rock": 1,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 10,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 5,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p20_e0": {
+            "rock": 0,
+            "paper": 4,
+            "scissor": 0
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 0
+          },
+          "p20_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p100_e0": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e100": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 138,
+            "paper": 90,
+            "scissor": 90
+          }
+        }
+      }
+    ],
+    [
+      "Orc_3",
+      {
+        "firstSeen": 1754260550991,
+        "lastSeen": 1754260908476,
+        "totalBattles": 242,
+        "moves": {
+          "rock": 50,
+          "paper": 50,
+          "scissor": 142
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "4": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "5": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 26
+          },
+          "6": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 8
+          },
+          "7": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 5
+          },
+          "8": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "9": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "paper-scissor": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "scissor-scissor": {
+            "rock": 49,
+            "paper": 0,
+            "scissor": 42
+          },
+          "scissor-rock": {
+            "rock": 0,
+            "paper": 49,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 16,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 11
+          },
+          "p60_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 23
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p20_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p0_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p80_e80": {
+            "rock": 0,
+            "paper": 14,
+            "scissor": 1
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 4
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p20_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p20_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 10
+          },
+          "p0_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p0_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p0_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p40_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 15
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 15
+          },
+          "p60_e100": {
+            "rock": 0,
+            "paper": 20,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 19
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 19
+          },
+          "p40_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p20_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 50,
+            "paper": 50,
+            "scissor": 142
+          }
+        }
+      }
+    ],
+    [
+      "Troll_4",
+      {
+        "firstSeen": 1754260550997,
+        "lastSeen": 1754260908483,
+        "totalBattles": 247,
+        "moves": {
+          "rock": 140,
+          "paper": 0,
+          "scissor": 107
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 21,
+            "paper": 0,
+            "scissor": 29
+          },
+          "4": {
+            "rock": 11,
+            "paper": 0,
+            "scissor": 39
+          },
+          "5": {
+            "rock": 6,
+            "paper": 0,
+            "scissor": 18
+          },
+          "6": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 9
+          },
+          "7": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 9
+          },
+          "8": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          }
+        },
+        "moveSequences": {
+          "rock-rock": {
+            "rock": 40,
+            "paper": 0,
+            "scissor": 50
+          },
+          "rock-scissor": {
+            "rock": 7,
+            "paper": 0,
+            "scissor": 43
+          },
+          "scissor-scissor": {
+            "rock": 42,
+            "paper": 0,
+            "scissor": 14
+          },
+          "scissor-rock": {
+            "rock": 49,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 30,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 18,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 5
+          },
+          "p40_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p20_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 4
+          },
+          "p0_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p80_e80": {
+            "rock": 14,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p60_e80": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p80_e60": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 21
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 29
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p40_e60": {
+            "rock": 6,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 12
+          },
+          "p0_e60": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 140,
+            "paper": 0,
+            "scissor": 107
+          }
+        }
+      }
+    ],
+    [
+      "Skeleton_5",
+      {
+        "firstSeen": 1754260551004,
+        "lastSeen": 1754260908489,
+        "totalBattles": 233,
+        "moves": {
+          "rock": 105,
+          "paper": 100,
+          "scissor": 28
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 19
+          },
+          "6": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 9
+          },
+          "7": {
+            "rock": 4,
+            "paper": 0,
+            "scissor": 0
+          },
+          "8": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-rock": {
+            "rock": 5,
+            "paper": 50,
+            "scissor": 0
+          },
+          "rock-paper": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "paper-paper": {
+            "rock": 30,
+            "paper": 0,
+            "scissor": 19
+          },
+          "paper-scissor": {
+            "rock": 10,
+            "paper": 0,
+            "scissor": 9
+          },
+          "scissor-rock": {
+            "rock": 19,
+            "paper": 0,
+            "scissor": 0
+          },
+          "scissor-scissor": {
+            "rock": 9,
+            "paper": 0,
+            "scissor": 0
+          },
+          "paper-rock": {
+            "rock": 30,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 15,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 0,
+            "paper": 11,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 11,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 7
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 5,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 0,
+            "paper": 16,
+            "scissor": 0
+          },
+          "p40_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 5
+          },
+          "p40_e0": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p100_e60": {
+            "rock": 28,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e20": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p20_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e60": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p20_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p60_e100": {
+            "rock": 7,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 24,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 2
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 9
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 22,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 105,
+            "paper": 100,
+            "scissor": 28
+          }
+        }
+      }
+    ],
+    [
+      "Zombie_6",
+      {
+        "firstSeen": 1754260551011,
+        "lastSeen": 1754260908503,
+        "totalBattles": 318,
+        "moves": {
+          "rock": 178,
+          "paper": 101,
+          "scissor": 39
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 22,
+            "paper": 25,
+            "scissor": 3
+          },
+          "2": {
+            "rock": 28,
+            "paper": 15,
+            "scissor": 7
+          },
+          "3": {
+            "rock": 22,
+            "paper": 19,
+            "scissor": 9
+          },
+          "4": {
+            "rock": 31,
+            "paper": 11,
+            "scissor": 8
+          },
+          "5": {
+            "rock": 32,
+            "paper": 11,
+            "scissor": 5
+          },
+          "6": {
+            "rock": 24,
+            "paper": 10,
+            "scissor": 5
+          },
+          "7": {
+            "rock": 13,
+            "paper": 7,
+            "scissor": 2
+          },
+          "8": {
+            "rock": 6,
+            "paper": 3,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 29,
+            "paper": 20,
+            "scissor": 5
+          },
+          "paper-paper": {
+            "rock": 14,
+            "paper": 11,
+            "scissor": 8
+          },
+          "paper-scissor": {
+            "rock": 7,
+            "paper": 5,
+            "scissor": 1
+          },
+          "scissor-rock": {
+            "rock": 8,
+            "paper": 9,
+            "scissor": 3
+          },
+          "rock-rock": {
+            "rock": 58,
+            "paper": 31,
+            "scissor": 13
+          },
+          "paper-rock": {
+            "rock": 36,
+            "paper": 13,
+            "scissor": 5
+          },
+          "rock-scissor": {
+            "rock": 10,
+            "paper": 8,
+            "scissor": 3
+          },
+          "scissor-paper": {
+            "rock": 12,
+            "paper": 2,
+            "scissor": 0
+          },
+          "scissor-scissor": {
+            "rock": 3,
+            "paper": 1,
+            "scissor": 1
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 22,
+            "paper": 25,
+            "scissor": 3
+          },
+          "p80_e80": {
+            "rock": 12,
+            "paper": 10,
+            "scissor": 3
+          },
+          "p80_e60": {
+            "rock": 3,
+            "paper": 6,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 18,
+            "paper": 5,
+            "scissor": 4
+          },
+          "p40_e60": {
+            "rock": 14,
+            "paper": 6,
+            "scissor": 4
+          },
+          "p0_e60": {
+            "rock": 2,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e20": {
+            "rock": 9,
+            "paper": 4,
+            "scissor": 0
+          },
+          "p80_e40": {
+            "rock": 4,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p60_e40": {
+            "rock": 10,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 6,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 11,
+            "paper": 5,
+            "scissor": 2
+          },
+          "p100_e40": {
+            "rock": 4,
+            "paper": 3,
+            "scissor": 2
+          },
+          "p100_e0": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e0": {
+            "rock": 5,
+            "paper": 4,
+            "scissor": 1
+          },
+          "p40_e40": {
+            "rock": 10,
+            "paper": 5,
+            "scissor": 3
+          },
+          "p40_e20": {
+            "rock": 8,
+            "paper": 3,
+            "scissor": 1
+          },
+          "p20_e60": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p20_e20": {
+            "rock": 5,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 8,
+            "paper": 3,
+            "scissor": 3
+          },
+          "p20_e40": {
+            "rock": 5,
+            "paper": 1,
+            "scissor": 2
+          },
+          "p60_e80": {
+            "rock": 2,
+            "paper": 4,
+            "scissor": 2
+          },
+          "p40_e80": {
+            "rock": 2,
+            "paper": 1,
+            "scissor": 2
+          },
+          "p20_e80": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p0_e80": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e100": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p80_e20": {
+            "rock": 4,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 7,
+            "paper": 1,
+            "scissor": 3
+          },
+          "p20_e0": {
+            "rock": 1,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p20_e100": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 178,
+            "paper": 101,
+            "scissor": 39
+          }
+        }
+      }
+    ],
+    [
+      "Demon_7",
+      {
+        "firstSeen": 1754260551020,
+        "lastSeen": 1754260908518,
+        "totalBattles": 277,
+        "moves": {
+          "rock": 85,
+          "paper": 103,
+          "scissor": 89
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 14,
+            "paper": 22,
+            "scissor": 14
+          },
+          "2": {
+            "rock": 18,
+            "paper": 18,
+            "scissor": 14
+          },
+          "3": {
+            "rock": 16,
+            "paper": 17,
+            "scissor": 17
+          },
+          "4": {
+            "rock": 15,
+            "paper": 16,
+            "scissor": 19
+          },
+          "5": {
+            "rock": 14,
+            "paper": 20,
+            "scissor": 14
+          },
+          "6": {
+            "rock": 5,
+            "paper": 8,
+            "scissor": 5
+          },
+          "7": {
+            "rock": 2,
+            "paper": 2,
+            "scissor": 5
+          },
+          "8": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 1
+          }
+        },
+        "moveSequences": {
+          "paper-paper": {
+            "rock": 17,
+            "paper": 59,
+            "scissor": 4
+          },
+          "paper-rock": {
+            "rock": 15,
+            "paper": 2,
+            "scissor": 0
+          },
+          "rock-rock": {
+            "rock": 46,
+            "paper": 3,
+            "scissor": 15
+          },
+          "rock-scissor": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 15
+          },
+          "scissor-scissor": {
+            "rock": 1,
+            "paper": 16,
+            "scissor": 49
+          },
+          "scissor-paper": {
+            "rock": 0,
+            "paper": 17,
+            "scissor": 0
+          },
+          "paper-scissor": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 3
+          },
+          "scissor-rock": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 1
+          },
+          "rock-paper": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 2
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 14,
+            "paper": 22,
+            "scissor": 14
+          },
+          "p80_e80": {
+            "rock": 2,
+            "paper": 4,
+            "scissor": 7
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p0_e80": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p0_e60": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p100_e60": {
+            "rock": 15,
+            "paper": 12,
+            "scissor": 10
+          },
+          "p100_e40": {
+            "rock": 12,
+            "paper": 10,
+            "scissor": 8
+          },
+          "p60_e40": {
+            "rock": 4,
+            "paper": 5,
+            "scissor": 5
+          },
+          "p40_e40": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p40_e20": {
+            "rock": 3,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p0_e20": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 1,
+            "paper": 2,
+            "scissor": 1
+          },
+          "p40_e100": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e60": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p40_e0": {
+            "rock": 2,
+            "paper": 4,
+            "scissor": 3
+          },
+          "p20_e0": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p80_e20": {
+            "rock": 2,
+            "paper": 6,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 3,
+            "paper": 6,
+            "scissor": 1
+          },
+          "p20_e20": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p100_e0": {
+            "rock": 7,
+            "paper": 4,
+            "scissor": 9
+          },
+          "p60_e0": {
+            "rock": 8,
+            "paper": 9,
+            "scissor": 10
+          },
+          "p60_e60": {
+            "rock": 3,
+            "paper": 4,
+            "scissor": 4
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 3
+          },
+          "p20_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 3
+          },
+          "p80_e60": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 3
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 85,
+            "paper": 103,
+            "scissor": 89
+          }
+        }
+      }
+    ],
+    [
+      "Dragon_8",
+      {
+        "firstSeen": 1754260551029,
+        "lastSeen": 1754260908525,
+        "totalBattles": 216,
+        "moves": {
+          "rock": 103,
+          "paper": 51,
+          "scissor": 62
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "2": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 12
+          },
+          "6": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "7": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "8": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "scissor-rock": {
+            "rock": 51,
+            "paper": 0,
+            "scissor": 1
+          },
+          "rock-rock": {
+            "rock": 0,
+            "paper": 51,
+            "scissor": 0
+          },
+          "rock-paper": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "paper-scissor": {
+            "rock": 40,
+            "paper": 0,
+            "scissor": 10
+          },
+          "scissor-scissor": {
+            "rock": 10,
+            "paper": 0,
+            "scissor": 0
+          },
+          "rock-scissor": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "p80_e80": {
+            "rock": 9,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e80": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 5,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p100_e60": {
+            "rock": 42,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 30,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 27,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 5,
+            "scissor": 1
+          },
+          "p40_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p20_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e20": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 11,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 13,
+            "scissor": 1
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e20": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 103,
+            "paper": 51,
+            "scissor": 62
+          }
+        }
+      }
+    ],
+    [
+      "Vampire_9",
+      {
+        "firstSeen": 1754260551037,
+        "lastSeen": 1754260908531,
+        "totalBattles": 234,
+        "moves": {
+          "rock": 59,
+          "paper": 73,
+          "scissor": 102
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "2": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "5": {
+            "rock": 0,
+            "paper": 23,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 9,
+            "paper": 0,
+            "scissor": 0
+          },
+          "7": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          }
+        },
+        "moveSequences": {
+          "scissor-paper": {
+            "rock": 59,
+            "paper": 0,
+            "scissor": 14
+          },
+          "paper-rock": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 59
+          },
+          "rock-scissor": {
+            "rock": 0,
+            "paper": 30,
+            "scissor": 28
+          },
+          "scissor-scissor": {
+            "rock": 0,
+            "paper": 28,
+            "scissor": 0
+          },
+          "paper-scissor": {
+            "rock": 0,
+            "paper": 14,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 29,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 15,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 13
+          },
+          "p40_e20": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e0": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p80_e80": {
+            "rock": 2,
+            "paper": 15,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p20_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p60_e60": {
+            "rock": 13,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 13
+          },
+          "p60_e20": {
+            "rock": 1,
+            "paper": 5,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 13,
+            "scissor": 0
+          },
+          "p60_e80": {
+            "rock": 4,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 16,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 16
+          },
+          "p60_e100": {
+            "rock": 0,
+            "paper": 6,
+            "scissor": 0
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 59,
+            "paper": 73,
+            "scissor": 102
+          }
+        }
+      }
+    ],
+    [
+      "Ghost_10",
+      {
+        "firstSeen": 1754260551045,
+        "lastSeen": 1754260908539,
+        "totalBattles": 212,
+        "moves": {
+          "rock": 212,
+          "paper": 0,
+          "scissor": 0
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 9,
+            "paper": 0,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "7": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "8": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-rock": {
+            "rock": 210,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e60": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e20": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 7,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 48,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 48,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 42,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 212,
+            "paper": 0,
+            "scissor": 0
+          }
+        }
+      }
+    ],
+    [
+      "Witch_11",
+      {
+        "firstSeen": 1754260551056,
+        "lastSeen": 1754260908546,
+        "totalBattles": 241,
+        "moves": {
+          "rock": 101,
+          "paper": 72,
+          "scissor": 68
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 50
+          },
+          "3": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 0,
+            "paper": 22,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 12
+          },
+          "7": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 4
+          },
+          "8": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "9": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-scissor": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "scissor-rock": {
+            "rock": 1,
+            "paper": 50,
+            "scissor": 11
+          },
+          "rock-paper": {
+            "rock": 27,
+            "paper": 22,
+            "scissor": 0
+          },
+          "paper-paper": {
+            "rock": 10,
+            "paper": 0,
+            "scissor": 12
+          },
+          "paper-scissor": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 4
+          },
+          "scissor-scissor": {
+            "rock": 4,
+            "paper": 0,
+            "scissor": 2
+          },
+          "rock-rock": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "paper-rock": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 37
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 10
+          },
+          "p40_e100": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e100": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p20_e60": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 1
+          },
+          "p20_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p20_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p80_e80": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 19
+          },
+          "p60_e80": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e60": {
+            "rock": 0,
+            "paper": 6,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 1
+          },
+          "p20_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p0_e0": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 9,
+            "paper": 4,
+            "scissor": 0
+          },
+          "p0_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 21
+          },
+          "p80_e60": {
+            "rock": 21,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 22,
+            "scissor": 0
+          },
+          "p40_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p100_e40": {
+            "rock": 12,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 12,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 9,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 8,
+            "scissor": 0
+          },
+          "p40_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 101,
+            "paper": 72,
+            "scissor": 68
+          }
+        }
+      }
+    ],
+    [
+      "Necromancer_12",
+      {
+        "firstSeen": 1754260551067,
+        "lastSeen": 1754260908555,
+        "totalBattles": 331,
+        "moves": {
+          "rock": 113,
+          "paper": 105,
+          "scissor": 113
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 15,
+            "paper": 18,
+            "scissor": 17
+          },
+          "2": {
+            "rock": 14,
+            "paper": 18,
+            "scissor": 18
+          },
+          "3": {
+            "rock": 19,
+            "paper": 13,
+            "scissor": 18
+          },
+          "4": {
+            "rock": 22,
+            "paper": 12,
+            "scissor": 16
+          },
+          "5": {
+            "rock": 13,
+            "paper": 12,
+            "scissor": 19
+          },
+          "6": {
+            "rock": 15,
+            "paper": 13,
+            "scissor": 10
+          },
+          "7": {
+            "rock": 9,
+            "paper": 11,
+            "scissor": 11
+          },
+          "8": {
+            "rock": 6,
+            "paper": 8,
+            "scissor": 4
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 9,
+            "paper": 17,
+            "scissor": 3
+          },
+          "paper-rock": {
+            "rock": 17,
+            "paper": 4,
+            "scissor": 17
+          },
+          "rock-rock": {
+            "rock": 18,
+            "paper": 18,
+            "scissor": 9
+          },
+          "rock-scissor": {
+            "rock": 11,
+            "paper": 9,
+            "scissor": 18
+          },
+          "scissor-scissor": {
+            "rock": 12,
+            "paper": 15,
+            "scissor": 25
+          },
+          "scissor-rock": {
+            "rock": 10,
+            "paper": 6,
+            "scissor": 13
+          },
+          "scissor-paper": {
+            "rock": 9,
+            "paper": 15,
+            "scissor": 7
+          },
+          "paper-paper": {
+            "rock": 20,
+            "paper": 13,
+            "scissor": 12
+          },
+          "paper-scissor": {
+            "rock": 6,
+            "paper": 7,
+            "scissor": 9
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 15,
+            "paper": 18,
+            "scissor": 17
+          },
+          "p100_e60": {
+            "rock": 3,
+            "paper": 8,
+            "scissor": 7
+          },
+          "p60_e60": {
+            "rock": 13,
+            "paper": 6,
+            "scissor": 9
+          },
+          "p40_e60": {
+            "rock": 6,
+            "paper": 4,
+            "scissor": 8
+          },
+          "p20_e40": {
+            "rock": 10,
+            "paper": 5,
+            "scissor": 5
+          },
+          "p0_e20": {
+            "rock": 5,
+            "paper": 9,
+            "scissor": 6
+          },
+          "p20_e20": {
+            "rock": 1,
+            "paper": 3,
+            "scissor": 1
+          },
+          "p80_e80": {
+            "rock": 4,
+            "paper": 2,
+            "scissor": 7
+          },
+          "p60_e80": {
+            "rock": 6,
+            "paper": 6,
+            "scissor": 2
+          },
+          "p40_e80": {
+            "rock": 4,
+            "paper": 2,
+            "scissor": 3
+          },
+          "p0_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 5
+          },
+          "p60_e100": {
+            "rock": 9,
+            "paper": 8,
+            "scissor": 5
+          },
+          "p60_e40": {
+            "rock": 3,
+            "paper": 3,
+            "scissor": 2
+          },
+          "p40_e40": {
+            "rock": 5,
+            "paper": 5,
+            "scissor": 4
+          },
+          "p40_e0": {
+            "rock": 2,
+            "paper": 3,
+            "scissor": 1
+          },
+          "p20_e0": {
+            "rock": 3,
+            "paper": 2,
+            "scissor": 2
+          },
+          "p20_e80": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p0_e40": {
+            "rock": 2,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p40_e20": {
+            "rock": 1,
+            "paper": 5,
+            "scissor": 3
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p80_e20": {
+            "rock": 4,
+            "paper": 1,
+            "scissor": 1
+          },
+          "p80_e60": {
+            "rock": 2,
+            "paper": 4,
+            "scissor": 5
+          },
+          "p40_e100": {
+            "rock": 4,
+            "paper": 0,
+            "scissor": 4
+          },
+          "p20_e100": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 3
+          },
+          "p60_e0": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 2,
+            "paper": 4,
+            "scissor": 2
+          },
+          "p80_e40": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p20_e60": {
+            "rock": 2,
+            "paper": 1,
+            "scissor": 3
+          },
+          "p0_e60": {
+            "rock": 3,
+            "paper": 2,
+            "scissor": 2
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 113,
+            "paper": 105,
+            "scissor": 113
+          }
+        }
+      }
+    ],
+    [
+      "Lich_13",
+      {
+        "firstSeen": 1754260551077,
+        "lastSeen": 1754260908562,
+        "totalBattles": 241,
+        "moves": {
+          "rock": 111,
+          "paper": 130,
+          "scissor": 0
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 0,
+            "paper": 24,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 10,
+            "paper": 0,
+            "scissor": 0
+          },
+          "7": {
+            "rock": 0,
+            "paper": 6,
+            "scissor": 0
+          },
+          "8": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 30,
+            "paper": 50,
+            "scissor": 0
+          },
+          "paper-paper": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "paper-rock": {
+            "rock": 30,
+            "paper": 49,
+            "scissor": 0
+          },
+          "rock-rock": {
+            "rock": 0,
+            "paper": 30,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 0,
+            "paper": 8,
+            "scissor": 0
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e80": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 0,
+            "paper": 4,
+            "scissor": 0
+          },
+          "p40_e100": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e60": {
+            "rock": 3,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 6,
+            "scissor": 0
+          },
+          "p40_e20": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e20": {
+            "rock": 1,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 38,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 4,
+            "paper": 6,
+            "scissor": 0
+          },
+          "p20_e20": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 31,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 13,
+            "paper": 5,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 4,
+            "scissor": 0
+          },
+          "p40_e0": {
+            "rock": 3,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 0,
+            "paper": 9,
+            "scissor": 0
+          },
+          "p80_e40": {
+            "rock": 4,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 16,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e0": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 1,
+            "paper": 7,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 111,
+            "paper": 130,
+            "scissor": 0
+          }
+        }
+      }
+    ],
+    [
+      "Elemental_14",
+      {
+        "firstSeen": 1754260551084,
+        "lastSeen": 1754260908577,
+        "totalBattles": 243,
+        "moves": {
+          "rock": 108,
+          "paper": 100,
+          "scissor": 35
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 23
+          },
+          "6": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 12
+          },
+          "7": {
+            "rock": 6,
+            "paper": 0,
+            "scissor": 0
+          },
+          "8": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-rock": {
+            "rock": 8,
+            "paper": 50,
+            "scissor": 0
+          },
+          "rock-paper": {
+            "rock": 0,
+            "paper": 50,
+            "scissor": 0
+          },
+          "paper-paper": {
+            "rock": 26,
+            "paper": 0,
+            "scissor": 23
+          },
+          "paper-scissor": {
+            "rock": 11,
+            "paper": 0,
+            "scissor": 12
+          },
+          "scissor-scissor": {
+            "rock": 12,
+            "paper": 0,
+            "scissor": 0
+          },
+          "scissor-rock": {
+            "rock": 23,
+            "paper": 0,
+            "scissor": 0
+          },
+          "paper-rock": {
+            "rock": 26,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 14,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 0,
+            "paper": 12,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 0,
+            "paper": 18,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p40_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p40_e0": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 3
+          },
+          "p20_e0": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 23,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 21,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 20,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 13,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e100": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p20_e100": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 0
+          },
+          "p20_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p40_e60": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 1
+          },
+          "p20_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 0,
+            "paper": 8,
+            "scissor": 3
+          },
+          "p60_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 6
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 0,
+            "paper": 9,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 10
+          },
+          "p20_e20": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e20": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 108,
+            "paper": 100,
+            "scissor": 35
+          }
+        }
+      }
+    ],
+    [
+      "Golem_15",
+      {
+        "firstSeen": 1754260551090,
+        "lastSeen": 1754260908583,
+        "totalBattles": 206,
+        "moves": {
+          "rock": 206,
+          "paper": 0,
+          "scissor": 0
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "4": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "moveSequences": {
+          "rock-rock": {
+            "rock": 204,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 50,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p80_e20": {
+            "rock": 8,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 45,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e40": {
+            "rock": 42,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e0": {
+            "rock": 39,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e100": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e60": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e20": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p60_e80": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e20": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 206,
+            "paper": 0,
+            "scissor": 0
+          }
+        }
+      }
+    ],
+    [
+      "Wizard_16",
+      {
+        "firstSeen": 1754260551095,
+        "lastSeen": 1754260908588,
+        "totalBattles": 237,
+        "moves": {
+          "rock": 83,
+          "paper": 97,
+          "scissor": 57
+        },
+        "movesByTurn": {
+          "1": {
+            "rock": 49,
+            "paper": 0,
+            "scissor": 0
+          },
+          "2": {
+            "rock": 0,
+            "paper": 49,
+            "scissor": 0
+          },
+          "3": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 48
+          },
+          "4": {
+            "rock": 0,
+            "paper": 48,
+            "scissor": 0
+          },
+          "5": {
+            "rock": 24,
+            "paper": 0,
+            "scissor": 0
+          },
+          "6": {
+            "rock": 10,
+            "paper": 0,
+            "scissor": 0
+          },
+          "7": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 7
+          },
+          "8": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          }
+        },
+        "moveSequences": {
+          "rock-paper": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 48
+          },
+          "paper-scissor": {
+            "rock": 0,
+            "paper": 48,
+            "scissor": 0
+          },
+          "scissor-paper": {
+            "rock": 47,
+            "paper": 0,
+            "scissor": 0
+          },
+          "paper-rock": {
+            "rock": 24,
+            "paper": 24,
+            "scissor": 0
+          },
+          "rock-rock": {
+            "rock": 3,
+            "paper": 17,
+            "scissor": 7
+          },
+          "rock-scissor": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 2
+          },
+          "scissor-rock": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 0
+          },
+          "scissor-scissor": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          }
+        },
+        "statCorrelations": {
+          "p100_e100": {
+            "rock": 49,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p100_e60": {
+            "rock": 0,
+            "paper": 32,
+            "scissor": 0
+          },
+          "p80_e60": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 20
+          },
+          "p80_e20": {
+            "rock": 2,
+            "paper": 18,
+            "scissor": 0
+          },
+          "p80_e80": {
+            "rock": 0,
+            "paper": 12,
+            "scissor": 4
+          },
+          "p60_e60": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 11
+          },
+          "p60_e20": {
+            "rock": 5,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e20": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e40": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e40": {
+            "rock": 3,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p40_e60": {
+            "rock": 2,
+            "paper": 3,
+            "scissor": 0
+          },
+          "p0_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 2
+          },
+          "p0_e20": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 4
+          },
+          "p60_e100": {
+            "rock": 0,
+            "paper": 5,
+            "scissor": 0
+          },
+          "p60_e40": {
+            "rock": 2,
+            "paper": 9,
+            "scissor": 0
+          },
+          "p60_e0": {
+            "rock": 11,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e60": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p20_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p100_e40": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 8
+          },
+          "p100_e0": {
+            "rock": 0,
+            "paper": 7,
+            "scissor": 0
+          },
+          "p60_e80": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 4
+          },
+          "p80_e40": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p40_e80": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 0
+          },
+          "p0_e80": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p0_e60": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 0
+          },
+          "p40_e0": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "p40_e100": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          }
+        },
+        "noobIdPatterns": {
+          "76000": {
+            "rock": 83,
+            "paper": 97,
+            "scissor": 57
+          }
+        }
+      }
+    ]
+  ],
+  "moveSequences": [
+    [
+      "TestEnemy1",
+      [
+        "rock",
+        "paper",
+        "scissor"
+      ]
+    ],
+    [
+      "TestEnemy2",
+      [
+        "rock",
+        "rock"
+      ]
+    ],
+    [
+      "Goblin_1",
+      [
+        "paper",
+        "scissor",
+        "rock"
+      ]
+    ],
+    [
+      "Goblin_2",
+      [
+        "rock",
+        "rock",
+        "rock"
+      ]
+    ],
+    [
+      "Orc_3",
+      [
+        "scissor",
+        "scissor",
+        "scissor"
+      ]
+    ],
+    [
+      "Troll_4",
+      [
+        "rock",
+        "scissor",
+        "scissor"
+      ]
+    ],
+    [
+      "Skeleton_5",
+      [
+        "rock",
+        "paper",
+        "paper"
+      ]
+    ],
+    [
+      "Zombie_6",
+      [
+        "rock",
+        "paper",
+        "rock"
+      ]
+    ],
+    [
+      "Demon_7",
+      [
+        "scissor",
+        "scissor",
+        "scissor"
+      ]
+    ],
+    [
+      "Dragon_8",
+      [
+        "rock",
+        "rock",
+        "paper"
+      ]
+    ],
+    [
+      "Vampire_9",
+      [
+        "paper",
+        "rock",
+        "scissor"
+      ]
+    ],
+    [
+      "Ghost_10",
+      [
+        "rock",
+        "rock",
+        "rock"
+      ]
+    ],
+    [
+      "Witch_11",
+      [
+        "scissor",
+        "rock",
+        "paper"
+      ]
+    ],
+    [
+      "Necromancer_12",
+      [
+        "paper",
+        "rock",
+        "scissor"
+      ]
+    ],
+    [
+      "Lich_13",
+      [
+        "paper",
+        "paper",
+        "rock"
+      ]
+    ],
+    [
+      "Elemental_14",
+      [
+        "rock",
+        "paper",
+        "paper"
+      ]
+    ],
+    [
+      "Golem_15",
+      [
+        "rock",
+        "rock",
+        "rock"
+      ]
+    ],
+    [
+      "Wizard_16",
+      [
+        "paper",
+        "scissor",
+        "paper"
+      ]
+    ]
+  ]
+}
