@@ -91,6 +91,27 @@ export class DecisionEngine {
       weaponStats.scissor.defense = playerStats.weapons.scissor?.defense || 0;
     }
 
+    // CRITICAL: Track enemy charges to eliminate impossible moves
+    let enemyPossibleMoves = ['rock', 'paper', 'scissor'];
+    if (processedEnemyStats.charges) {
+      enemyPossibleMoves = [];
+      if (processedEnemyStats.charges.rock > 0) enemyPossibleMoves.push('rock');
+      if (processedEnemyStats.charges.paper > 0) enemyPossibleMoves.push('paper');
+      if (processedEnemyStats.charges.scissor > 0) enemyPossibleMoves.push('scissor');
+      
+      // Log when enemy options are limited
+      if (enemyPossibleMoves.length < 3) {
+        if (!config.minimalOutput) {
+          console.log(`🎯 Enemy limited to: ${enemyPossibleMoves.join(', ')} (charges: R${processedEnemyStats.charges.rock}/P${processedEnemyStats.charges.paper}/S${processedEnemyStats.charges.scissor})`);
+        }
+        
+        // Force high confidence when only 1-2 options
+        if (enemyPossibleMoves.length === 1) {
+          console.log(`💯 Enemy can ONLY play ${enemyPossibleMoves[0]}!`);
+        }
+      }
+    }
+
     // Get prediction from statistics engine
     const prediction = this.statisticsEngine.predictNextMove(
       enemyId,
@@ -98,7 +119,8 @@ export class DecisionEngine {
       processedPlayerStats,
       processedEnemyStats,
       weaponStats,
-      this.currentNoobId
+      this.currentNoobId,
+      enemyPossibleMoves  // Pass possible moves to filter predictions
     );
     
     // Check recent performance for this enemy
@@ -147,6 +169,9 @@ export class DecisionEngine {
           paper: prediction.predictions.paper.toFixed(3),
           scissor: prediction.predictions.scissor.toFixed(3)
         });
+        if (prediction.possibleMoves && prediction.possibleMoves.length < 3) {
+          console.log(`  (Filtered to possible moves: ${prediction.possibleMoves.join(', ')})`);
+        }
         console.log('Weapon scores:', {
           rock: prediction.weaponScores.rock.toFixed(3),
           paper: prediction.weaponScores.paper.toFixed(3),

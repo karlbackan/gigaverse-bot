@@ -326,13 +326,31 @@ export class DungeonPlayer {
         }
       };
       
+      // Check if enemy has weapon charge data and handle negative charge bug
+      let enemyCharges = null;
+      if (enemy.rock && enemy.paper && enemy.scissor) {
+        enemyCharges = {
+          rock: Math.max(0, enemy.rock.currentCharges || 0),      // Handle negative/undefined
+          paper: Math.max(0, enemy.paper.currentCharges || 0),    // -1/3 becomes 0
+          scissor: Math.max(0, enemy.scissor.currentCharges || 0)
+        };
+        
+        // Log first time we see enemy charges
+        if (!this.enemyChargesLogged) {
+          console.log('✓ Enemy charge tracking available!');
+          console.log(`  Enemy charges: Rock=${enemyCharges.rock}, Paper=${enemyCharges.paper}, Scissor=${enemyCharges.scissor}`);
+          this.enemyChargesLogged = true;
+        }
+      }
+      
       const enemyStatsFull = {
         health: enemyHealth,
         maxHealth: enemy.health.currentMax,
         healthPercent: (enemyHealth / enemy.health.currentMax) * 100,
         shield: enemy.shield.current,
         maxShield: enemy.shield.currentMax,
-        shieldPercent: enemy.shield.currentMax > 0 ? (enemy.shield.current / enemy.shield.currentMax) * 100 : 0
+        shieldPercent: enemy.shield.currentMax > 0 ? (enemy.shield.current / enemy.shield.currentMax) * 100 : 0,
+        charges: enemyCharges  // NEW: Include charge state
       };
       
       const action = await this.decisionEngine.makeDecision(

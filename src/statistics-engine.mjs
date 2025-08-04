@@ -95,7 +95,8 @@ export class StatisticsEngine {
         moveSequences: {},
         statCorrelations: {},
         noobIdPatterns: {},
-        recentBattles: [] // For recency weighting
+        recentBattles: [], // For recency weighting
+        chargePatterns: {} // NEW: Track behavior by charge state
       });
     }
 
@@ -156,6 +157,15 @@ export class StatisticsEngine {
     if (enemy.recentBattles.length > 100) {
       enemy.recentBattles.shift();
     }
+    
+    // Track charge-based behavior patterns
+    if (enemyStats && enemyStats.charges && enemyAction) {
+      const chargeKey = this.getChargeKey(enemyStats.charges);
+      if (!enemy.chargePatterns[chargeKey]) {
+        enemy.chargePatterns[chargeKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.chargePatterns[chargeKey][enemyAction]++;
+    }
 
     // Record to session
     this.sessionData.battles.push({
@@ -197,8 +207,34 @@ export class StatisticsEngine {
     const eHealth = Math.floor(enemyStats.healthPercent / 20) * 20;
     return `p${pHealth}_e${eHealth}`;
   }
+  
+  getChargeKey(charges) {
+    // Create a charge state key for behavioral tracking
+    // Track specific charge levels and conservation patterns
+    const r = charges.rock;
+    const p = charges.paper;
+    const s = charges.scissor;
+    const total = r + p + s;
+    
+    // Special cases for limited options
+    if (r === 0 && p > 0 && s > 0) return 'no_rock';
+    if (p === 0 && r > 0 && s > 0) return 'no_paper';
+    if (s === 0 && r > 0 && p > 0) return 'no_scissor';
+    
+    // Low charge situations
+    if (total <= 3) return 'critical_low';
+    if (total <= 5) return 'low_charges';
+    
+    // Specific charge patterns
+    if (r === 1 && p >= 2 && s >= 2) return 'rock_conservation';
+    if (p === 1 && r >= 2 && s >= 2) return 'paper_conservation';
+    if (s === 1 && r >= 2 && p >= 2) return 'scissor_conservation';
+    
+    // General charge levels
+    return `r${r}_p${p}_s${s}`;
+  }
 
-  predictNextMove(enemyId, turn, playerStats, enemyStats, weaponStats, noobId) {
+  predictNextMove(enemyId, turn, playerStats, enemyStats, weaponStats, noobId, enemyPossibleMoves = null) {
     const enemy = this.enemyStats.get(enemyId);
     if (!enemy || enemy.totalBattles < 5) {
       // Not enough data, return null
@@ -214,11 +250,12 @@ export class StatisticsEngine {
     // Weight factors (configurable)
     const weights = {
       overall: 0.05,       // Overall move distribution (reduced)
-      turnSpecific: 0.15,  // Turn-specific patterns (reduced)
-      sequence: 0.35,      // Move sequences (still important)
+      turnSpecific: 0.10,  // Turn-specific patterns (reduced)
+      sequence: 0.25,      // Move sequences (reduced for charge priority)
       statCorrelation: 0.1, // Stat-based patterns (reduced)
-      noobIdPattern: 0.1,   // Time-based shifts (reduced)
-      recent: 0.25         // Recent battles (new, important)
+      noobIdPattern: 0.05,  // Time-based shifts (reduced)
+      recent: 0.20,        // Recent battles
+      chargePattern: 0.25  // NEW: Charge-based behavior (high priority!)
     };
 
     // 1. Overall move distribution
@@ -304,22 +341,73 @@ export class StatisticsEngine {
         predictions.scissor += weights.recent * (recentMoves.scissor / totalWeight);
       }
     }
+    
+    // 7. Charge-based patterns (NEW AND CRITICAL!)
+    if (enemyStats && enemyStats.charges && enemy.chargePatterns) {
+      const chargeKey = this.getChargeKey(enemyStats.charges);
+      if (enemy.chargePatterns[chargeKey]) {
+        const chargeMoves = enemy.chargePatterns[chargeKey];
+        const chargeTotal = chargeMoves.rock + chargeMoves.paper + chargeMoves.scissor;
+        if (chargeTotal >= 3) { // Need at least 3 samples
+          predictions.rock += weights.chargePattern * (chargeMoves.rock / chargeTotal);
+          predictions.paper += weights.chargePattern * (chargeMoves.paper / chargeTotal);
+          predictions.scissor += weights.chargePattern * (chargeMoves.scissor / chargeTotal);
+          
+          if (!config.minimalOutput) {
+            console.log(`  Charge pattern "${chargeKey}": R${(chargeMoves.rock/chargeTotal*100).toFixed(0)}% P${(chargeMoves.paper/chargeTotal*100).toFixed(0)}% S${(chargeMoves.scissor/chargeTotal*100).toFixed(0)}%`);
+          }
+        }
+      }
+    }
 
     // Normalize predictions
-    const total = predictions.rock + predictions.paper + predictions.scissor;
+    let total = predictions.rock + predictions.paper + predictions.scissor;
     if (total > 0) {
       predictions.rock /= total;
       predictions.paper /= total;
       predictions.scissor /= total;
     }
 
+    // CRITICAL: Filter out impossible moves based on enemy charges
+    if (enemyPossibleMoves && enemyPossibleMoves.length < 3) {
+      if (!config.minimalOutput) {
+        console.log(`  Charge filter: Enemy can only play ${enemyPossibleMoves.join(', ')}`);
+        console.log(`  Pre-filter predictions: R${(predictions.rock*100).toFixed(0)}% P${(predictions.paper*100).toFixed(0)}% S${(predictions.scissor*100).toFixed(0)}%`);
+      }
+      
+      // Zero out impossible moves
+      if (!enemyPossibleMoves.includes('rock')) predictions.rock = 0;
+      if (!enemyPossibleMoves.includes('paper')) predictions.paper = 0;
+      if (!enemyPossibleMoves.includes('scissor')) predictions.scissor = 0;
+      
+      // Renormalize after filtering
+      total = predictions.rock + predictions.paper + predictions.scissor;
+      if (total > 0) {
+        predictions.rock /= total;
+        predictions.paper /= total;
+        predictions.scissor /= total;
+      }
+      
+      if (!config.minimalOutput) {
+        console.log(`  Post-filter predictions: R${(predictions.rock*100).toFixed(0)}% P${(predictions.paper*100).toFixed(0)}% S${(predictions.scissor*100).toFixed(0)}%`);
+      }
+    }
+
     // Apply weapon stats weighting
     const weaponScores = this.calculateWeaponScores(predictions, weaponStats);
+    
+    // Boost confidence when enemy has limited options
+    let chargeConfidenceBoost = 0;
+    if (enemyPossibleMoves) {
+      if (enemyPossibleMoves.length === 1) chargeConfidenceBoost = 0.5;  // 100% certain
+      else if (enemyPossibleMoves.length === 2) chargeConfidenceBoost = 0.2;  // 50/50
+    }
 
     return {
       predictions,
       weaponScores,
-      confidence: this.calculateConfidence(enemy, sequenceKey)
+      confidence: Math.min(0.9, this.calculateConfidence(enemy, sequenceKey) + chargeConfidenceBoost),
+      possibleMoves: enemyPossibleMoves  // Include for decision making
     };
   }
 
