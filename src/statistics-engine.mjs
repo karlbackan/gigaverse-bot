@@ -27,10 +27,13 @@ export class StatisticsEngine {
         if (data.enemyStats) {
           this.enemyStats = new Map(data.enemyStats);
           
-          // Ensure all enemies have recentBattles array (for backward compatibility)
+          // Ensure all enemies have required fields (for backward compatibility)
           for (const [enemyId, enemy] of this.enemyStats.entries()) {
             if (!enemy.recentBattles) {
               enemy.recentBattles = [];
+            }
+            if (!enemy.chargePatterns) {
+              enemy.chargePatterns = {};
             }
           }
         } else {
