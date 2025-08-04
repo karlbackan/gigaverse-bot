@@ -71,7 +71,8 @@ export class DecisionEngine {
       health: enemyHealth,
       healthPercent: enemyStats?.healthPercent || (enemyHealth / (enemyStats?.maxHealth || 100)) * 100,
       shield: enemyStats?.shield || 0,
-      shieldPercent: enemyStats?.shieldPercent || 0
+      shieldPercent: enemyStats?.shieldPercent || 0,
+      charges: enemyStats?.charges || null  // Include charge data!
     };
 
     // Prepare weapon stats
@@ -132,6 +133,20 @@ export class DecisionEngine {
     const battleCount = this.statisticsEngine.getBattleCount(enemyId);
     const confidenceMultiplier = Math.min(1, battleCount / this.params.minBattlesForConfidence);
     
+    // CRITICAL: Check if enemy has only one possible move - NEVER explore in this case!
+    if (enemyPossibleMoves && enemyPossibleMoves.length === 1) {
+      const onlyMove = enemyPossibleMoves[0];
+      const counters = { rock: 'paper', paper: 'scissor', scissor: 'rock' };
+      const guaranteed = counters[onlyMove];
+      
+      if (availableWeapons.includes(guaranteed)) {
+        if (!config.minimalOutput) {
+          console.log(`💯 Guaranteed win! Enemy can only play ${onlyMove}, countering with ${guaranteed}`);
+        }
+        return guaranteed;
+      }
+    }
+    
     // Determine exploration rate based on performance
     let effectiveExplorationRate = this.params.explorationRate;
     if (isWinningStreak && battleCount > this.params.minBattlesForConfidence) {
@@ -140,7 +155,12 @@ export class DecisionEngine {
       effectiveExplorationRate *= 1.5; // Increase exploration when losing
     }
     
-    // Apply epsilon-greedy exploration FIRST
+    // Reduce exploration when enemy has limited options
+    if (enemyPossibleMoves && enemyPossibleMoves.length === 2) {
+      effectiveExplorationRate *= 0.5; // Half exploration rate for 50/50 situations
+    }
+    
+    // Apply epsilon-greedy exploration
     if (Math.random() < effectiveExplorationRate) {
       if (!config.minimalOutput) {
         console.log(`Exploring (${(effectiveExplorationRate * 100).toFixed(0)}% rate)`);
