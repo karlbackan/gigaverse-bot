@@ -25,6 +25,13 @@ export class StatisticsEngine {
         // Convert arrays back to Maps
         if (data.enemyStats) {
           this.enemyStats = new Map(data.enemyStats);
+          
+          // Ensure all enemies have recentBattles array (for backward compatibility)
+          for (const [enemyId, enemy] of this.enemyStats.entries()) {
+            if (!enemy.recentBattles) {
+              enemy.recentBattles = [];
+            }
+          }
         } else {
           this.enemyStats = new Map();
         }
@@ -87,7 +94,8 @@ export class StatisticsEngine {
         movesByTurn: {},
         moveSequences: {},
         statCorrelations: {},
-        noobIdPatterns: {}
+        noobIdPatterns: {},
+        recentBattles: [] // For recency weighting
       });
     }
 
@@ -134,6 +142,19 @@ export class StatisticsEngine {
         enemy.noobIdPatterns[noobIdRange] = { rock: 0, paper: 0, scissor: 0 };
       }
       enemy.noobIdPatterns[noobIdRange][enemyAction]++;
+    }
+    
+    // Store in recent battles for recency weighting
+    enemy.recentBattles.push({
+      turn,
+      move: enemyAction,
+      timestamp,
+      sequenceKey: this.getSequenceKey(enemyId)
+    });
+    
+    // Keep only last 100 battles for recency
+    if (enemy.recentBattles.length > 100) {
+      enemy.recentBattles.shift();
     }
 
     // Record to session
@@ -192,11 +213,12 @@ export class StatisticsEngine {
 
     // Weight factors (configurable)
     const weights = {
-      overall: 0.1,        // Overall move distribution
-      turnSpecific: 0.2,   // Turn-specific patterns
-      sequence: 0.4,       // Move sequences (most important)
-      statCorrelation: 0.15, // Stat-based patterns
-      noobIdPattern: 0.15   // Time-based shifts
+      overall: 0.05,       // Overall move distribution (reduced)
+      turnSpecific: 0.15,  // Turn-specific patterns (reduced)
+      sequence: 0.35,      // Move sequences (still important)
+      statCorrelation: 0.1, // Stat-based patterns (reduced)
+      noobIdPattern: 0.1,   // Time-based shifts (reduced)
+      recent: 0.25         // Recent battles (new, important)
     };
 
     // 1. Overall move distribution
@@ -255,6 +277,31 @@ export class StatisticsEngine {
           predictions.paper += weights.noobIdPattern * (noobMoves.paper / noobTotal);
           predictions.scissor += weights.noobIdPattern * (noobMoves.scissor / noobTotal);
         }
+      }
+    }
+    
+    // 6. Recency-weighted predictions
+    if (enemy.recentBattles && enemy.recentBattles.length > 0) {
+      const now = Date.now();
+      const recentMoves = { rock: 0, paper: 0, scissor: 0 };
+      let totalWeight = 0;
+      
+      // Calculate recency-weighted move distribution
+      for (const battle of enemy.recentBattles) {
+        const age = (now - battle.timestamp) / (1000 * 60 * 60); // Age in hours
+        const recencyWeight = Math.exp(-0.1 * age); // Exponential decay
+        
+        if (battle.move) {
+          recentMoves[battle.move] += recencyWeight;
+          totalWeight += recencyWeight;
+        }
+      }
+      
+      // Apply recent pattern predictions
+      if (totalWeight > 0) {
+        predictions.rock += weights.recent * (recentMoves.rock / totalWeight);
+        predictions.paper += weights.recent * (recentMoves.paper / totalWeight);
+        predictions.scissor += weights.recent * (recentMoves.scissor / totalWeight);
       }
     }
 
@@ -439,5 +486,11 @@ export class StatisticsEngine {
 
   exportStatistics() {
     this.saveData();
+  }
+  
+  // Get battle count for an enemy
+  getBattleCount(enemyId) {
+    const enemy = this.enemyStats.get(enemyId);
+    return enemy ? enemy.totalBattles : 0;
   }
 }

@@ -31,6 +31,19 @@ export class DecisionEngine {
     this.statisticsEngine = new StatisticsEngine();
     this.currentEnemyId = null;
     this.currentNoobId = null;
+    
+    // Robustness parameters
+    this.params = {
+      explorationRate: 0.1,        // 10% random exploration
+      minBattlesForConfidence: 20, // Need 20 battles for full confidence
+      lossStreakThreshold: 0.35,   // Trigger fallback if win rate < 35%
+      recentWindowSize: 20,        // Look at last 20 battles for win rate
+      winStreakThreshold: 0.75,    // Reduce exploration if win rate > 75%
+      mixedStrategyWeight: 0.5     // For game theory optimal play
+    };
+    
+    // Track recent performance by enemy
+    this.enemyRecentPerformance = new Map();
   }
 
   // Set current noobId for tracking time-based patterns
@@ -87,17 +100,48 @@ export class DecisionEngine {
       weaponStats,
       this.currentNoobId
     );
+    
+    // Check recent performance for this enemy
+    const recentPerformance = this.getRecentPerformance(enemyId);
+    const isLosingStreak = recentPerformance.winRate < this.params.lossStreakThreshold;
+    const isWinningStreak = recentPerformance.winRate > this.params.winStreakThreshold;
+    
+    // Apply confidence scaling based on battle count
+    const battleCount = this.statisticsEngine.getBattleCount(enemyId);
+    const confidenceMultiplier = Math.min(1, battleCount / this.params.minBattlesForConfidence);
+    
+    // Determine exploration rate based on performance
+    let effectiveExplorationRate = this.params.explorationRate;
+    if (isWinningStreak && battleCount > this.params.minBattlesForConfidence) {
+      effectiveExplorationRate *= 0.5; // Reduce exploration when winning
+    } else if (isLosingStreak) {
+      effectiveExplorationRate *= 1.5; // Increase exploration when losing
+    }
+    
+    // Apply epsilon-greedy exploration FIRST
+    if (Math.random() < effectiveExplorationRate) {
+      if (!config.minimalOutput) {
+        console.log(`Exploring (${(effectiveExplorationRate * 100).toFixed(0)}% rate)`);
+      } else {
+        console.log('Explore');
+      }
+      return this.getRandomAction(availableWeapons);
+    }
 
-    // If we have a high-confidence prediction, use it
-    if (prediction && prediction.confidence > 0.6) {
+    // If we have a prediction with scaled confidence
+    if (prediction && prediction.confidence * confidenceMultiplier > 0.3) {
+      const scaledConfidence = prediction.confidence * confidenceMultiplier;
+      
       if (config.minimalOutput) {
         // Minimal output: Conf% R/P/S probabilities
         const r = (prediction.predictions.rock * 100).toFixed(0);
         const p = (prediction.predictions.paper * 100).toFixed(0);
         const s = (prediction.predictions.scissor * 100).toFixed(0);
-        console.log(`Conf:${(prediction.confidence * 100).toFixed(0)}% R${r}/P${p}/S${s}`);
+        console.log(`Conf:${(scaledConfidence * 100).toFixed(0)}% R${r}/P${p}/S${s}`);
       } else {
-        console.log('Using statistical prediction with confidence:', prediction.confidence.toFixed(2));
+        console.log('Using statistical prediction');
+        console.log(`  Raw confidence: ${prediction.confidence.toFixed(2)}, Scaled: ${scaledConfidence.toFixed(2)}`);
+        console.log(`  Battle count: ${battleCount}, Win rate: ${(recentPerformance.winRate * 100).toFixed(0)}%`);
         console.log('Enemy move predictions:', {
           rock: prediction.predictions.rock.toFixed(3),
           paper: prediction.predictions.paper.toFixed(3),
@@ -109,29 +153,64 @@ export class DecisionEngine {
           scissor: prediction.weaponScores.scissor.toFixed(3)
         });
       }
-
-      // Select weapon with highest score that's available
-      let bestWeapon = null;
-      let bestScore = -Infinity;
-
-      for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
-        if ((!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0) {
-          if (score > bestScore) {
-            bestScore = score;
-            bestWeapon = weapon;
+      
+      // Handle losing streak - use fallback strategy
+      if (isLosingStreak) {
+        if (!config.minimalOutput) {
+          console.log('Losing streak detected - using counter to favorite move');
+        }
+        const favoriteMove = this.getFavoriteEnemyMove(enemyId);
+        if (favoriteMove) {
+          const counter = actionLosses[favoriteMove]; // What beats their favorite
+          if ((!availableWeapons || availableWeapons.includes(counter)) && weaponCharges[counter] > 0) {
+            return counter;
           }
         }
       }
 
-      if (bestWeapon) {
-        // Add some randomness to avoid being too predictable (10% chance)
-        if (Math.random() < 0.1) {
-          if (!config.minimalOutput) {
-            console.log('Adding randomness to avoid predictability');
-          }
-          return this.getRandomAction(availableWeapons);
+      // Implement mixed strategy based on weapon scores
+      const availableScores = {};
+      let totalPositiveScore = 0;
+      
+      for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
+        if ((!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0) {
+          // Convert scores to probabilities (shift to positive)
+          const shiftedScore = score + 1; // Ensure positive
+          availableScores[weapon] = Math.max(0, shiftedScore);
+          totalPositiveScore += availableScores[weapon];
         }
-        return bestWeapon;
+      }
+      
+      if (Object.keys(availableScores).length > 0 && totalPositiveScore > 0) {
+        // Find the best weapon
+        let bestWeapon = null;
+        let bestScore = -Infinity;
+        for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
+          if (availableScores[weapon] !== undefined && score > bestScore) {
+            bestScore = score;
+            bestWeapon = weapon;
+          }
+        }
+        
+        // Apply mixed strategy - don't always pick the best
+        const mixedProbabilities = {};
+        for (const [weapon, score] of Object.entries(availableScores)) {
+          if (weapon === bestWeapon) {
+            // Best weapon gets extra weight based on confidence
+            mixedProbabilities[weapon] = score + (totalPositiveScore * this.params.mixedStrategyWeight);
+          } else {
+            mixedProbabilities[weapon] = score;
+          }
+        }
+        
+        // Select based on mixed probabilities
+        const selectedWeapon = this.selectFromProbabilities(mixedProbabilities);
+        
+        if (!config.minimalOutput && selectedWeapon !== bestWeapon) {
+          console.log(`Mixed strategy: selected ${selectedWeapon} instead of best ${bestWeapon}`);
+        }
+        
+        return selectedWeapon;
       }
     } else if (prediction && config.minimalOutput) {
       console.log(`Conf:${(prediction.confidence * 100).toFixed(0)}% (low)`);
@@ -259,6 +338,9 @@ export class DecisionEngine {
     if (this.turnHistory.length > 1000) {
       this.turnHistory.shift();
     }
+    
+    // Update recent performance tracking
+    this.updateRecentPerformance(enemyId, result);
 
     // Record to statistics engine
     this.statisticsEngine.recordBattle({
@@ -307,5 +389,69 @@ export class DecisionEngine {
   exportStatistics() {
     this.statisticsEngine.saveData();
     console.log('Statistics data exported');
+  }
+  
+  // Get recent performance for an enemy
+  getRecentPerformance(enemyId) {
+    const recent = this.enemyRecentPerformance.get(enemyId) || { wins: 0, total: 0 };
+    return {
+      winRate: recent.total > 0 ? recent.wins / recent.total : 0.5,
+      battleCount: recent.total
+    };
+  }
+  
+  // Get favorite enemy move
+  getFavoriteEnemyMove(enemyId) {
+    const enemy = this.statisticsEngine.enemyStats.get(enemyId);
+    if (!enemy) return null;
+    
+    const moves = enemy.moves;
+    let favorite = null;
+    let maxCount = 0;
+    
+    for (const [move, count] of Object.entries(moves)) {
+      if (count > maxCount) {
+        maxCount = count;
+        favorite = move;
+      }
+    }
+    
+    return favorite;
+  }
+  
+  // Select from probability distribution
+  selectFromProbabilities(probabilities) {
+    const total = Object.values(probabilities).reduce((sum, prob) => sum + prob, 0);
+    if (total === 0) return null;
+    
+    let random = Math.random() * total;
+    for (const [option, probability] of Object.entries(probabilities)) {
+      random -= probability;
+      if (random <= 0) {
+        return option;
+      }
+    }
+    
+    // Fallback (shouldn't reach here)
+    return Object.keys(probabilities)[0];
+  }
+  
+  // Update recent performance tracking
+  updateRecentPerformance(enemyId, result) {
+    if (!this.enemyRecentPerformance.has(enemyId)) {
+      this.enemyRecentPerformance.set(enemyId, { wins: 0, total: 0, history: [] });
+    }
+    
+    const perf = this.enemyRecentPerformance.get(enemyId);
+    perf.history.push(result === 'win' ? 1 : 0);
+    
+    // Keep only recent window
+    if (perf.history.length > this.params.recentWindowSize) {
+      perf.history.shift();
+    }
+    
+    // Recalculate stats
+    perf.total = perf.history.length;
+    perf.wins = perf.history.filter(r => r === 1).length;
   }
 }
