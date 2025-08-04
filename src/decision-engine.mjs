@@ -171,8 +171,12 @@ export class DecisionEngine {
       return this.getSmartExplorationMove(availableWeapons, enemyPossibleMoves);
     }
 
-    // If we have a prediction with scaled confidence
-    if (prediction && prediction.confidence * confidenceMultiplier > 0.3) {
+    // Check if predictions are meaningful (not all zeros after filtering)
+    const hasValidPredictions = prediction && 
+      (prediction.predictions.rock > 0 || prediction.predictions.paper > 0 || prediction.predictions.scissor > 0);
+    
+    // If we have a prediction with scaled confidence and valid predictions
+    if (hasValidPredictions && prediction.confidence * confidenceMultiplier > 0.3) {
       const scaledConfidence = prediction.confidence * confidenceMultiplier;
       
       if (config.minimalOutput) {
@@ -316,6 +320,23 @@ export class DecisionEngine {
       // High health - slightly prefer aggressive play
       weights.rock *= 1.1;
       weights.scissor *= 1.1;
+    }
+    
+    // CRITICAL: Apply smart weighting based on what enemy CAN play
+    if (enemyPossibleMoves && enemyPossibleMoves.length < 3) {
+      // Reduce weight of moves that only counter what enemy CAN'T play
+      const enemyImpossible = ['rock', 'paper', 'scissor'].filter(m => !enemyPossibleMoves.includes(m));
+      
+      for (const impossible of enemyImpossible) {
+        // What counters this impossible move?
+        const uselessCounter = actionLosses[impossible];
+        // Reduce its weight significantly
+        weights[uselessCounter] *= 0.1;
+        
+        if (!config.minimalOutput) {
+          console.log(`  Reducing ${uselessCounter} weight (only counters ${impossible} which enemy can't play)`);
+        }
+      }
     }
 
     if (config.debug) {
