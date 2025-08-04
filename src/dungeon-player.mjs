@@ -105,7 +105,8 @@ export class DungeonPlayer {
             const underhaulMaxRuns = isJuiced ? underhaulInfo.juicedMaxRunsPerDay : underhaulInfo.UINT256_CID;
             
             if (underhaulRunsToday < underhaulMaxRuns) {
-              console.log(`✅ Switching to Dungetron Underhaul: ${underhaulRunsToday}/${underhaulMaxRuns} runs today`);
+              console.log(`✅ Attempting to switch to Dungetron Underhaul: ${underhaulRunsToday}/${underhaulMaxRuns} runs today`);
+              console.log('   (Note: This requires checkpoint 2 to be unlocked)');
               this.currentDungeonType = config.underhaulDungeonType; // Switch to Underhaul
               return true;
             } else {
@@ -114,6 +115,7 @@ export class DungeonPlayer {
           }
         } else {
           console.log('ℹ️  Auto-switch to Underhaul is disabled');
+          console.log('   (Underhaul may not be unlocked on this account)');
         }
         
         // Both dungeons are at their limits
@@ -187,8 +189,13 @@ export class DungeonPlayer {
           console.log('\n⚠️  API rejected dungeon start');
           
           if (this.currentDungeonType === 3) {
-            console.log('❗ Underhaul might require checkpoint 2 to be unlocked first');
-            console.log('   Try completing more Dungetron 5000 runs to unlock checkpoints');
+            console.log('❗ Dungetron Underhaul is NOT UNLOCKED on this account!');
+            console.log('   You need to reach checkpoint 2 in Dungetron 5000 first.');
+            console.log('   The account has only completed basic runs, not enough for Underhaul.');
+            
+            // Disable auto-switching since Underhaul isn't available
+            config.autoSwitchToUnderhaul = false;
+            console.log('\n   ⚠️  Auto-switch to Underhaul has been disabled.');
           } else {
             console.log('   Possible cooldown, daily limit, or state issue');
           }
