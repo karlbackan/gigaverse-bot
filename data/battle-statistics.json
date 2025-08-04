@@ -1,5 +1,5 @@
 {
-  "lastUpdated": 1754283937467,
+  "lastUpdated": 1754284360167,
   "enemyStats": [
     [
       "Goblin_1",
@@ -61836,76 +61836,76 @@
       "ChargeTest_1",
       {
         "firstSeen": 1754283495935,
-        "lastSeen": 1754283495938,
-        "totalBattles": 10,
+        "lastSeen": 1754284360167,
+        "totalBattles": 20,
         "moves": {
           "rock": 0,
-          "paper": 10,
+          "paper": 20,
           "scissor": 0
         },
         "movesByTurn": {
           "1": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "2": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "3": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "4": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "5": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "6": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "7": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "8": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "9": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           },
           "10": {
             "rock": 0,
-            "paper": 1,
+            "paper": 2,
             "scissor": 0
           }
         },
         "moveSequences": {
           "paper-paper": {
             "rock": 0,
-            "paper": 8,
+            "paper": 18,
             "scissor": 0
           }
         },
         "statCorrelations": {
           "p100_e100": {
             "rock": 0,
-            "paper": 10,
+            "paper": 20,
             "scissor": 0
           }
         },
@@ -61970,12 +61970,72 @@
             "move": "paper",
             "timestamp": 1754283495938,
             "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 1,
+            "move": "paper",
+            "timestamp": 1754284360162,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 2,
+            "move": "paper",
+            "timestamp": 1754284360163,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 3,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 4,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 5,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 6,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 7,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 8,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 9,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
+          },
+          {
+            "turn": 10,
+            "move": "paper",
+            "timestamp": 1754284360167,
+            "sequenceKey": "paper-paper"
           }
         ],
         "chargePatterns": {
           "r3_p3_s3": {
             "rock": 0,
-            "paper": 10,
+            "paper": 20,
             "scissor": 0
           }
         }

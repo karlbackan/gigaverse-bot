@@ -167,7 +167,8 @@ export class DecisionEngine {
       } else {
         console.log('Explore');
       }
-      return this.getRandomAction(availableWeapons);
+      // Smart exploration: only explore moves that counter possible enemy moves
+      return this.getSmartExplorationMove(availableWeapons, enemyPossibleMoves);
     }
 
     // If we have a prediction with scaled confidence
@@ -400,6 +401,42 @@ export class DecisionEngine {
       noobId: this.currentNoobId,
       timestamp: Date.now()
     });
+  }
+
+  // Smart exploration: only explore moves that counter possible enemy moves
+  getSmartExplorationMove(availableWeapons, enemyPossibleMoves) {
+    if (!enemyPossibleMoves || enemyPossibleMoves.length === 3) {
+      // All moves possible, use normal random
+      return this.getRandomAction(availableWeapons);
+    }
+    
+    // Determine which of our moves are useful (counter what enemy CAN play)
+    const usefulMoves = new Set();
+    
+    // For each possible enemy move, add the counter to useful moves
+    for (const enemyMove of enemyPossibleMoves) {
+      const counter = actionLosses[enemyMove]; // What beats this enemy move
+      if (availableWeapons.includes(counter)) {
+        usefulMoves.add(counter);
+      }
+    }
+    
+    // Convert to array
+    const usefulArray = Array.from(usefulMoves);
+    
+    if (config.debug || !config.minimalOutput) {
+      console.log(`  Smart exploration: Enemy can play ${enemyPossibleMoves.join('/')}, useful moves: ${usefulArray.join('/')}`);
+      
+      // Show what we're excluding
+      const excluded = availableWeapons.filter(w => !usefulArray.includes(w));
+      if (excluded.length > 0) {
+        const enemyCantPlay = ['rock', 'paper', 'scissor'].filter(m => !enemyPossibleMoves.includes(m));
+        console.log(`  Excluding ${excluded.join('/')} (only counters ${enemyCantPlay.join('/')} which enemy can't play)`);
+      }
+    }
+    
+    // Pick randomly from useful moves
+    return usefulArray[Math.floor(Math.random() * usefulArray.length)] || this.getRandomAction(availableWeapons);
   }
 
   // Get statistics summary
