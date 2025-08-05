@@ -229,6 +229,7 @@ export class DungeonPlayer {
               // Try to fall back to Dungetron 5000
               console.log('\n   ⚠️  Falling back to Dungetron 5000...');
               this.currentDungeonType = 1;
+              this.decisionEngine.setDungeonType(1);  // CRITICAL: Update statistics engine too!
               // Retry with Dungetron 5000
               return await this.startDungeon();
             }
