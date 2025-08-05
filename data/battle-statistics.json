@@ -1,5 +1,5 @@
 {
-  "lastUpdated": 1754404090459,
+  "lastUpdated": 1754406246168,
   "dungeonStats": {
     "1": [
       [
@@ -10371,7 +10371,1553 @@
         }
       ]
     ],
-    "3": []
+    "3": [
+      [
+        23,
+        {
+          "firstSeen": 1754406047723,
+          "lastSeen": 1754406077241,
+          "totalBattles": 11,
+          "moves": {
+            "rock": 3,
+            "paper": 5,
+            "scissor": 3
+          },
+          "movesByTurn": {
+            "1": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "2": {
+              "rock": 1,
+              "paper": 3,
+              "scissor": 1
+            },
+            "3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "4": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "5": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {
+            "paper-paper": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 0
+            },
+            "paper-rock": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 2
+            },
+            "rock-scissor": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "scissor-paper": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "paper-scissor": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "scissor-rock": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "rock-paper": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 1,
+              "paper": 3,
+              "scissor": 0
+            },
+            "p60_e100": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "p40_e100": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 1
+            },
+            "p40_e0": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p20_e0": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 3,
+              "paper": 5,
+              "scissor": 3
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 1,
+              "move": "paper",
+              "timestamp": 1754406047723,
+              "sequenceKey": null
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754406051005,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754406053871,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754406056828,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406059707,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754406062574,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754406065441,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754406068307,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754406071175,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754406074144,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754406077241,
+              "sequenceKey": "rock-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "paper_conservation": {
+              "rock": 0,
+              "paper": 3,
+              "scissor": 0
+            },
+            "no_paper": {
+              "rock": 3,
+              "paper": 0,
+              "scissor": 3
+            }
+          }
+        }
+      ],
+      [
+        24,
+        {
+          "firstSeen": 1754406083249,
+          "lastSeen": 1754406097604,
+          "totalBattles": 6,
+          "moves": {
+            "rock": 2,
+            "paper": 1,
+            "scissor": 3
+          },
+          "movesByTurn": {
+            "4": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 1
+            },
+            "5": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 2
+            },
+            "6": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "paper-scissor": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "scissor-rock": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 2
+            },
+            "rock-scissor": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            },
+            "p60_e60": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 2
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 2,
+              "paper": 1,
+              "scissor": 3
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 6,
+              "move": "paper",
+              "timestamp": 1754406083249,
+              "sequenceKey": null
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754406086119,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754406088986,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754406091854,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754406094720,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754406097604,
+              "sequenceKey": "rock-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 2
+            }
+          }
+        }
+      ],
+      [
+        25,
+        {
+          "firstSeen": 1754406100459,
+          "lastSeen": 1754406106190,
+          "totalBattles": 3,
+          "moves": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "4": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "rock-scissor": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "p40_e100": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "p40_e60": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754406100459,
+              "sequenceKey": null
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754406103321,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754406106190,
+              "sequenceKey": "scissor-paper"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          }
+        }
+      ],
+      [
+        1,
+        {
+          "firstSeen": 1754406132407,
+          "lastSeen": 1754406132407,
+          "totalBattles": 1,
+          "moves": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "1": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {},
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 1,
+              "move": "scissor",
+              "timestamp": 1754406132407,
+              "sequenceKey": null
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        2,
+        {
+          "firstSeen": 1754406135395,
+          "lastSeen": 1754406135395,
+          "totalBattles": 1,
+          "moves": {
+            "rock": 0,
+            "paper": 0,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "2": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {},
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406135395,
+              "sequenceKey": null
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        3,
+        {
+          "firstSeen": 1754406138180,
+          "lastSeen": 1754406141110,
+          "totalBattles": 2,
+          "moves": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {},
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "p100_e0": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754406138180,
+              "sequenceKey": null
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754406141110,
+              "sequenceKey": "scissor-paper"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          }
+        }
+      ],
+      [
+        4,
+        {
+          "firstSeen": 1754406144077,
+          "lastSeen": 1754406156091,
+          "totalBattles": 5,
+          "moves": {
+            "rock": 1,
+            "paper": 2,
+            "scissor": 2
+          },
+          "movesByTurn": {
+            "2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 2
+            },
+            "3": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "4": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "paper-scissor": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor-scissor": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "scissor-rock": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 2
+            },
+            "p100_e60": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 1,
+              "paper": 2,
+              "scissor": 2
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754406144077,
+              "sequenceKey": null
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406147049,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406150015,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754406152984,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754406156091,
+              "sequenceKey": "rock-paper"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor_conservation": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          }
+        }
+      ],
+      [
+        5,
+        {
+          "firstSeen": 1754406159026,
+          "lastSeen": 1754406161994,
+          "totalBattles": 2,
+          "moves": {
+            "rock": 2,
+            "paper": 0,
+            "scissor": 0
+          },
+          "movesByTurn": {
+            "5": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {},
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754406159026,
+              "sequenceKey": null
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754406161994,
+              "sequenceKey": "rock-rock"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s3": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          }
+        }
+      ],
+      [
+        6,
+        {
+          "firstSeen": 1754406165066,
+          "lastSeen": 1754406173671,
+          "totalBattles": 4,
+          "moves": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 2
+          },
+          "movesByTurn": {
+            "3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "4": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            },
+            "5": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "paper-scissor": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor-scissor": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p100_e60": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 2
+            },
+            "p100_e40": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754406165066,
+              "sequenceKey": null
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754406167935,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754406170800,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754406173671,
+              "sequenceKey": "scissor-rock"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor_conservation": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            }
+          }
+        }
+      ],
+      [
+        7,
+        {
+          "firstSeen": 1754406176669,
+          "lastSeen": 1754406182475,
+          "totalBattles": 3,
+          "moves": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            },
+            "4": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "paper-scissor": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p100_e60": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "p100_e40": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754406176669,
+              "sequenceKey": null
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754406179431,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754406182475,
+              "sequenceKey": "scissor-paper"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          }
+        }
+      ],
+      [
+        8,
+        {
+          "firstSeen": 1754406185446,
+          "lastSeen": 1754406202953,
+          "totalBattles": 7,
+          "moves": {
+            "rock": 3,
+            "paper": 3,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "2": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "3": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 0
+            },
+            "4": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 0
+            },
+            "5": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "paper-rock": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 1
+            },
+            "rock-paper": {
+              "rock": 2,
+              "paper": 0,
+              "scissor": 0
+            }
+          },
+          "statCorrelations": {
+            "p100_e100": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p100_e60": {
+              "rock": 1,
+              "paper": 2,
+              "scissor": 0
+            },
+            "p60_e60": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 3,
+              "paper": 3,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754406185446,
+              "sequenceKey": null
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754406188314,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754406191178,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754406194128,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754406196902,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754406199676,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406202953,
+              "sequenceKey": "rock-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 3,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s3": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        9,
+        {
+          "firstSeen": 1754406205821,
+          "lastSeen": 1754406211558,
+          "totalBattles": 3,
+          "moves": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 2
+          },
+          "movesByTurn": {
+            "2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "moveSequences": {
+            "scissor-paper": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406205821,
+              "sequenceKey": null
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754406208690,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754406211558,
+              "sequenceKey": "paper-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        10,
+        {
+          "firstSeen": 1754406214467,
+          "lastSeen": 1754406217439,
+          "totalBattles": 2,
+          "moves": {
+            "rock": 1,
+            "paper": 0,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "2": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {},
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "p60_e20": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754406214467,
+              "sequenceKey": null
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754406217439,
+              "sequenceKey": "rock-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        11,
+        {
+          "firstSeen": 1754406220363,
+          "lastSeen": 1754406225992,
+          "totalBattles": 3,
+          "moves": {
+            "rock": 0,
+            "paper": 2,
+            "scissor": 1
+          },
+          "movesByTurn": {
+            "4": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "5": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {
+            "paper-paper": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 0
+            },
+            "p60_e80": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 1
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754406220363,
+              "sequenceKey": null
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754406223127,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754406225992,
+              "sequenceKey": "paper-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "paper_conservation": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        12,
+        {
+          "firstSeen": 1754406228862,
+          "lastSeen": 1754406237289,
+          "totalBattles": 4,
+          "moves": {
+            "rock": 1,
+            "paper": 1,
+            "scissor": 2
+          },
+          "movesByTurn": {
+            "4": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "5": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 1
+            },
+            "6": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            }
+          },
+          "moveSequences": {
+            "scissor-paper": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "paper-rock": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 1
+            },
+            "p60_e60": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754406228862,
+              "sequenceKey": null
+            },
+            {
+              "turn": 6,
+              "move": "paper",
+              "timestamp": 1754406231627,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754406234345,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754406237289,
+              "sequenceKey": "rock-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "r2_p3_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ],
+      [
+        13,
+        {
+          "firstSeen": 1754406240124,
+          "lastSeen": 1754406246168,
+          "totalBattles": 3,
+          "moves": {
+            "rock": 0,
+            "paper": 1,
+            "scissor": 2
+          },
+          "movesByTurn": {
+            "4": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            },
+            "5": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "moveSequences": {
+            "paper-scissor": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          },
+          "statCorrelations": {
+            "p60_e100": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "noobIdPatterns": {
+            "76000": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 2
+            }
+          },
+          "recentBattles": [
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754406240124,
+              "sequenceKey": null
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754406242927,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754406246168,
+              "sequenceKey": "scissor-scissor"
+            }
+          ],
+          "chargePatterns": {
+            "r3_p3_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "r3_p2_s3": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            }
+          }
+        }
+      ]
+    ]
   },
   "moveSequencesByDungeon": {
     "1": [
@@ -10504,6 +12050,128 @@
         ]
       ]
     ],
-    "3": []
+    "3": [
+      [
+        23,
+        [
+          "paper",
+          "rock",
+          "scissor"
+        ]
+      ],
+      [
+        24,
+        [
+          "scissor",
+          "rock",
+          "scissor"
+        ]
+      ],
+      [
+        25,
+        [
+          "rock",
+          "scissor",
+          "paper"
+        ]
+      ],
+      [
+        1,
+        [
+          "scissor"
+        ]
+      ],
+      [
+        2,
+        [
+          "scissor"
+        ]
+      ],
+      [
+        3,
+        [
+          "scissor",
+          "paper"
+        ]
+      ],
+      [
+        4,
+        [
+          "scissor",
+          "rock",
+          "paper"
+        ]
+      ],
+      [
+        5,
+        [
+          "rock",
+          "rock"
+        ]
+      ],
+      [
+        6,
+        [
+          "scissor",
+          "scissor",
+          "rock"
+        ]
+      ],
+      [
+        7,
+        [
+          "paper",
+          "scissor",
+          "paper"
+        ]
+      ],
+      [
+        8,
+        [
+          "paper",
+          "rock",
+          "scissor"
+        ]
+      ],
+      [
+        9,
+        [
+          "scissor",
+          "paper",
+          "scissor"
+        ]
+      ],
+      [
+        10,
+        [
+          "rock",
+          "scissor"
+        ]
+      ],
+      [
+        11,
+        [
+          "paper",
+          "paper",
+          "scissor"
+        ]
+      ],
+      [
+        12,
+        [
+          "paper",
+          "rock",
+          "scissor"
+        ]
+      ],
+      [
+        13,
+        [
+          "paper",
+          "scissor",
+          "scissor"
+        ]
+      ]
+    ]
   }
 }

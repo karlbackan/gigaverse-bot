@@ -281,12 +281,27 @@ export class StatisticsEngine {
     const r = charges.rock;
     const p = charges.paper;
     const s = charges.scissor;
-    const total = r + p + s;
     
-    // Special cases for limited options
-    if (r === 0 && p > 0 && s > 0) return 'no_rock';
-    if (p === 0 && r > 0 && s > 0) return 'no_paper';
-    if (s === 0 && r > 0 && p > 0) return 'no_scissor';
+    // For Underhaul: negative means recharging, 0+ means available
+    // Check for recharging weapons (negative charges)
+    if (r < 0 && p >= 0 && s >= 0) return 'rock_recharging';
+    if (p < 0 && r >= 0 && s >= 0) return 'paper_recharging';
+    if (s < 0 && r >= 0 && p >= 0) return 'scissor_recharging';
+    
+    // Multiple recharging
+    if (r < 0 && p < 0) return 'rock_paper_recharging';
+    if (r < 0 && s < 0) return 'rock_scissor_recharging';
+    if (p < 0 && s < 0) return 'paper_scissor_recharging';
+    if (r < 0 && p < 0 && s < 0) return 'all_recharging'; // Should never happen
+    
+    // Count available weapons (0 or positive charges)
+    const available = (r >= 0 ? 1 : 0) + (p >= 0 ? 1 : 0) + (s >= 0 ? 1 : 0);
+    const total = Math.max(0, r) + Math.max(0, p) + Math.max(0, s);
+    
+    // Special cases for limited options (considering 0 as usable)
+    if (r < 0 && p >= 0 && s >= 0) return 'no_rock';
+    if (p < 0 && r >= 0 && s >= 0) return 'no_paper';
+    if (s < 0 && r >= 0 && p >= 0) return 'no_scissor';
     
     // Low charge situations
     if (total <= 3) return 'critical_low';

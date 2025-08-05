@@ -363,9 +363,18 @@ export class DungeonPlayer {
 
       // Make decision using our engine - but ensure we only pick weapons with charges
       const availableWeapons = [];
-      if (player.rock.currentCharges > 0) availableWeapons.push('rock');
-      if (player.paper.currentCharges > 0) availableWeapons.push('paper'); 
-      if (player.scissor.currentCharges > 0) availableWeapons.push('scissor');
+      // In Underhaul: negative charges = recharging (can't use), 0+ = can use
+      const isUnderhaul = this.currentDungeonType === 3;
+      if (isUnderhaul) {
+        if (player.rock.currentCharges >= 0) availableWeapons.push('rock');
+        if (player.paper.currentCharges >= 0) availableWeapons.push('paper'); 
+        if (player.scissor.currentCharges >= 0) availableWeapons.push('scissor');
+      } else {
+        // Dungetron 5000: only positive charges can be used
+        if (player.rock.currentCharges > 0) availableWeapons.push('rock');
+        if (player.paper.currentCharges > 0) availableWeapons.push('paper'); 
+        if (player.scissor.currentCharges > 0) availableWeapons.push('scissor');
+      }
       
       if (availableWeapons.length === 0) {
         console.error('ERROR: No weapons have charges available!');
@@ -394,13 +403,15 @@ export class DungeonPlayer {
         }
       };
       
-      // Check if enemy has weapon charge data and handle negative charge bug
+      // Check if enemy has weapon charge data
       let enemyCharges = null;
       if (enemy.rock && enemy.paper && enemy.scissor) {
+        // In Underhaul, negative charges (-1/3) mean the weapon is recharging
+        // We need to preserve these negative values for proper tracking
         enemyCharges = {
-          rock: Math.max(0, enemy.rock.currentCharges || 0),      // Handle negative/undefined
-          paper: Math.max(0, enemy.paper.currentCharges || 0),    // -1/3 becomes 0
-          scissor: Math.max(0, enemy.scissor.currentCharges || 0)
+          rock: enemy.rock.currentCharges ?? 0,
+          paper: enemy.paper.currentCharges ?? 0,
+          scissor: enemy.scissor.currentCharges ?? 0
         };
         
         // Log first time we see enemy charges

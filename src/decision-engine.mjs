@@ -31,6 +31,7 @@ export class DecisionEngine {
     this.statisticsEngine = new StatisticsEngine();
     this.currentEnemyId = null;
     this.currentNoobId = null;
+    this.currentDungeonType = 1; // Default to Dungetron 5000
     
     // Robustness parameters
     this.params = {
@@ -53,6 +54,7 @@ export class DecisionEngine {
 
   // Set current dungeon type for separate tracking
   setDungeonType(dungeonType) {
+    this.currentDungeonType = dungeonType;
     this.statisticsEngine.setDungeonType(dungeonType);
   }
 
@@ -101,14 +103,18 @@ export class DecisionEngine {
     let enemyPossibleMoves = ['rock', 'paper', 'scissor'];
     if (processedEnemyStats.charges) {
       enemyPossibleMoves = [];
-      if (processedEnemyStats.charges.rock > 0) enemyPossibleMoves.push('rock');
-      if (processedEnemyStats.charges.paper > 0) enemyPossibleMoves.push('paper');
-      if (processedEnemyStats.charges.scissor > 0) enemyPossibleMoves.push('scissor');
+      // In Underhaul, negative charges mean recharging (cannot use)
+      // 0 or positive means can use
+      if (processedEnemyStats.charges.rock >= 0) enemyPossibleMoves.push('rock');
+      if (processedEnemyStats.charges.paper >= 0) enemyPossibleMoves.push('paper');
+      if (processedEnemyStats.charges.scissor >= 0) enemyPossibleMoves.push('scissor');
       
       // Log when enemy options are limited
       if (enemyPossibleMoves.length < 3) {
         if (!config.minimalOutput) {
-          console.log(`🎯 Enemy limited to: ${enemyPossibleMoves.join(', ')} (charges: R${processedEnemyStats.charges.rock}/P${processedEnemyStats.charges.paper}/S${processedEnemyStats.charges.scissor})`);
+          // Show charges with recharging state
+          const formatCharge = (c) => c < 0 ? `${c}/3 (recharging)` : `${c}/3`;
+          console.log(`🎯 Enemy limited to: ${enemyPossibleMoves.join(', ')} (charges: R${formatCharge(processedEnemyStats.charges.rock)}, P${formatCharge(processedEnemyStats.charges.paper)}, S${formatCharge(processedEnemyStats.charges.scissor)})`);
         }
         
         // Force high confidence when only 1-2 options
