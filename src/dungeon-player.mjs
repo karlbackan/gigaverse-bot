@@ -243,6 +243,24 @@ export class DungeonPlayer {
       }
     } catch (error) {
       console.error('Error starting dungeon:', error);
+      
+      // Check if this is an Underhaul unlock error
+      if (error.response?.status === 400 && 
+          error.response?.data?.message === 'Error handling action' &&
+          this.currentDungeonType === 3) {
+        console.log('\n⚠️  API rejected Underhaul start');
+        console.log('❗ Dungetron Underhaul may not be unlocked on this account!');
+        console.log('   You need to reach checkpoint 2 in Dungetron 5000 first.');
+        
+        // Try to fall back to Dungetron 5000
+        console.log('\n   ⚠️  Falling back to Dungetron 5000...');
+        this.currentDungeonType = 1;
+        this.decisionEngine.setDungeonType(1);
+        
+        // Retry with Dungetron 5000
+        return await this.startDungeon();
+      }
+      
       return false;
     }
   }
