@@ -4,6 +4,7 @@ import { DecisionEngine } from './decision-engine.mjs';
 import { sleep } from './utils.mjs';
 import { sendDungeonAction } from './dungeon-api-direct.mjs';
 import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
+import { getEquippedGearIds } from './direct-api-gear.mjs';
 import { getNoobIdFromJWT } from './jwt-utils.mjs';
 import axios from 'axios';
 
@@ -186,6 +187,14 @@ export class DungeonPlayer {
         item.type === 'Consumable' && item.quantity > 0
       );
 
+      // Get equipped gear IDs if starting Underhaul
+      let gearInstanceIds = [];
+      if (this.currentDungeonType === 3) {
+        console.log('Fetching equipped gear for Underhaul...');
+        gearInstanceIds = await getEquippedGearIds();
+        console.log(`Found ${gearInstanceIds.length} equipped gear items: ${gearInstanceIds.join(', ')}`);
+      }
+
       // Prepare dungeon start data
       const data = {
         // IMPORTANT: Underhaul doesn't use juiced mode parameter!
@@ -193,7 +202,7 @@ export class DungeonPlayer {
         consumables: [], // Simplified for now
         itemId: 0, // No specific item
         index: 0,
-        gearInstanceIds: [] // Add gear instance IDs as expected by the API
+        gearInstanceIds: gearInstanceIds // Pass equipped gear IDs for Underhaul
       };
 
       // Use direct API call with current dungeon type
