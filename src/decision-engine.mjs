@@ -431,6 +431,7 @@ export class DecisionEngine {
       enemyStats,
       weaponStats,
       noobId: this.currentNoobId,
+      dungeonType: this.currentDungeonType,
       timestamp: Date.now()
     });
   }
@@ -516,7 +517,10 @@ export class DecisionEngine {
   
   // Get favorite enemy move
   getFavoriteEnemyMove(enemyId) {
-    const enemy = this.statisticsEngine.enemyStats.get(enemyId);
+    const dungeonStats = this.statisticsEngine.enemyStats[this.currentDungeonType];
+    if (!dungeonStats) return null;
+    
+    const enemy = dungeonStats.get(enemyId);
     if (!enemy) return null;
     
     const moves = enemy.moves;
