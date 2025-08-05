@@ -24,6 +24,9 @@ export class DungeonPlayer {
         console.log(`Initialized with noobId: ${noobId}`);
       }
     }
+    
+    // Set initial dungeon type in decision engine
+    this.decisionEngine.setDungeonType(this.currentDungeonType);
   }
 
   // Check if we can play (energy, juice status, etc.)
@@ -88,6 +91,7 @@ export class DungeonPlayer {
           if (runsToday < maxRuns) {
             console.log(`Dungetron 5000 runs today: ${runsToday}/${maxRuns}`);
             this.currentDungeonType = config.dungeonType; // Use Dungetron 5000
+            this.decisionEngine.setDungeonType(this.currentDungeonType);
             return true;
           } else {
             console.log(`⚠️  Dungetron 5000 daily limit reached: ${runsToday}/${maxRuns}`);
@@ -108,6 +112,7 @@ export class DungeonPlayer {
               console.log(`✅ Attempting to switch to Dungetron Underhaul: ${underhaulRunsToday}/${underhaulMaxRuns} runs today`);
               console.log('   (Note: This requires checkpoint 2 to be unlocked)');
               this.currentDungeonType = config.underhaulDungeonType; // Switch to Underhaul
+              this.decisionEngine.setDungeonType(this.currentDungeonType);
               return true;
             } else {
               console.log(`⚠️  Underhaul also at daily limit: ${underhaulRunsToday}/${underhaulMaxRuns}`);
@@ -159,7 +164,8 @@ export class DungeonPlayer {
 
       // Prepare dungeon start data
       const data = {
-        isJuiced: config.isJuiced || false, // Use juiced mode from config
+        // Use juiced mode for Underhaul (120 energy), or from config for Dungetron 5000
+        isJuiced: this.currentDungeonType === 3 ? true : (config.isJuiced || false),
         consumables: [], // Simplified for now
         itemId: 0, // No specific item
         index: 0,

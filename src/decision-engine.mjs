@@ -51,6 +51,11 @@ export class DecisionEngine {
     this.currentNoobId = noobId;
   }
 
+  // Set current dungeon type for separate tracking
+  setDungeonType(dungeonType) {
+    this.statisticsEngine.setDungeonType(dungeonType);
+  }
+
   // Make decision based on all available data
   async makeDecision(enemyId, turn, playerHealth, enemyHealth, availableWeapons = null, weaponCharges = null, playerStats = null, enemyStats = null) {
     if (config.debug) {

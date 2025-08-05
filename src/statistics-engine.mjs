@@ -9,12 +9,17 @@ const __dirname = path.dirname(__filename);
 export class StatisticsEngine {
   constructor() {
     this.dataPath = path.join(__dirname, '..', 'data', 'battle-statistics.json');
-    this.moveSequences = new Map(); // Track move sequences by enemy
+    // Track move sequences by dungeon type and enemy
+    this.moveSequences = {
+      1: new Map(), // Dungetron 5000
+      3: new Map()  // Underhaul
+    };
     this.sessionData = {
       startTime: Date.now(),
       battles: [],
       enemies: new Map()
     };
+    this.currentDungeonType = 1; // Default to Dungetron 5000
     this.loadData();
   }
 
@@ -23,12 +28,37 @@ export class StatisticsEngine {
       if (fs.existsSync(this.dataPath)) {
         const data = JSON.parse(fs.readFileSync(this.dataPath, 'utf8'));
         
-        // Convert arrays back to Maps
-        if (data.enemyStats) {
-          this.enemyStats = new Map(data.enemyStats);
+        // Initialize enemy stats for each dungeon type
+        this.enemyStats = {
+          1: new Map(), // Dungetron 5000
+          3: new Map()  // Underhaul
+        };
+        
+        // Handle new structure (by dungeon type)
+        if (data.dungeonStats) {
+          for (const [dungeonType, enemyData] of Object.entries(data.dungeonStats)) {
+            const dtype = parseInt(dungeonType);
+            if (this.enemyStats[dtype]) {
+              this.enemyStats[dtype] = new Map(enemyData);
+              
+              // Ensure all enemies have required fields (for backward compatibility)
+              for (const [enemyId, enemy] of this.enemyStats[dtype].entries()) {
+                if (!enemy.recentBattles) {
+                  enemy.recentBattles = [];
+                }
+                if (!enemy.chargePatterns) {
+                  enemy.chargePatterns = {};
+                }
+              }
+            }
+          }
+        } else if (data.enemyStats) {
+          // Handle old format - import into Dungetron 5000
+          console.log('Migrating old statistics format to new dungeon-specific format...');
+          this.enemyStats[1] = new Map(data.enemyStats);
           
-          // Ensure all enemies have required fields (for backward compatibility)
-          for (const [enemyId, enemy] of this.enemyStats.entries()) {
+          // Ensure all enemies have required fields
+          for (const [enemyId, enemy] of this.enemyStats[1].entries()) {
             if (!enemy.recentBattles) {
               enemy.recentBattles = [];
             }
@@ -36,22 +66,37 @@ export class StatisticsEngine {
               enemy.chargePatterns = {};
             }
           }
-        } else {
-          this.enemyStats = new Map();
         }
         
-        if (data.moveSequences) {
-          this.moveSequences = new Map(data.moveSequences);
+        // Load move sequences by dungeon type
+        if (data.moveSequencesByDungeon) {
+          for (const [dungeonType, sequences] of Object.entries(data.moveSequencesByDungeon)) {
+            const dtype = parseInt(dungeonType);
+            if (this.moveSequences[dtype]) {
+              this.moveSequences[dtype] = new Map(sequences);
+            }
+          }
+        } else if (data.moveSequences) {
+          // Handle old format - import into Dungetron 5000
+          this.moveSequences[1] = new Map(data.moveSequences);
         }
         
-        console.log(`Loaded statistics for ${this.enemyStats.size} enemies`);
+        const dungetronCount = this.enemyStats[1].size;
+        const underhaulCount = this.enemyStats[3].size;
+        console.log(`Loaded statistics: ${dungetronCount} Dungetron enemies, ${underhaulCount} Underhaul enemies`);
       } else {
-        this.enemyStats = new Map();
+        this.enemyStats = {
+          1: new Map(), // Dungetron 5000
+          3: new Map()  // Underhaul
+        };
         console.log('No existing statistics found, starting fresh');
       }
     } catch (error) {
       console.error('Error loading statistics:', error);
-      this.enemyStats = new Map();
+      this.enemyStats = {
+        1: new Map(),
+        3: new Map()
+      };
     }
   }
 
@@ -64,13 +109,29 @@ export class StatisticsEngine {
 
       const data = {
         lastUpdated: Date.now(),
-        enemyStats: Array.from(this.enemyStats.entries()),
-        moveSequences: Array.from(this.moveSequences.entries())
+        dungeonStats: {
+          1: Array.from(this.enemyStats[1].entries()),
+          3: Array.from(this.enemyStats[3].entries())
+        },
+        moveSequencesByDungeon: {
+          1: Array.from(this.moveSequences[1].entries()),
+          3: Array.from(this.moveSequences[3].entries())
+        }
       };
 
       fs.writeFileSync(this.dataPath, JSON.stringify(data, null, 2));
     } catch (error) {
       console.error('Error saving statistics:', error);
+    }
+  }
+
+  setDungeonType(dungeonType) {
+    if (dungeonType === 1 || dungeonType === 3) {
+      this.currentDungeonType = dungeonType;
+      if (!config.minimalOutput) {
+        const dungeonName = dungeonType === 1 ? 'Dungetron 5000' : 'Underhaul';
+        console.log(`Statistics engine set to track ${dungeonName} enemies`);
+      }
     }
   }
 
@@ -88,9 +149,10 @@ export class StatisticsEngine {
       timestamp = Date.now()
     } = battleData;
 
-    // Get or create enemy record
-    if (!this.enemyStats.has(enemyId)) {
-      this.enemyStats.set(enemyId, {
+    // Get or create enemy record for current dungeon type
+    const dungeonStats = this.enemyStats[this.currentDungeonType];
+    if (!dungeonStats.has(enemyId)) {
+      dungeonStats.set(enemyId, {
         firstSeen: timestamp,
         lastSeen: timestamp,
         totalBattles: 0,
@@ -104,7 +166,7 @@ export class StatisticsEngine {
       });
     }
 
-    const enemy = this.enemyStats.get(enemyId);
+    const enemy = dungeonStats.get(enemyId);
     enemy.lastSeen = timestamp;
     enemy.totalBattles++;
 
@@ -189,16 +251,17 @@ export class StatisticsEngine {
   }
 
   getSequenceKey(enemyId) {
-    const sequence = this.moveSequences.get(enemyId) || [];
+    const sequence = this.moveSequences[this.currentDungeonType].get(enemyId) || [];
     if (sequence.length < 2) return null;
     return sequence.slice(-2).join('-');
   }
 
   updateSequence(enemyId, move) {
-    if (!this.moveSequences.has(enemyId)) {
-      this.moveSequences.set(enemyId, []);
+    const dungeonSequences = this.moveSequences[this.currentDungeonType];
+    if (!dungeonSequences.has(enemyId)) {
+      dungeonSequences.set(enemyId, []);
     }
-    const sequence = this.moveSequences.get(enemyId);
+    const sequence = dungeonSequences.get(enemyId);
     sequence.push(move);
     if (sequence.length > 3) {
       sequence.shift(); // Keep only last 3 moves
@@ -239,7 +302,7 @@ export class StatisticsEngine {
   }
 
   predictNextMove(enemyId, turn, playerStats, enemyStats, weaponStats, noobId, enemyPossibleMoves = null) {
-    const enemy = this.enemyStats.get(enemyId);
+    const enemy = this.enemyStats[this.currentDungeonType].get(enemyId);
     if (!enemy || enemy.totalBattles < 5) {
       // Not enough data, return null
       return null;
@@ -464,7 +527,7 @@ export class StatisticsEngine {
 
   getAnalysisReport(enemyId = null) {
     if (enemyId) {
-      const enemy = this.enemyStats.get(enemyId);
+      const enemy = this.enemyStats[this.currentDungeonType].get(enemyId);
       if (!enemy) return null;
       
       return {
@@ -479,14 +542,17 @@ export class StatisticsEngine {
     }
     
     // Overall analysis
+    const dungeonStats = this.enemyStats[this.currentDungeonType];
     const report = {
-      totalEnemies: this.enemyStats.size,
-      totalBattles: Array.from(this.enemyStats.values()).reduce((sum, e) => sum + e.totalBattles, 0),
+      dungeonType: this.currentDungeonType,
+      dungeonName: this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Underhaul',
+      totalEnemies: dungeonStats.size,
+      totalBattles: Array.from(dungeonStats.values()).reduce((sum, e) => sum + e.totalBattles, 0),
       sessionBattles: this.sessionData.battles.length,
       enemyReports: []
     };
     
-    for (const [id, enemy] of this.enemyStats.entries()) {
+    for (const [id, enemy] of dungeonStats.entries()) {
       if (enemy.totalBattles >= 10) {
         report.enemyReports.push(this.getAnalysisReport(id));
       }
@@ -582,7 +648,7 @@ export class StatisticsEngine {
   
   // Get battle count for an enemy
   getBattleCount(enemyId) {
-    const enemy = this.enemyStats.get(enemyId);
+    const enemy = this.enemyStats[this.currentDungeonType].get(enemyId);
     return enemy ? enemy.totalBattles : 0;
   }
 }
