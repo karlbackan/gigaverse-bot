@@ -80,47 +80,45 @@ export class DungeonPlayer {
         const todayResponse = await api.get('/game/dungeon/today');
         const todayData = todayResponse.data;
         
-        // Check Dungetron 5000 first (ID 1)
-        const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1");
-        const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1);
+        // Check Underhaul first (ID 3) - PRIMARY GAME MODE
+        const underhaulProgress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "3");
+        const underhaulInfo = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 3);
         
-        if (dungetron5000Progress && dungetron5000Info) {
-          const runsToday = dungetron5000Progress.UINT256_CID || 0;
-          const maxRuns = isJuiced ? dungetron5000Info.juicedMaxRunsPerDay : dungetron5000Info.UINT256_CID;
+        if (underhaulInfo) {
+          const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
+          const underhaulMaxRuns = 9; // Underhaul always has 9 attempts
           
-          if (runsToday < maxRuns) {
-            console.log(`Dungetron 5000 runs today: ${runsToday}/${maxRuns}`);
-            this.currentDungeonType = config.dungeonType; // Use Dungetron 5000
+          if (underhaulRunsToday < underhaulMaxRuns) {
+            console.log(`Dungetron Underhaul runs today: ${underhaulRunsToday}/${underhaulMaxRuns}`);
+            this.currentDungeonType = 3; // Use Underhaul
             this.decisionEngine.setDungeonType(this.currentDungeonType);
             return true;
           } else {
-            console.log(`⚠️  Dungetron 5000 daily limit reached: ${runsToday}/${maxRuns}`);
+            console.log(`⚠️  Dungetron Underhaul daily limit reached: ${underhaulRunsToday}/${underhaulMaxRuns}`);
           }
         }
         
-        // Check if we should try Underhaul when Dungetron 5000 is full
-        if (config.autoSwitchToUnderhaul) {
-          // Check Underhaul if Dungetron 5000 is full (ID 3)
-          const underhaulProgress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "3");
-          const underhaulInfo = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 3);
+        // Check if we should try Dungetron 5000 when Underhaul is full
+        if (config.autoSwitchToDungetron) {
+          // Check Dungetron 5000 if Underhaul is full (ID 1)
+          const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1");
+          const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1);
           
-          if (underhaulInfo) {
-            const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
-            const underhaulMaxRuns = isJuiced ? underhaulInfo.juicedMaxRunsPerDay : underhaulInfo.UINT256_CID;
+          if (dungetron5000Progress && dungetron5000Info) {
+            const runsToday = dungetron5000Progress.UINT256_CID || 0;
+            const maxRuns = isJuiced ? dungetron5000Info.juicedMaxRunsPerDay : dungetron5000Info.UINT256_CID;
             
-            if (underhaulRunsToday < underhaulMaxRuns) {
-              console.log(`✅ Attempting to switch to Dungetron Underhaul: ${underhaulRunsToday}/${underhaulMaxRuns} runs today`);
-              console.log('   (Note: This requires checkpoint 2 to be unlocked)');
-              this.currentDungeonType = config.underhaulDungeonType; // Switch to Underhaul
+            if (runsToday < maxRuns) {
+              console.log(`✅ Switching to Dungetron 5000: ${runsToday}/${maxRuns} runs today`);
+              this.currentDungeonType = 1; // Switch to Dungetron 5000
               this.decisionEngine.setDungeonType(this.currentDungeonType);
               return true;
             } else {
-              console.log(`⚠️  Underhaul also at daily limit: ${underhaulRunsToday}/${underhaulMaxRuns}`);
+              console.log(`⚠️  Dungetron 5000 also at daily limit: ${runsToday}/${maxRuns}`);
             }
           }
         } else {
-          console.log('ℹ️  Auto-switch to Underhaul is disabled');
-          console.log('   (Underhaul may not be unlocked on this account)');
+          console.log('ℹ️  Auto-switch to Dungetron 5000 is disabled');
         }
         
         // Both dungeons are at their limits
@@ -150,7 +148,8 @@ export class DungeonPlayer {
   async startDungeon() {
     try {
       const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
-      const modeText = config.isJuiced ? ' (Juiced Mode)' : '';
+      const modeText = this.currentDungeonType === 3 ? ' (Juiced Mode 120 energy)' : 
+                       (config.isJuiced ? ' (Juiced Mode)' : ' (Regular Mode)');
       if (!config.minimalOutput) {
         console.log(`Starting new ${dungeonName}${modeText} dungeon run...`);
       }
@@ -199,9 +198,14 @@ export class DungeonPlayer {
             console.log('   You need to reach checkpoint 2 in Dungetron 5000 first.');
             console.log('   The account has only completed basic runs, not enough for Underhaul.');
             
-            // Disable auto-switching since Underhaul isn't available
-            config.autoSwitchToUnderhaul = false;
-            console.log('\n   ⚠️  Auto-switch to Underhaul has been disabled.');
+            // Check if we're trying to run Underhaul but it's not unlocked
+            if (config.dungeonType === 3) {
+              // Try to fall back to Dungetron 5000
+              console.log('\n   ⚠️  Falling back to Dungetron 5000...');
+              this.currentDungeonType = 1;
+              // Retry with Dungetron 5000
+              return await this.startDungeon();
+            }
           } else {
             console.log('   Possible cooldown, daily limit, or state issue');
           }

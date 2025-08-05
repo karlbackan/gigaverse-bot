@@ -8,10 +8,10 @@ export const config = {
   walletAddress: process.env.WALLET_ADDRESS,
 
   // Bot Settings
-  dungeonType: process.env.DUNGEON_TYPE === 'UNDERHAUL' ? 3 : 1, // Read from env
-  isJuiced: process.env.DUNGEON_TYPE === 'JUICED', // Enable juiced mode
-  underhaulDungeonType: 3, // Dungetron Underhaul (Fallback when hitting limits)
-  autoSwitchToUnderhaul: process.env.AUTO_SWITCH_UNDERHAUL !== 'false', // Set to false to disable
+  dungeonType: process.env.DUNGEON_TYPE === 'REGULAR' ? 1 : 3, // Default to Underhaul (3), unless REGULAR specified
+  isJuiced: process.env.DUNGEON_TYPE === 'JUICED', // Enable juiced mode (not used for Underhaul)
+  dungetron5000Type: 1, // Dungetron 5000 (Fallback when Underhaul hits limits)
+  autoSwitchToDungetron: process.env.AUTO_SWITCH_UNDERHAUL !== 'false', // Auto-switch to Dungetron 5000 when Underhaul is full
   energyThreshold: parseInt(process.env.ENERGY_THRESHOLD || '40'),
   repairThreshold: parseInt(process.env.REPAIR_THRESHOLD || '30'),
   minEnergyToRun: parseInt(process.env.MIN_ENERGY_TO_RUN || '40'),
