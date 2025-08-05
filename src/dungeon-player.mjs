@@ -36,8 +36,34 @@ export class DungeonPlayer {
       try {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
+          // Detect which dungeon type we're in
+          // The entity should have DUNGEON_TYPE_CID or we can infer from the enemy types
+          const entity = dungeonState.data.entity;
+          
+          // Try to detect dungeon type from entity data
+          if (entity?.DUNGEON_TYPE_CID) {
+            this.currentDungeonType = entity.DUNGEON_TYPE_CID;
+            this.decisionEngine.setDungeonType(this.currentDungeonType);
+          } else if (dungeonState.data.run?.runEntityId) {
+            // Try to infer from run ID - Underhaul runs might have different ID patterns
+            const runId = dungeonState.data.run.runEntityId;
+            // Log the run ID to help us understand the pattern
+            console.log(`Active run ID: ${runId}`);
+            
+            // For now, check if we can get dungeon type from the run structure
+            // The actual logic will depend on how the API structures the data
+            if (dungeonState.data.run.dungeonType) {
+              this.currentDungeonType = dungeonState.data.run.dungeonType;
+              this.decisionEngine.setDungeonType(this.currentDungeonType);
+            } else {
+              // Keep current dungeon type as fallback
+              console.log(`Warning: Could not detect dungeon type from active run. Using default: ${this.currentDungeonType}`);
+            }
+          }
+          
           if (!config.minimalOutput) {
-            console.log('Already in an active dungeon - will continue playing');
+            const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Underhaul';
+            console.log(`Already in an active ${dungeonName} dungeon - will continue playing`);
             if (dungeonState.data.run.lootPhase) {
               console.log('(Currently in loot phase)');
             }
@@ -234,6 +260,13 @@ export class DungeonPlayer {
 
       const run = dungeonStateResponse.data.run;
       const entity = dungeonStateResponse.data.entity;
+      
+      // Double-check we have the right dungeon type set
+      if (entity?.DUNGEON_TYPE_CID && entity.DUNGEON_TYPE_CID !== this.currentDungeonType) {
+        console.log(`Dungeon type mismatch detected! Updating from ${this.currentDungeonType} to ${entity.DUNGEON_TYPE_CID}`);
+        this.currentDungeonType = entity.DUNGEON_TYPE_CID;
+        this.decisionEngine.setDungeonType(this.currentDungeonType);
+      }
       
       const player = run.players[0];
       
@@ -570,6 +603,8 @@ export class DungeonPlayer {
         }
       } else {
         console.log('Continuing existing dungeon...');
+        // Make sure decision engine knows which dungeon type we're in
+        this.decisionEngine.setDungeonType(this.currentDungeonType);
       }
 
       // Play through the dungeon continuously until completion or failure
