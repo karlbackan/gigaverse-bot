@@ -174,8 +174,7 @@ export class DungeonPlayer {
   async startDungeon() {
     try {
       const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
-      const modeText = this.currentDungeonType === 3 ? ' (Juiced Mode 120 energy)' : 
-                       (config.isJuiced ? ' (Juiced Mode)' : ' (Regular Mode)');
+      const modeText = config.isJuiced ? ' (Juiced Mode)' : ' (Regular Mode)';
       if (!config.minimalOutput) {
         console.log(`Starting new ${dungeonName}${modeText} dungeon run...`);
       }
@@ -189,8 +188,8 @@ export class DungeonPlayer {
 
       // Prepare dungeon start data
       const data = {
-        // Use juiced mode for Underhaul (120 energy), or from config for Dungetron 5000
-        isJuiced: this.currentDungeonType === 3 ? true : (config.isJuiced || false),
+        // IMPORTANT: Underhaul doesn't use juiced mode parameter!
+        isJuiced: config.isJuiced || false, // Always use config setting
         consumables: [], // Simplified for now
         itemId: 0, // No specific item
         index: 0,
