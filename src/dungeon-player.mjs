@@ -14,8 +14,12 @@ export class DungeonPlayer {
     this.currentDungeon = null;
     this.isPlaying = false;
     this.consecutiveErrors = 0;
-    this.currentDungeonType = config.dungeonType; // Start with Dungetron 5000
+    this.currentDungeonType = config.dungeonType; // Initialize from config
     this.walletAddress = walletAddress; // Store wallet address for this player
+    
+    // Log the initial dungeon type for clarity
+    const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
+    console.log(`Initialized with dungeon type: ${this.currentDungeonType} (${dungeonName})`)
     
     // Set noobId in decision engine
     const noobId = getNoobIdFromJWT(config.jwtToken);

@@ -30,12 +30,17 @@ export function resetActionToken() {
 }
 
 // Direct API wrapper that bypasses SDK
-export async function sendDirectAction(action, dungeonId = 3, data = {}) {
+export async function sendDirectAction(action, dungeonType, data = {}) {
   try {
+    // Ensure dungeonType is always provided
+    if (!dungeonType) {
+      throw new Error('dungeonType is required for sendDirectAction');
+    }
+    
     // Build payload with optional action token
     const payload = {
       action,
-      dungeonType: dungeonId, // Actually needs dungeonType, not dungeonId
+      dungeonType,
       data
     };
     
@@ -87,7 +92,7 @@ export async function sendDirectAction(action, dungeonId = 3, data = {}) {
       
       const retryPayload = {
         action,
-        dungeonType: dungeonId,
+        dungeonType,
         data
       };
       
@@ -172,12 +177,17 @@ export async function getDirectAvailableDungeons() {
 }
 
 // Send loot action directly
-export async function sendDirectLootAction(action, dungeonId = 3) {
+export async function sendDirectLootAction(action, dungeonType) {
   try {
+    // Ensure dungeonType is always provided
+    if (!dungeonType) {
+      throw new Error('dungeonType is required for sendDirectLootAction');
+    }
+    
     // Build payload for loot action
     const payload = {
       action,
-      dungeonType: dungeonId // Actually needs dungeonType
+      dungeonType
     };
     
     // Include action token if we have one from previous response
