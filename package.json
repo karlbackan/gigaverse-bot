@@ -8,6 +8,10 @@
     "start": "node src/bot.mjs",
     "menu": "node menu.mjs",
     "dev": "node --watch src/bot.mjs",
+    "server": "node server/server.mjs",
+    "server:dev": "node --watch server/server.mjs",
+    "client": "node server/client.mjs",
+    "multi": "node server/multi-account.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,6 +19,9 @@
   "license": "ISC",
   "dependencies": {
     "@fireballgg/gigaverse-sdk": "^0.0.1-alpha.1",
-    "dotenv": "^17.2.0"
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^4.21.2"
   }
 }

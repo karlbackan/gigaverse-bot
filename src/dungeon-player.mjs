@@ -238,12 +238,11 @@ export class DungeonPlayer {
             
             // Check if we're trying to run Underhaul but it's not unlocked
             if (config.dungeonType === 3) {
-              // Try to fall back to Dungetron 5000
-              console.log('\n   ⚠️  Falling back to Dungetron 5000...');
-              this.currentDungeonType = 1;
-              this.decisionEngine.setDungeonType(1);  // CRITICAL: Update statistics engine too!
-              // Retry with Dungetron 5000
-              return await this.startDungeon();
+              // DISABLED: Automatic fallback to dungeon 1
+              console.log('\n   ❌ Underhaul start failed. NOT falling back to Dungetron 5000.');
+              console.log('   To start Underhaul, you must do it manually in the browser.');
+              // Don't retry - just fail
+              return false;
             }
           } else {
             console.log('   Possible cooldown, daily limit, or state issue');
@@ -265,13 +264,11 @@ export class DungeonPlayer {
         console.log('❗ Dungetron Underhaul may not be unlocked on this account!');
         console.log('   You need to reach checkpoint 2 in Dungetron 5000 first.');
         
-        // Try to fall back to Dungetron 5000
-        console.log('\n   ⚠️  Falling back to Dungetron 5000...');
-        this.currentDungeonType = 1;
-        this.decisionEngine.setDungeonType(1);
-        
-        // Retry with Dungetron 5000
-        return await this.startDungeon();
+        // DISABLED: Automatic fallback to dungeon 1
+        console.log('\n   ❌ Underhaul start failed. NOT falling back to Dungetron 5000.');
+        console.log('   The API blocks Underhaul starts. Start it manually in browser.');
+        // Don't retry - just fail
+        return false;
       }
       
       return false;
