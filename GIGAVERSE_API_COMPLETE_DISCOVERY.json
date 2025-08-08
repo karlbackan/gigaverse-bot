@@ -1,0 +1,1714 @@
+{
+  "discoveryDate": "2025-08-08T06:59:32.720Z",
+  "baseUrl": "https://gigaverse.io/api",
+  "summary": {
+    "totalTested": 113,
+    "existing": 55,
+    "authRequired": 27,
+    "public": 7,
+    "categories": 14
+  },
+  "categories": {
+    "user": [
+      {
+        "method": "GET",
+        "path": "/user/me",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Current user info"
+      },
+      {
+        "method": "POST",
+        "path": "/user/auth",
+        "status": 500,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Internal Server Error",
+        "description": "User authentication"
+      },
+      {
+        "method": "PUT",
+        "path": "/user/settings",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Update user settings"
+      },
+      {
+        "method": "GET",
+        "path": "/user/gameaccount/0x1234567890123456789012345678901234567890",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "address": "0x1234567890123456789012345678901234567890",
+          "noob": null,
+          "allowedToCreateAccount": true,
+          "canEnterGame": false,
+          "noobPassBalance": 0,
+          "lastNoobId": 76291,
+          "maxNoobId": 10000
+        },
+        "description": "Game account by address"
+      },
+      {
+        "method": "POST",
+        "path": "/user/gameaccount",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Create game account"
+      },
+      {
+        "method": "POST",
+        "path": "/user/me",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "PUT",
+        "path": "/user/me",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "DELETE",
+        "path": "/user/me",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "PATCH",
+        "path": "/user/me",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      }
+    ],
+    "game": [
+      {
+        "method": "GET",
+        "path": "/game/dungeon/state",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Current dungeon state"
+      },
+      {
+        "method": "GET",
+        "path": "/game/dungeon/today",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Available dungeons today"
+      },
+      {
+        "method": "POST",
+        "path": "/game/dungeon/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Dungeon actions"
+      },
+      {
+        "method": "GET",
+        "path": "/game/dungeon/history",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Dungeon run history"
+      },
+      {
+        "method": "GET",
+        "path": "/game/dungeon/leaderboard",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Dungeon leaderboards"
+      },
+      {
+        "method": "GET",
+        "path": "/game/dungeon/stats",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Dungeon statistics"
+      },
+      {
+        "method": "GET",
+        "path": "/game/underhaul/state",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Underhaul dungeon state"
+      },
+      {
+        "method": "POST",
+        "path": "/game/underhaul/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Underhaul actions"
+      },
+      {
+        "method": "GET",
+        "path": "/game/underhaul/today",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Available underhaul today"
+      },
+      {
+        "method": "GET",
+        "path": "/game/underhaul/history",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Underhaul run history"
+      },
+      {
+        "method": "GET",
+        "path": "/game/underhaul/leaderboard",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Underhaul leaderboards"
+      },
+      {
+        "method": "GET",
+        "path": "/game/underhaul/stats",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Underhaul statistics"
+      },
+      {
+        "method": "GET",
+        "path": "/game/dungeon/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "PUT",
+        "path": "/game/dungeon/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "DELETE",
+        "path": "/game/dungeon/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "PATCH",
+        "path": "/game/dungeon/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "GET",
+        "path": "/game/underhaul/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "PUT",
+        "path": "/game/underhaul/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "DELETE",
+        "path": "/game/underhaul/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      },
+      {
+        "method": "PATCH",
+        "path": "/game/underhaul/action",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized"
+      }
+    ],
+    "gear": [
+      {
+        "method": "GET",
+        "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "entities": []
+        },
+        "description": "Player gear instances"
+      },
+      {
+        "method": "POST",
+        "path": "/gear/equip",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Equip gear"
+      },
+      {
+        "method": "POST",
+        "path": "/gear/unequip",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Unequip gear"
+      },
+      {
+        "method": "POST",
+        "path": "/gear/craft",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Craft gear"
+      },
+      {
+        "method": "POST",
+        "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      },
+      {
+        "method": "PUT",
+        "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      },
+      {
+        "method": "DELETE",
+        "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ],
+    "importexport": [
+      {
+        "method": "GET",
+        "path": "/importexport/balances/0x1234567890123456789012345678901234567890",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "entities": []
+        },
+        "description": "Player balances"
+      },
+      {
+        "method": "POST",
+        "path": "/importexport/import",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Import data"
+      },
+      {
+        "method": "POST",
+        "path": "/importexport/export",
+        "status": 401,
+        "exists": true,
+        "needsAuth": true,
+        "public": false,
+        "message": "Unauthorized",
+        "description": "Export data"
+      }
+    ],
+    "analytics": [
+      {
+        "method": "POST",
+        "path": "/analytics/event",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "success": true
+        },
+        "description": "Analytics events"
+      },
+      {
+        "method": "POST",
+        "path": "/analytics/track",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Track user action"
+      }
+    ],
+    "offchain": [
+      {
+        "method": "GET",
+        "path": "/offchain/player/energy/0x1234567890123456789012345678901234567890",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "entities": [
+            {
+              "docId": "Player#0x1234567890123456789012345678901234567890",
+              "_id": "6895a03caac5f1f0a512f862",
+              "createdAt": "2025-08-08T06:59:08.891Z",
+              "updatedAt": "2025-08-08T06:59:08.891Z",
+              "ENERGY_CID": 240000000000,
+              "TIMESTAMP_CID": 1754636348,
+              "__v": 0,
+              "parsedData": {
+                "energy": 240000000000,
+                "energyValue": 240,
+                "maxEnergy": 240,
+                "regenPerSecond": 2777777,
+                "regenPerHour": 10,
+                "secondsSinceLastUpdate": 0,
+                "isPlayerJuiced": false
+              }
+            }
+          ]
+        },
+        "description": "Player energy"
+      }
+    ],
+    "account": [
+      {
+        "method": "GET",
+        "path": "/account/0x1234567890123456789012345678901234567890",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "accountEntity": null,
+          "usernames": [],
+          "noob": null,
+          "checkpointProgress": []
+        },
+        "description": "Account info"
+      },
+      {
+        "method": "POST",
+        "path": "/account",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed",
+        "description": "Create account"
+      }
+    ],
+    "indexer": [
+      {
+        "method": "GET",
+        "path": "/indexer/player/gameitems/0x1234567890123456789012345678901234567890",
+        "status": 200,
+        "exists": true,
+        "needsAuth": false,
+        "public": true,
+        "data": {
+          "entities": []
+        },
+        "description": "Player game items"
+      }
+    ],
+    "dungeon": [
+      {
+        "method": "POST",
+        "path": "/dungeon/action",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      },
+      {
+        "method": "POST",
+        "path": "/dungeon/start",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ],
+    "underhaul": [
+      {
+        "method": "POST",
+        "path": "/underhaul/action",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      },
+      {
+        "method": "POST",
+        "path": "/underhaul/start",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ],
+    "graphql": [
+      {
+        "method": "POST",
+        "path": "/graphql",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ],
+    "auth": [
+      {
+        "method": "POST",
+        "path": "/auth/login",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      },
+      {
+        "method": "POST",
+        "path": "/auth/logout",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      },
+      {
+        "method": "POST",
+        "path": "/auth/refresh",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ],
+    "battle": [
+      {
+        "method": "POST",
+        "path": "/battle/start",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ],
+    "combat": [
+      {
+        "method": "POST",
+        "path": "/combat/action",
+        "status": 405,
+        "exists": true,
+        "needsAuth": false,
+        "public": false,
+        "message": "Method Not Allowed"
+      }
+    ]
+  },
+  "allEndpoints": [
+    {
+      "method": "GET",
+      "path": "/user/me",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Current user info"
+    },
+    {
+      "method": "POST",
+      "path": "/user/auth",
+      "status": 500,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Internal Server Error",
+      "description": "User authentication"
+    },
+    {
+      "method": "GET",
+      "path": "/user/profile",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "User profile"
+    },
+    {
+      "method": "GET",
+      "path": "/user/settings",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "User settings"
+    },
+    {
+      "method": "PUT",
+      "path": "/user/settings",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Update user settings"
+    },
+    {
+      "method": "GET",
+      "path": "/user/notifications",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "User notifications"
+    },
+    {
+      "method": "GET",
+      "path": "/user/gameaccount/0x1234567890123456789012345678901234567890",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "address": "0x1234567890123456789012345678901234567890",
+        "noob": null,
+        "allowedToCreateAccount": true,
+        "canEnterGame": false,
+        "noobPassBalance": 0,
+        "lastNoobId": 76291,
+        "maxNoobId": 10000
+      },
+      "description": "Game account by address"
+    },
+    {
+      "method": "GET",
+      "path": "/user/gameaccounts",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "All user game accounts"
+    },
+    {
+      "method": "POST",
+      "path": "/user/gameaccount",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Create game account"
+    },
+    {
+      "method": "GET",
+      "path": "/game/dungeon/state",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Current dungeon state"
+    },
+    {
+      "method": "GET",
+      "path": "/game/dungeon/today",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Available dungeons today"
+    },
+    {
+      "method": "POST",
+      "path": "/game/dungeon/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Dungeon actions"
+    },
+    {
+      "method": "GET",
+      "path": "/game/dungeon/history",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Dungeon run history"
+    },
+    {
+      "method": "GET",
+      "path": "/game/dungeon/leaderboard",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Dungeon leaderboards"
+    },
+    {
+      "method": "GET",
+      "path": "/game/dungeon/stats",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Dungeon statistics"
+    },
+    {
+      "method": "GET",
+      "path": "/game/underhaul/state",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Underhaul dungeon state"
+    },
+    {
+      "method": "POST",
+      "path": "/game/underhaul/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Underhaul actions"
+    },
+    {
+      "method": "GET",
+      "path": "/game/underhaul/today",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Available underhaul today"
+    },
+    {
+      "method": "GET",
+      "path": "/game/underhaul/history",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Underhaul run history"
+    },
+    {
+      "method": "GET",
+      "path": "/game/underhaul/leaderboard",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Underhaul leaderboards"
+    },
+    {
+      "method": "GET",
+      "path": "/game/underhaul/stats",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Underhaul statistics"
+    },
+    {
+      "method": "GET",
+      "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "entities": []
+      },
+      "description": "Player gear instances"
+    },
+    {
+      "method": "GET",
+      "path": "/gear/types",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Available gear types"
+    },
+    {
+      "method": "GET",
+      "path": "/gear/stats",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Gear statistics"
+    },
+    {
+      "method": "POST",
+      "path": "/gear/equip",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Equip gear"
+    },
+    {
+      "method": "POST",
+      "path": "/gear/unequip",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Unequip gear"
+    },
+    {
+      "method": "GET",
+      "path": "/gear/market",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Gear marketplace"
+    },
+    {
+      "method": "POST",
+      "path": "/gear/craft",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Craft gear"
+    },
+    {
+      "method": "GET",
+      "path": "/importexport/balances/0x1234567890123456789012345678901234567890",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "entities": []
+      },
+      "description": "Player balances"
+    },
+    {
+      "method": "GET",
+      "path": "/importexport/transactions",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Transaction history"
+    },
+    {
+      "method": "POST",
+      "path": "/importexport/import",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Import data"
+    },
+    {
+      "method": "POST",
+      "path": "/importexport/export",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized",
+      "description": "Export data"
+    },
+    {
+      "method": "POST",
+      "path": "/analytics/event",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "success": true
+      },
+      "description": "Analytics events"
+    },
+    {
+      "method": "GET",
+      "path": "/analytics/stats",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Analytics statistics"
+    },
+    {
+      "method": "POST",
+      "path": "/analytics/track",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Track user action"
+    },
+    {
+      "method": "GET",
+      "path": "/offchain/player/energy/0x1234567890123456789012345678901234567890",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "entities": [
+          {
+            "docId": "Player#0x1234567890123456789012345678901234567890",
+            "_id": "6895a03caac5f1f0a512f862",
+            "createdAt": "2025-08-08T06:59:08.891Z",
+            "updatedAt": "2025-08-08T06:59:08.891Z",
+            "ENERGY_CID": 240000000000,
+            "TIMESTAMP_CID": 1754636348,
+            "__v": 0,
+            "parsedData": {
+              "energy": 240000000000,
+              "energyValue": 240,
+              "maxEnergy": 240,
+              "regenPerSecond": 2777777,
+              "regenPerHour": 10,
+              "secondsSinceLastUpdate": 0,
+              "isPlayerJuiced": false
+            }
+          }
+        ]
+      },
+      "description": "Player energy"
+    },
+    {
+      "method": "GET",
+      "path": "/offchain/player/stats/0x1234567890123456789012345678901234567890",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Player stats"
+    },
+    {
+      "method": "GET",
+      "path": "/offchain/player/items/0x1234567890123456789012345678901234567890",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Player items"
+    },
+    {
+      "method": "GET",
+      "path": "/account/0x1234567890123456789012345678901234567890",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "accountEntity": null,
+        "usernames": [],
+        "noob": null,
+        "checkpointProgress": []
+      },
+      "description": "Account info"
+    },
+    {
+      "method": "GET",
+      "path": "/accounts",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "List accounts"
+    },
+    {
+      "method": "POST",
+      "path": "/account",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed",
+      "description": "Create account"
+    },
+    {
+      "method": "GET",
+      "path": "/indexer/player/gameitems/0x1234567890123456789012345678901234567890",
+      "status": 200,
+      "exists": true,
+      "needsAuth": false,
+      "public": true,
+      "data": {
+        "entities": []
+      },
+      "description": "Player game items"
+    },
+    {
+      "method": "GET",
+      "path": "/indexer/events",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Indexed events"
+    },
+    {
+      "method": "GET",
+      "path": "/indexer/blocks",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Indexed blocks"
+    },
+    {
+      "method": "GET",
+      "path": "/indexer/transactions",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found",
+      "description": "Indexed transactions"
+    },
+    {
+      "method": "POST",
+      "path": "/user/me",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "PUT",
+      "path": "/user/me",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "DELETE",
+      "path": "/user/me",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "PATCH",
+      "path": "/user/me",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "GET",
+      "path": "/game/dungeon/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "PUT",
+      "path": "/game/dungeon/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "DELETE",
+      "path": "/game/dungeon/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "PATCH",
+      "path": "/game/dungeon/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "GET",
+      "path": "/game/underhaul/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "PUT",
+      "path": "/game/underhaul/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "DELETE",
+      "path": "/game/underhaul/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "PATCH",
+      "path": "/game/underhaul/action",
+      "status": 401,
+      "exists": true,
+      "needsAuth": true,
+      "public": false,
+      "message": "Unauthorized"
+    },
+    {
+      "method": "POST",
+      "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "PUT",
+      "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "DELETE",
+      "path": "/gear/instances/0x1234567890123456789012345678901234567890",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/user/me",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/user/me",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/game/dungeon/state",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/game/underhaul/state",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/users/me",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/users/profile",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/players/me",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/players/stats",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/dungeon/state",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "POST",
+      "path": "/dungeon/action",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "GET",
+      "path": "/underhaul/state",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "POST",
+      "path": "/underhaul/action",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "POST",
+      "path": "/underhaul/start",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "POST",
+      "path": "/dungeon/start",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/users",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/stats",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/games",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/info",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/version",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/docs",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/swagger",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/api-docs",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/openapi.json",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/graphql",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "POST",
+      "path": "/graphql",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "GET",
+      "path": "/ws",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/socket",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/realtime",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/refresh",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/market/items",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/market/prices",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/economy/stats",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/leaderboard",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/rankings",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/friends",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/guilds",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/chat",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/messages",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/rewards",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/achievements",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/quests",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/events",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "POST",
+      "path": "/battle/start",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "POST",
+      "path": "/combat/action",
+      "status": 405,
+      "exists": true,
+      "needsAuth": false,
+      "public": false,
+      "message": "Method Not Allowed"
+    },
+    {
+      "method": "GET",
+      "path": "/battles/history",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/config",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/settings",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    },
+    {
+      "method": "GET",
+      "path": "/features",
+      "status": 404,
+      "exists": false,
+      "needsAuth": false,
+      "public": false,
+      "message": "Not Found"
+    }
+  ]
+}
