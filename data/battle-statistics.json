@@ -1,5 +1,5 @@
 {
-  "lastUpdated": 1754652680840,
+  "lastUpdated": 1754654648121,
   "dungeonStats": {
     "1": [
       [
@@ -10898,38 +10898,38 @@
         23,
         {
           "firstSeen": 1754650709474,
-          "lastSeen": 1754652672587,
-          "totalBattles": 112,
+          "lastSeen": 1754654623099,
+          "totalBattles": 191,
           "moves": {
-            "rock": 42,
-            "paper": 34,
-            "scissor": 36
+            "rock": 78,
+            "paper": 57,
+            "scissor": 56
           },
           "movesByTurn": {
             "1": {
-              "rock": 12,
-              "paper": 7,
-              "scissor": 6
+              "rock": 16,
+              "paper": 9,
+              "scissor": 11
             },
             "2": {
-              "rock": 13,
-              "paper": 13,
-              "scissor": 13
+              "rock": 23,
+              "paper": 19,
+              "scissor": 22
             },
             "3": {
-              "rock": 10,
-              "paper": 6,
-              "scissor": 10
+              "rock": 20,
+              "paper": 10,
+              "scissor": 14
             },
             "4": {
-              "rock": 1,
-              "paper": 6,
-              "scissor": 2
+              "rock": 7,
+              "paper": 13,
+              "scissor": 3
             },
             "5": {
-              "rock": 6,
-              "paper": 2,
-              "scissor": 4
+              "rock": 12,
+              "paper": 6,
+              "scissor": 5
             },
             "6": {
               "rock": 0,
@@ -10939,71 +10939,71 @@
           },
           "moveSequences": {
             "scissor-paper": {
-              "rock": 5,
-              "paper": 2,
+              "rock": 7,
+              "paper": 7,
               "scissor": 5
             },
             "paper-scissor": {
-              "rock": 3,
-              "paper": 6,
-              "scissor": 2
-            },
-            "scissor-rock": {
-              "rock": 2,
-              "paper": 8,
-              "scissor": 6
-            },
-            "rock-paper": {
-              "rock": 4,
-              "paper": 5,
-              "scissor": 6
-            },
-            "paper-paper": {
-              "rock": 6,
-              "paper": 0,
-              "scissor": 1
-            },
-            "paper-rock": {
               "rock": 5,
-              "paper": 4,
-              "scissor": 6
-            },
-            "rock-scissor": {
-              "rock": 10,
-              "paper": 3,
+              "paper": 7,
               "scissor": 3
             },
+            "scissor-rock": {
+              "rock": 7,
+              "paper": 10,
+              "scissor": 7
+            },
+            "rock-paper": {
+              "rock": 6,
+              "paper": 9,
+              "scissor": 7
+            },
+            "paper-paper": {
+              "rock": 13,
+              "paper": 0,
+              "scissor": 3
+            },
+            "paper-rock": {
+              "rock": 11,
+              "paper": 5,
+              "scissor": 10
+            },
+            "rock-scissor": {
+              "rock": 14,
+              "paper": 7,
+              "scissor": 6
+            },
             "scissor-scissor": {
-              "rock": 3,
-              "paper": 2,
-              "scissor": 2
+              "rock": 5,
+              "paper": 4,
+              "scissor": 3
             },
             "rock-rock": {
-              "rock": 4,
-              "paper": 3,
-              "scissor": 4
+              "rock": 10,
+              "paper": 7,
+              "scissor": 11
             }
           },
           "statCorrelations": {
             "p100_e100": {
-              "rock": 24,
-              "paper": 15,
-              "scissor": 20
+              "rock": 36,
+              "paper": 23,
+              "scissor": 30
             },
             "p100_e80": {
-              "rock": 1,
-              "paper": 2,
+              "rock": 5,
+              "paper": 4,
               "scissor": 1
             },
             "p60_e80": {
               "rock": 1,
               "paper": 0,
-              "scissor": 1
+              "scissor": 2
             },
             "p100_e0": {
-              "rock": 3,
-              "paper": 6,
-              "scissor": 5
+              "rock": 8,
+              "paper": 7,
+              "scissor": 10
             },
             "p80_e0": {
               "rock": 2,
@@ -11011,8 +11011,8 @@
               "scissor": 0
             },
             "p60_e100": {
-              "rock": 1,
-              "paper": 1,
+              "rock": 4,
+              "paper": 2,
               "scissor": 1
             },
             "p40_e100": {
@@ -11046,503 +11046,44 @@
               "scissor": 1
             },
             "p80_e100": {
-              "rock": 1,
-              "paper": 0,
+              "rock": 5,
+              "paper": 3,
               "scissor": 0
             },
             "p100_e20": {
               "rock": 0,
-              "paper": 2,
-              "scissor": 1
+              "paper": 4,
+              "scissor": 2
             },
             "p60_e0": {
-              "rock": 4,
-              "paper": 2,
+              "rock": 8,
+              "paper": 6,
               "scissor": 1
+            },
+            "p80_e20": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "p40_e20": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "p20_e20": {
+              "rock": 2,
+              "paper": 2,
+              "scissor": 3
             }
           },
           "noobIdPatterns": {
             "76200": {
-              "rock": 42,
-              "paper": 34,
-              "scissor": 36
+              "rock": 78,
+              "paper": 57,
+              "scissor": 56
             }
           },
           "recentBattles": [
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651013103,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 1,
-              "move": "paper",
-              "timestamp": 1754651042928,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651045622,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651048338,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651051213,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651055280,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651058273,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651060980,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651063744,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651066572,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651070574,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 1,
-              "move": "paper",
-              "timestamp": 1754651078370,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651081060,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651083765,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651088034,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "scissor",
-              "timestamp": 1754651123745,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651126452,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651129223,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754651293446,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651296270,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651298986,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651301731,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651304468,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651307223,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651310024,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651312810,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754651342459,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651345238,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651347941,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651350627,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651353487,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "scissor",
-              "timestamp": 1754651398360,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754651433280,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651436029,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 1,
-              "move": "paper",
-              "timestamp": 1754651465404,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651468081,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651470833,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754651500053,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754651689381,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 1,
-              "move": "scissor",
-              "timestamp": 1754651740135,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "scissor",
-              "timestamp": 1754651858835,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651861524,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651864191,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651866853,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651869527,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754651872301,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754651874981,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754651877645,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754651880436,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 1,
-              "move": "scissor",
-              "timestamp": 1754651915158,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651917926,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651920649,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754651923343,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754651926077,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 1,
-              "move": "paper",
-              "timestamp": 1754651991127,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651993848,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651996575,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754651999296,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754652002038,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754652004778,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754652149123,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754652151873,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754652203704,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754652206778,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754652209533,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754652212289,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754652215168,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652217879,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754652220610,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754652223358,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754652226880,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754652264366,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754652267132,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754652269822,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754652272522,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754652275291,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754652278037,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754652280819,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 1,
-              "move": "rock",
-              "timestamp": 1754652329106,
-              "sequenceKey": "rock-rock"
-            },
             {
               "turn": 2,
               "move": "rock",
@@ -11668,72 +11209,556 @@
               "move": "scissor",
               "timestamp": 1754652672587,
               "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 1,
+              "move": "rock",
+              "timestamp": 1754653988332,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754653991030,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754653993859,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754653996553,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754653999248,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654001915,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754654004596,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654007294,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654010087,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 1,
+              "move": "scissor",
+              "timestamp": 1754654047437,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654050109,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654052835,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654055491,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654058284,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654061088,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 1,
+              "move": "scissor",
+              "timestamp": 1754654140579,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654143299,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654145993,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654148769,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654151449,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654154186,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 1,
+              "move": "rock",
+              "timestamp": 1754654181809,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654184559,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654187374,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 1,
+              "move": "scissor",
+              "timestamp": 1754654233781,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654236510,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654239198,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654241912,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654244618,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654247431,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654250138,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 1,
+              "move": "scissor",
+              "timestamp": 1754654271516,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654274238,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654276898,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654279611,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654312657,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654315380,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654319263,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654322050,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654324797,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 1,
+              "move": "rock",
+              "timestamp": 1754654356462,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654359179,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654361929,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654364736,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654367426,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654370397,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 1,
+              "move": "rock",
+              "timestamp": 1754654391411,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654394119,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654396813,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654399501,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654402192,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654404985,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654407668,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654410400,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654413145,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654415872,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654418815,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 1,
+              "move": "scissor",
+              "timestamp": 1754654471075,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654474006,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654476741,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654479566,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 1,
+              "move": "paper",
+              "timestamp": 1754654547089,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654549931,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654552670,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 1,
+              "move": "paper",
+              "timestamp": 1754654584774,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654587522,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654590393,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654593099,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654595796,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654598458,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654601260,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654604019,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654606711,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654609499,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654612252,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654614958,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654617643,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654620314,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654623099,
+              "sequenceKey": "rock-scissor"
             }
           ],
           "chargePatterns": {
             "r3_p3_s3": {
-              "rock": 12,
-              "paper": 7,
-              "scissor": 6
+              "rock": 16,
+              "paper": 9,
+              "scissor": 11
             },
             "r3_p3_s2": {
-              "rock": 7,
-              "paper": 7,
-              "scissor": 3
+              "rock": 12,
+              "paper": 10,
+              "scissor": 5
             },
             "r3_p2_s3": {
-              "rock": 7,
-              "paper": 5,
+              "rock": 9,
+              "paper": 10,
               "scissor": 7
             },
             "paper_conservation": {
-              "rock": 4,
+              "rock": 11,
               "paper": 1,
-              "scissor": 1
+              "scissor": 3
             },
             "r2_p2_s3": {
-              "rock": 0,
+              "rock": 2,
               "paper": 1,
-              "scissor": 5
+              "scissor": 7
             },
             "r2_p3_s3": {
-              "rock": 6,
-              "paper": 5,
-              "scissor": 8
+              "rock": 13,
+              "paper": 6,
+              "scissor": 12
             },
             "r3_p2_s2": {
-              "rock": 1,
-              "paper": 1,
+              "rock": 2,
+              "paper": 3,
               "scissor": 1
             },
             "scissor_conservation": {
-              "rock": 1,
-              "paper": 3,
+              "rock": 2,
+              "paper": 4,
               "scissor": 2
             },
             "scissor_recharging": {
-              "rock": 1,
+              "rock": 2,
               "paper": 1,
               "scissor": 0
             },
             "low_charges": {
-              "rock": 2,
-              "paper": 1,
-              "scissor": 1
+              "rock": 4,
+              "paper": 4,
+              "scissor": 3
             },
             "rock_conservation": {
-              "rock": 0,
-              "paper": 2,
-              "scissor": 1
+              "rock": 4,
+              "paper": 3,
+              "scissor": 3
             },
             "r2_p3_s2": {
               "rock": 0,
-              "paper": 0,
+              "paper": 1,
               "scissor": 1
             },
             "paper_recharging": {
               "rock": 1,
               "paper": 0,
+              "scissor": 0
+            },
+            "rock_recharging": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 1
+            },
+            "r2_p2_s2": {
+              "rock": 0,
+              "paper": 2,
               "scissor": 0
             }
           }
@@ -11743,102 +11768,102 @@
         24,
         {
           "firstSeen": 1754650720577,
-          "lastSeen": 1754652680840,
-          "totalBattles": 131,
+          "lastSeen": 1754654645143,
+          "totalBattles": 205,
           "moves": {
-            "rock": 49,
-            "paper": 45,
-            "scissor": 37
+            "rock": 70,
+            "paper": 72,
+            "scissor": 63
           },
           "movesByTurn": {
             "2": {
-              "rock": 15,
-              "paper": 8,
-              "scissor": 4
+              "rock": 16,
+              "paper": 12,
+              "scissor": 8
             },
             "3": {
-              "rock": 10,
-              "paper": 8,
-              "scissor": 10
+              "rock": 15,
+              "paper": 16,
+              "scissor": 16
             },
             "4": {
-              "rock": 13,
-              "paper": 9,
-              "scissor": 5
+              "rock": 17,
+              "paper": 16,
+              "scissor": 8
             },
             "5": {
-              "rock": 9,
-              "paper": 15,
-              "scissor": 11
+              "rock": 17,
+              "paper": 21,
+              "scissor": 23
             },
             "6": {
-              "rock": 1,
-              "paper": 4,
+              "rock": 4,
+              "paper": 5,
               "scissor": 4
             },
             "7": {
               "rock": 1,
-              "paper": 1,
-              "scissor": 3
+              "paper": 2,
+              "scissor": 4
             }
           },
           "moveSequences": {
             "paper-rock": {
-              "rock": 6,
-              "paper": 4,
-              "scissor": 7
+              "rock": 7,
+              "paper": 6,
+              "scissor": 13
             },
             "rock-rock": {
               "rock": 9,
-              "paper": 4,
-              "scissor": 6
+              "paper": 7,
+              "scissor": 7
             },
             "rock-scissor": {
-              "rock": 5,
-              "paper": 6,
-              "scissor": 3
+              "rock": 10,
+              "paper": 9,
+              "scissor": 6
             },
             "scissor-paper": {
-              "rock": 4,
-              "paper": 6,
+              "rock": 8,
+              "paper": 13,
               "scissor": 4
             },
             "paper-scissor": {
-              "rock": 3,
-              "paper": 3,
-              "scissor": 6
+              "rock": 6,
+              "paper": 8,
+              "scissor": 7
             },
             "scissor-rock": {
-              "rock": 5,
-              "paper": 6,
-              "scissor": 1
-            },
-            "rock-paper": {
-              "rock": 6,
-              "paper": 5,
-              "scissor": 3
-            },
-            "paper-paper": {
-              "rock": 6,
-              "paper": 5,
+              "rock": 7,
+              "paper": 8,
               "scissor": 5
             },
+            "rock-paper": {
+              "rock": 9,
+              "paper": 6,
+              "scissor": 6
+            },
+            "paper-paper": {
+              "rock": 8,
+              "paper": 6,
+              "scissor": 11
+            },
             "scissor-scissor": {
-              "rock": 4,
-              "paper": 5,
-              "scissor": 2
+              "rock": 5,
+              "paper": 8,
+              "scissor": 4
             }
           },
           "statCorrelations": {
             "p60_e100": {
-              "rock": 7,
-              "paper": 6,
-              "scissor": 3
+              "rock": 11,
+              "paper": 20,
+              "scissor": 8
             },
             "p60_e40": {
-              "rock": 4,
+              "rock": 6,
               "paper": 1,
-              "scissor": 2
+              "scissor": 3
             },
             "p60_e20": {
               "rock": 1,
@@ -11848,12 +11873,12 @@
             "p60_e0": {
               "rock": 2,
               "paper": 2,
-              "scissor": 2
+              "scissor": 3
             },
             "p100_e100": {
-              "rock": 18,
-              "paper": 9,
-              "scissor": 11
+              "rock": 22,
+              "paper": 12,
+              "scissor": 16
             },
             "p100_e0": {
               "rock": 0,
@@ -11861,29 +11886,29 @@
               "scissor": 0
             },
             "p80_e100": {
-              "rock": 4,
-              "paper": 2,
+              "rock": 5,
+              "paper": 3,
               "scissor": 1
             },
             "p80_e40": {
-              "rock": 1,
+              "rock": 2,
               "paper": 2,
               "scissor": 2
             },
             "p20_e40": {
-              "rock": 2,
+              "rock": 4,
               "paper": 2,
-              "scissor": 2
+              "scissor": 3
             },
             "p100_e40": {
-              "rock": 4,
-              "paper": 9,
-              "scissor": 1
+              "rock": 5,
+              "paper": 10,
+              "scissor": 4
             },
             "p40_e40": {
               "rock": 2,
-              "paper": 2,
-              "scissor": 1
+              "paper": 3,
+              "scissor": 2
             },
             "p40_e20": {
               "rock": 0,
@@ -11907,13 +11932,13 @@
             },
             "p40_e80": {
               "rock": 0,
-              "paper": 0,
+              "paper": 1,
               "scissor": 1
             },
             "p40_e100": {
-              "rock": 1,
-              "paper": 0,
-              "scissor": 3
+              "rock": 3,
+              "paper": 1,
+              "scissor": 8
             },
             "p100_e60": {
               "rock": 0,
@@ -11932,462 +11957,48 @@
             },
             "p0_e100": {
               "rock": 0,
-              "paper": 2,
+              "paper": 4,
+              "scissor": 4
+            },
+            "p20_e100": {
+              "rock": 0,
+              "paper": 0,
               "scissor": 1
+            },
+            "p40_e0": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p0_e80": {
+              "rock": 2,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p100_e20": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p0_e20": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "p40_e60": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
             }
           },
           "noobIdPatterns": {
             "76200": {
-              "rock": 49,
-              "paper": 45,
-              "scissor": 37
+              "rock": 70,
+              "paper": 72,
+              "scissor": 63
             }
           },
           "recentBattles": [
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754651170884,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651315601,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651318349,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651321112,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754651323949,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754651326636,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754651329466,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651356217,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651358903,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651361664,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651401211,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651403984,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651406701,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651409452,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754651412129,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754651414848,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651438749,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651441477,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651444149,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651446865,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754651449550,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754651452263,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651473747,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651476454,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651479178,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651481862,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754651484623,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651502852,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754651505559,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651692120,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754651694956,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651697735,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651700428,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651742930,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754651745743,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651748469,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "scissor",
-              "timestamp": 1754651824236,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 3,
-              "move": "paper",
-              "timestamp": 1754651826936,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754651883193,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754651885879,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754651888668,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754651928833,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754651931520,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754651934207,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754652154645,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754652157338,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 2,
-              "move": "rock",
-              "timestamp": 1754652160111,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 2,
-              "move": "scissor",
-              "timestamp": 1754652162927,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 2,
-              "move": "paper",
-              "timestamp": 1754652165634,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 3,
-              "move": "rock",
-              "timestamp": 1754652168388,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754652171122,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652173847,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754652176720,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754652179480,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754652229747,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754652232438,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754652235152,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652237889,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652240651,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 6,
-              "move": "scissor",
-              "timestamp": 1754652243397,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 6,
-              "move": "scissor",
-              "timestamp": 1754652246099,
-              "sequenceKey": "scissor-scissor"
-            },
-            {
-              "turn": 7,
-              "move": "rock",
-              "timestamp": 1754652248849,
-              "sequenceKey": "scissor-rock"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652283586,
-              "sequenceKey": "rock-paper"
-            },
-            {
-              "turn": 4,
-              "move": "paper",
-              "timestamp": 1754652286370,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754652289152,
-              "sequenceKey": "paper-rock"
-            },
-            {
-              "turn": 5,
-              "move": "rock",
-              "timestamp": 1754652291853,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 4,
-              "move": "rock",
-              "timestamp": 1754652294704,
-              "sequenceKey": "rock-rock"
-            },
-            {
-              "turn": 4,
-              "move": "scissor",
-              "timestamp": 1754652297482,
-              "sequenceKey": "rock-scissor"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652300258,
-              "sequenceKey": "scissor-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652340322,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652555598,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 5,
-              "move": "paper",
-              "timestamp": 1754652558330,
-              "sequenceKey": "paper-paper"
-            },
-            {
-              "turn": 5,
-              "move": "scissor",
-              "timestamp": 1754652561049,
-              "sequenceKey": "paper-scissor"
-            },
-            {
-              "turn": 6,
-              "move": "paper",
-              "timestamp": 1754652563791,
-              "sequenceKey": "scissor-paper"
-            },
             {
               "turn": 6,
               "move": "paper",
@@ -12543,28 +12154,472 @@
               "move": "rock",
               "timestamp": 1754652680840,
               "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654012825,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654015579,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654018314,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654020994,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654023670,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654026356,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654029116,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654031793,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654034473,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654064038,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654066719,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654069436,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654072360,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654075059,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654077741,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654080580,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 6,
+              "move": "rock",
+              "timestamp": 1754654083340,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 6,
+              "move": "paper",
+              "timestamp": 1754654086094,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 7,
+              "move": "scissor",
+              "timestamp": 1754654088842,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 7,
+              "move": "paper",
+              "timestamp": 1754654091565,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654156897,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654159570,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654162328,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654165040,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 6,
+              "move": "rock",
+              "timestamp": 1754654167732,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654170646,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654173540,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654190142,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654192815,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654195497,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654198350,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654252877,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654255552,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654258298,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654282315,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654285035,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654287814,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654290514,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 6,
+              "move": "rock",
+              "timestamp": 1754654334498,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654337455,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654340165,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654342891,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654345623,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654348442,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654373126,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754654375846,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654378588,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754654381278,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654383971,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654421576,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754654424294,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654427069,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 4,
+              "move": "paper",
+              "timestamp": 1754654429966,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654432980,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654435867,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654438663,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654482358,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654485147,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654487894,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 2,
+              "move": "rock",
+              "timestamp": 1754654555431,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654558203,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654560972,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654563639,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654566333,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654569001,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654571816,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654625850,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654628532,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654631196,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654633895,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654636932,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654639611,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654642315,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654645143,
+              "sequenceKey": "scissor-rock"
             }
           ],
           "chargePatterns": {
             "r3_p3_s3": {
-              "rock": 9,
-              "paper": 11,
-              "scissor": 3
+              "rock": 16,
+              "paper": 13,
+              "scissor": 6
             },
             "r3_p2_s3": {
-              "rock": 7,
-              "paper": 6,
-              "scissor": 4
+              "rock": 8,
+              "paper": 11,
+              "scissor": 6
             },
             "r2_p3_s3": {
-              "rock": 8,
-              "paper": 6,
-              "scissor": 5
+              "rock": 9,
+              "paper": 10,
+              "scissor": 12
             },
             "rock_conservation": {
               "rock": 7,
-              "paper": 1,
-              "scissor": 2
+              "paper": 3,
+              "scissor": 3
             },
             "rock_recharging": {
               "rock": 0,
@@ -12572,27 +12627,27 @@
               "scissor": 4
             },
             "r3_p3_s2": {
-              "rock": 5,
-              "paper": 2,
-              "scissor": 5
+              "rock": 10,
+              "paper": 6,
+              "scissor": 9
             },
             "paper_conservation": {
-              "rock": 3,
-              "paper": 2,
-              "scissor": 3
+              "rock": 6,
+              "paper": 6,
+              "scissor": 7
             },
             "paper_recharging": {
               "rock": 3,
               "paper": 0,
-              "scissor": 1
+              "scissor": 4
             },
             "scissor_conservation": {
               "rock": 2,
-              "paper": 3,
-              "scissor": 2
+              "paper": 4,
+              "scissor": 3
             },
             "low_charges": {
-              "rock": 2,
+              "rock": 5,
               "paper": 7,
               "scissor": 3
             },
@@ -12604,7 +12659,7 @@
             "r2_p2_s3": {
               "rock": 2,
               "paper": 0,
-              "scissor": 2
+              "scissor": 3
             },
             "r2_p2_s2": {
               "rock": 0,
@@ -12612,13 +12667,13 @@
               "scissor": 1
             },
             "r3_p2_s2": {
-              "rock": 0,
-              "paper": 2,
+              "rock": 1,
+              "paper": 6,
               "scissor": 1
             },
             "scissor_recharging": {
               "rock": 0,
-              "paper": 1,
+              "paper": 2,
               "scissor": 0
             }
           }
@@ -12628,12 +12683,12 @@
         25,
         {
           "firstSeen": 1754650734272,
-          "lastSeen": 1754652629423,
-          "totalBattles": 67,
+          "lastSeen": 1754654648121,
+          "totalBattles": 86,
           "moves": {
-            "rock": 25,
-            "paper": 13,
-            "scissor": 29
+            "rock": 34,
+            "paper": 17,
+            "scissor": 35
           },
           "movesByTurn": {
             "2": {
@@ -12642,24 +12697,24 @@
               "scissor": 2
             },
             "3": {
-              "rock": 5,
-              "paper": 6,
-              "scissor": 12
+              "rock": 9,
+              "paper": 7,
+              "scissor": 15
             },
             "4": {
-              "rock": 4,
+              "rock": 7,
               "paper": 3,
-              "scissor": 8
+              "scissor": 9
             },
             "5": {
-              "rock": 7,
-              "paper": 2,
-              "scissor": 5
+              "rock": 8,
+              "paper": 4,
+              "scissor": 6
             },
             "6": {
-              "rock": 1,
-              "paper": 0,
-              "scissor": 2
+              "rock": 2,
+              "paper": 1,
+              "scissor": 3
             },
             "7": {
               "rock": 1,
@@ -12669,14 +12724,14 @@
           },
           "moveSequences": {
             "scissor-rock": {
-              "rock": 6,
-              "paper": 2,
+              "rock": 8,
+              "paper": 4,
               "scissor": 4
             },
             "rock-scissor": {
-              "rock": 3,
+              "rock": 4,
               "paper": 3,
-              "scissor": 4
+              "scissor": 6
             },
             "scissor-paper": {
               "rock": 2,
@@ -12684,39 +12739,39 @@
               "scissor": 4
             },
             "paper-scissor": {
-              "rock": 3,
+              "rock": 4,
               "paper": 2,
               "scissor": 4
             },
             "rock-rock": {
               "rock": 3,
-              "paper": 2,
-              "scissor": 5
+              "paper": 3,
+              "scissor": 7
             },
             "scissor-scissor": {
-              "rock": 5,
+              "rock": 7,
               "paper": 2,
               "scissor": 1
             },
             "rock-paper": {
-              "rock": 1,
-              "paper": 0,
-              "scissor": 4
+              "rock": 2,
+              "paper": 1,
+              "scissor": 5
             },
             "paper-rock": {
-              "rock": 1,
+              "rock": 2,
               "paper": 1,
-              "scissor": 1
+              "scissor": 2
             },
             "paper-paper": {
-              "rock": 0,
+              "rock": 1,
               "paper": 0,
               "scissor": 1
             }
           },
           "statCorrelations": {
             "p60_e100": {
-              "rock": 7,
+              "rock": 8,
               "paper": 1,
               "scissor": 3
             },
@@ -12727,7 +12782,7 @@
             },
             "p40_e20": {
               "rock": 0,
-              "paper": 0,
+              "paper": 2,
               "scissor": 1
             },
             "p20_e20": {
@@ -12743,22 +12798,22 @@
             "p100_e100": {
               "rock": 5,
               "paper": 1,
-              "scissor": 2
+              "scissor": 3
             },
             "p80_e100": {
-              "rock": 1,
+              "rock": 2,
               "paper": 1,
               "scissor": 4
             },
             "p20_e100": {
-              "rock": 0,
+              "rock": 1,
               "paper": 1,
               "scissor": 0
             },
             "p0_e100": {
               "rock": 3,
               "paper": 0,
-              "scissor": 2
+              "scissor": 3
             },
             "p0_e60": {
               "rock": 1,
@@ -12776,14 +12831,14 @@
               "scissor": 4
             },
             "p100_e60": {
-              "rock": 0,
+              "rock": 1,
               "paper": 1,
               "scissor": 2
             },
             "p40_e100": {
               "rock": 1,
-              "paper": 0,
-              "scissor": 3
+              "paper": 1,
+              "scissor": 6
             },
             "p40_e40": {
               "rock": 0,
@@ -12791,9 +12846,9 @@
               "scissor": 1
             },
             "p40_e0": {
-              "rock": 1,
+              "rock": 3,
               "paper": 0,
-              "scissor": 1
+              "scissor": 2
             },
             "p20_e0": {
               "rock": 0,
@@ -12806,16 +12861,26 @@
               "scissor": 0
             },
             "p40_e60": {
-              "rock": 0,
+              "rock": 1,
               "paper": 0,
               "scissor": 1
+            },
+            "p20_e60": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 0
+            },
+            "p100_e20": {
+              "rock": 1,
+              "paper": 1,
+              "scissor": 0
             }
           },
           "noobIdPatterns": {
             "76200": {
-              "rock": 25,
-              "paper": 13,
-              "scissor": 29
+              "rock": 34,
+              "paper": 17,
+              "scissor": 35
             }
           },
           "recentBattles": [
@@ -13220,28 +13285,142 @@
               "move": "scissor",
               "timestamp": 1754652629423,
               "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654037179,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654039876,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 6,
+              "move": "paper",
+              "timestamp": 1754654094333,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 6,
+              "move": "scissor",
+              "timestamp": 1754654097043,
+              "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 5,
+              "move": "rock",
+              "timestamp": 1754654099806,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654102556,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 5,
+              "move": "paper",
+              "timestamp": 1754654105320,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 4,
+              "move": "rock",
+              "timestamp": 1754654108172,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654110889,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654113600,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 6,
+              "move": "rock",
+              "timestamp": 1754654261355,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 5,
+              "move": "scissor",
+              "timestamp": 1754654264043,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654490704,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654493441,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654496300,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654500473,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654574608,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654577365,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 4,
+              "move": "scissor",
+              "timestamp": 1754654648121,
+              "sequenceKey": "scissor-scissor"
             }
           ],
           "chargePatterns": {
             "r3_p3_s3": {
-              "rock": 8,
-              "paper": 3,
-              "scissor": 6
+              "rock": 11,
+              "paper": 4,
+              "scissor": 8
             },
             "r3_p3_s2": {
-              "rock": 7,
+              "rock": 10,
               "paper": 5,
               "scissor": 3
             },
             "r2_p3_s3": {
-              "rock": 5,
-              "paper": 3,
-              "scissor": 8
+              "rock": 6,
+              "paper": 5,
+              "scissor": 10
             },
             "r3_p2_s3": {
-              "rock": 3,
-              "paper": 1,
-              "scissor": 7
+              "rock": 4,
+              "paper": 2,
+              "scissor": 8
             },
             "rock_conservation": {
               "rock": 1,
@@ -13261,10 +13440,10 @@
             "r2_p2_s3": {
               "rock": 0,
               "paper": 0,
-              "scissor": 1
+              "scissor": 2
             },
             "paper_conservation": {
-              "rock": 0,
+              "rock": 1,
               "paper": 0,
               "scissor": 1
             },
@@ -13280,23 +13459,23 @@
         27,
         {
           "firstSeen": 1754650749803,
-          "lastSeen": 1754651966640,
-          "totalBattles": 20,
+          "lastSeen": 1754654521087,
+          "totalBattles": 32,
           "moves": {
-            "rock": 6,
-            "paper": 8,
-            "scissor": 6
+            "rock": 10,
+            "paper": 14,
+            "scissor": 8
           },
           "movesByTurn": {
             "2": {
               "rock": 0,
-              "paper": 0,
-              "scissor": 1
+              "paper": 2,
+              "scissor": 2
             },
             "3": {
-              "rock": 1,
-              "paper": 3,
-              "scissor": 3
+              "rock": 5,
+              "paper": 7,
+              "scissor": 4
             },
             "4": {
               "rock": 3,
@@ -13316,12 +13495,12 @@
           },
           "moveSequences": {
             "paper-paper": {
-              "rock": 0,
-              "paper": 1,
-              "scissor": 2
+              "rock": 1,
+              "paper": 3,
+              "scissor": 3
             },
             "paper-scissor": {
-              "rock": 1,
+              "rock": 2,
               "paper": 1,
               "scissor": 1
             },
@@ -13333,11 +13512,11 @@
             "paper-rock": {
               "rock": 0,
               "paper": 1,
-              "scissor": 0
+              "scissor": 1
             },
             "rock-paper": {
               "rock": 0,
-              "paper": 1,
+              "paper": 3,
               "scissor": 2
             },
             "scissor-scissor": {
@@ -13346,20 +13525,25 @@
               "scissor": 1
             },
             "scissor-rock": {
-              "rock": 1,
-              "paper": 1,
+              "rock": 2,
+              "paper": 2,
               "scissor": 0
             },
             "rock-rock": {
               "rock": 2,
-              "paper": 1,
+              "paper": 2,
+              "scissor": 0
+            },
+            "rock-scissor": {
+              "rock": 1,
+              "paper": 0,
               "scissor": 0
             }
           },
           "statCorrelations": {
             "p0_e100": {
-              "rock": 0,
-              "paper": 3,
+              "rock": 1,
+              "paper": 6,
               "scissor": 2
             },
             "p80_e100": {
@@ -13368,7 +13552,7 @@
               "scissor": 0
             },
             "p60_e100": {
-              "rock": 2,
+              "rock": 3,
               "paper": 0,
               "scissor": 1
             },
@@ -13390,7 +13574,7 @@
             "p100_e100": {
               "rock": 1,
               "paper": 0,
-              "scissor": 0
+              "scissor": 1
             },
             "p0_e60": {
               "rock": 1,
@@ -13401,13 +13585,28 @@
               "rock": 0,
               "paper": 1,
               "scissor": 1
+            },
+            "p20_e100": {
+              "rock": 2,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p20_e20": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 0
+            },
+            "p20_e0": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
             }
           },
           "noobIdPatterns": {
             "76200": {
-              "rock": 6,
-              "paper": 8,
-              "scissor": 6
+              "rock": 10,
+              "paper": 14,
+              "scissor": 8
             }
           },
           "recentBattles": [
@@ -13530,31 +13729,103 @@
               "move": "scissor",
               "timestamp": 1754651966640,
               "sequenceKey": "paper-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654116410,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654119173,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654121902,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654124588,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654127275,
+              "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654503331,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654506054,
+              "sequenceKey": "scissor-rock"
+            },
+            {
+              "turn": 3,
+              "move": "rock",
+              "timestamp": 1754654508808,
+              "sequenceKey": "rock-rock"
+            },
+            {
+              "turn": 3,
+              "move": "paper",
+              "timestamp": 1754654512768,
+              "sequenceKey": "rock-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654515540,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654518317,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654521087,
+              "sequenceKey": "paper-scissor"
             }
           ],
           "chargePatterns": {
             "r3_p3_s3": {
-              "rock": 1,
+              "rock": 2,
               "paper": 2,
-              "scissor": 1
+              "scissor": 2
             },
             "r3_p2_s3": {
               "rock": 1,
-              "paper": 2,
+              "paper": 3,
               "scissor": 0
             },
             "paper_conservation": {
               "rock": 0,
-              "paper": 1,
+              "paper": 3,
               "scissor": 1
             },
             "r2_p3_s3": {
-              "rock": 1,
-              "paper": 1,
+              "rock": 2,
+              "paper": 2,
               "scissor": 0
             },
             "r3_p3_s2": {
-              "rock": 0,
+              "rock": 1,
               "paper": 0,
               "scissor": 1
             },
@@ -13570,7 +13841,7 @@
             },
             "rock_conservation": {
               "rock": 2,
-              "paper": 0,
+              "paper": 1,
               "scissor": 0
             },
             "rock_recharging": {
@@ -13582,6 +13853,16 @@
               "rock": 0,
               "paper": 0,
               "scissor": 2
+            },
+            "paper_recharging": {
+              "rock": 1,
+              "paper": 0,
+              "scissor": 1
+            },
+            "r2_p2_s3": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
             }
           }
         }
@@ -13819,18 +14100,23 @@
         28,
         {
           "firstSeen": 1754651975291,
-          "lastSeen": 1754651983392,
-          "totalBattles": 4,
+          "lastSeen": 1754654539491,
+          "totalBattles": 10,
           "moves": {
             "rock": 2,
-            "paper": 2,
-            "scissor": 0
+            "paper": 5,
+            "scissor": 3
           },
           "movesByTurn": {
+            "2": {
+              "rock": 0,
+              "paper": 3,
+              "scissor": 1
+            },
             "3": {
               "rock": 1,
               "paper": 0,
-              "scissor": 0
+              "scissor": 2
             },
             "4": {
               "rock": 0,
@@ -13851,7 +14137,27 @@
             },
             "paper-paper": {
               "rock": 1,
+              "paper": 1,
+              "scissor": 0
+            },
+            "paper-rock": {
+              "rock": 0,
               "paper": 0,
+              "scissor": 1
+            },
+            "rock-scissor": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor-scissor": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 1
+            },
+            "scissor-paper": {
+              "rock": 0,
+              "paper": 1,
               "scissor": 0
             }
           },
@@ -13875,13 +14181,28 @@
               "rock": 1,
               "paper": 0,
               "scissor": 0
+            },
+            "p20_e100": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 3
+            },
+            "p0_e100": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "p0_e40": {
+              "rock": 0,
+              "paper": 2,
+              "scissor": 0
             }
           },
           "noobIdPatterns": {
             "76200": {
               "rock": 2,
-              "paper": 2,
-              "scissor": 0
+              "paper": 5,
+              "scissor": 3
             }
           },
           "recentBattles": [
@@ -13908,13 +14229,49 @@
               "move": "rock",
               "timestamp": 1754651983392,
               "sequenceKey": "paper-rock"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654523847,
+              "sequenceKey": "rock-scissor"
+            },
+            {
+              "turn": 3,
+              "move": "scissor",
+              "timestamp": 1754654526594,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "scissor",
+              "timestamp": 1754654531187,
+              "sequenceKey": "scissor-scissor"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654533952,
+              "sequenceKey": "scissor-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654536670,
+              "sequenceKey": "paper-paper"
+            },
+            {
+              "turn": 2,
+              "move": "paper",
+              "timestamp": 1754654539491,
+              "sequenceKey": "paper-paper"
             }
           ],
           "chargePatterns": {
             "r3_p3_s3": {
               "rock": 1,
               "paper": 0,
-              "scissor": 0
+              "scissor": 1
             },
             "r2_p3_s3": {
               "rock": 0,
@@ -13929,6 +14286,26 @@
             "paper_conservation": {
               "rock": 1,
               "paper": 0,
+              "scissor": 0
+            },
+            "r3_p3_s2": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor_conservation": {
+              "rock": 0,
+              "paper": 0,
+              "scissor": 1
+            },
+            "scissor_recharging": {
+              "rock": 0,
+              "paper": 1,
+              "scissor": 0
+            },
+            "low_charges": {
+              "rock": 0,
+              "paper": 2,
               "scissor": 0
             }
           }
@@ -14199,23 +14576,23 @@
       [
         23,
         [
-          "rock",
           "paper",
+          "rock",
           "scissor"
         ]
       ],
       [
         24,
         [
-          "rock",
-          "rock",
+          "paper",
+          "scissor",
           "rock"
         ]
       ],
       [
         25,
         [
-          "scissor",
+          "rock",
           "scissor",
           "scissor"
         ]
@@ -14223,7 +14600,7 @@
       [
         27,
         [
-          "rock",
+          "paper",
           "paper",
           "scissor"
         ]
@@ -14241,7 +14618,7 @@
         [
           "paper",
           "paper",
-          "rock"
+          "paper"
         ]
       ]
     ]

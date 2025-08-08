@@ -1,4 +1,4 @@
-import { gigaApi } from './api.mjs';
+import { getDirectGearInstances } from './direct-api-gear.mjs';
 import { config } from './config.mjs';
 
 export class GearManager {
@@ -10,7 +10,7 @@ export class GearManager {
   // Check if any gear needs repair
   async checkGearStatus() {
     try {
-      const gearResponse = await gigaApi.getNoobGear();
+      const gearResponse = await getDirectGearInstances();
       const gearItems = gearResponse?.entities || [];
       const needsRepair = [];
 
