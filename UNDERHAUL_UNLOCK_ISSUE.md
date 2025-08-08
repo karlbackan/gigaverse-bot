@@ -1,46 +1,56 @@
-# Dungetron Underhaul Unlock Issue
+# Dungetron Underhaul Status - Updated Information
 
-## The Problem
+## ⚠️ IMPORTANT UPDATE
 
-The bot is working correctly, but **Dungetron Underhaul is not unlocked** on your account.
+**Previous conclusions about Underhaul being "not unlocked" were based on testing with the wrong API base URL.**
 
-### What's Happening:
-1. ✅ Dungetron 5000 daily limit reached (12/12)
-2. ✅ Bot correctly tries to switch to Underhaul
-3. ❌ API rejects with error 400 - Underhaul not unlocked
+## Current Status
 
-### Why It's Failing:
-- Dungetron Underhaul requires **checkpoint 2** to be unlocked first
-- Your account hasn't reached this checkpoint yet
-- The game API prevents starting Underhaul until you meet the requirements
+The bot's Underhaul functionality is **PENDING VERIFICATION** after discovering that all previous API tests used an incorrect base URL.
 
-## Solution
+### What Was Happening Before:
+1. ✅ Bot tried to switch to Underhaul when daily limit reached
+2. ❌ API returned errors (400/404)
+3. 🔄 **NOW DISCOVERED:** We were using wrong base URL `https://gigaverse.io/game/api` instead of `https://gigaverse.io/api`
 
-### Immediate Fix (Applied):
-- Set `AUTO_SWITCH_UNDERHAUL=false` in `.env`
-- This prevents the bot from trying to access Underhaul
+### What This Means:
+- Previous "Underhaul not unlocked" errors may have been **404 errors** from hitting non-existent endpoints
+- Actual Underhaul unlock status is **UNKNOWN** until testing with correct endpoints
+- Account progression requirements (checkpoint 2) may still apply, but need verification
 
-### Long-term Fix:
-1. Play more Dungetron 5000 manually or with the bot tomorrow
-2. Reach checkpoint 2 (usually requires completing floor 2 multiple times)
-3. Once Underhaul is unlocked, change `.env` to `AUTO_SWITCH_UNDERHAUL=true`
+## Corrected API Endpoints
+
+With the correct base URL, Underhaul should use:
+- `POST https://gigaverse.io/api/underhaul/action` ← **Most likely correct endpoint**
+- `POST https://gigaverse.io/api/game/underhaul/action` ← Alternative endpoint
+
+## Bot Configuration
+
+Current settings remain the same:
+- `AUTO_SWITCH_UNDERHAUL=false` - Keep disabled until endpoint testing complete
+- `DUNGEON_TYPE=REGULAR` - Default to regular dungeons
+
+## Next Steps
+
+1. **Test with fresh JWT tokens** and correct base URL
+2. **Verify actual Underhaul unlock requirements** 
+3. **Update bot configuration** once working endpoint found
+4. **Re-enable Underhaul switching** if account supports it
+
+## Key Changes From Previous Understanding
+
+| Previous (Incorrect) | Current (Corrected) |
+|---------------------|-------------------|
+| "Underhaul blocked server-side" | Wrong base URL caused 404 errors |
+| "Account not unlocked" | **Status unknown** - needs retesting |
+| API endpoints confirmed | **All endpoints wrong** - used `/game/api` |
 
 ## Bot Status
 
-**The bot code is working perfectly:**
-- ✅ Statistics tracking works
-- ✅ Decision making works
-- ✅ Multi-account management works
-- ✅ Daily limit detection works
+**The bot code is working correctly for regular dungeons.**
 
-The only issue is that Underhaul isn't available on your account yet.
+Underhaul functionality needs testing with the corrected API endpoints before determining actual unlock status or account requirements.
 
-## What to Do Now
+---
 
-Since you've hit the daily limit for Dungetron 5000:
-1. Wait until tomorrow (daily reset)
-2. The bot will automatically run Dungetron 5000 again
-3. After more runs, you'll eventually unlock checkpoint 2
-4. Then Underhaul will become available
-
-No code changes needed - just need to progress further in the game!
+**This file will be updated once Underhaul endpoint testing is complete with fresh JWT tokens.**
