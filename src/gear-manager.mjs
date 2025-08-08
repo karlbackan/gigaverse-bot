@@ -1,5 +1,15 @@
 import { getDirectGearInstances } from './direct-api-gear.mjs';
 import { config } from './config.mjs';
+import axios from 'axios';
+
+// API instance for gear repairs
+const api = axios.create({
+  baseURL: 'https://gigaverse.io/api',
+  headers: {
+    'Authorization': `Bearer ${config.jwtToken}`,
+    'Content-Type': 'application/json'
+  }
+});
 
 export class GearManager {
   constructor() {
@@ -25,10 +35,11 @@ export class GearManager {
         if (durability !== undefined && durability < maxDurability) {
           const durabilityPercent = (durability / maxDurability) * 100;
           
-          if (durabilityPercent < config.repairThreshold) {
+          // Only repair gear that's completely broken (0% durability)
+          if (durability === 0) {
             needsRepair.push({
               ...item,
-              id: item._id,
+              gearInstanceId: item.docId,  // Use docId as the gear instance ID for repairs
               itemId: itemId,
               durability: durability,
               maxDurability: maxDurability,
@@ -46,27 +57,31 @@ export class GearManager {
     }
   }
 
+  // Get max durability based on item rarity
+  getMaxDurability(rarity) {
+    // Max durability is based on rarity: Common=40, Uncommon=50, Rare=60, Epic=70
+    return [40, 50, 60, 70][rarity] || 40;
+  }
+
   // Repair a specific gear item
-  async repairGear(gearId) {
+  async repairGear(gearInstanceId) {
     try {
-      console.log(`Repairing gear ID: ${gearId}`);
+      console.log(`Repairing gear: ${gearInstanceId}`);
       
-      // TODO: Fix gear repair API call
-      console.log('(Gear repair temporarily disabled - needs API fix)');
-      return false;
+      const response = await api.post('/gear/repair', {
+        gearInstanceId: gearInstanceId
+      });
       
-      // The repairGear method expects just the gear instance ID, not a payload object
-      const response = await gigaApi.repairGear(gearId);
-      
-      if (response && response.success) {
-        console.log(`Successfully repaired gear ID: ${gearId}`);
+      if (response.data?.entities?.[0]) {
+        const item = response.data.entities[0];
+        const maxDurability = this.getMaxDurability(item.RARITY_CID);
+        console.log(`✅ Successfully repaired gear! Durability: ${item.DURABILITY_CID}/${maxDurability}`);
         return true;
-      } else {
-        console.error(`Failed to repair gear ID: ${gearId}`, response);
-        return false;
       }
+      
+      return false;
     } catch (error) {
-      console.error(`Error repairing gear ID ${gearId}:`, error);
+      console.error(`❌ Failed to repair gear: ${error.response?.data?.message || error.message}`);
       return false;
     }
   }
@@ -83,8 +98,15 @@ export class GearManager {
     console.log(`Found ${needsRepair.length} gear items needing repair`);
     
     for (const gear of needsRepair) {
-      console.log(`${gear.name}: ${gear.durabilityPercent.toFixed(1)}% durability`);
-      await this.repairGear(gear.id);
+      console.log(`${gear.name}: ${gear.durabilityPercent.toFixed(1)}% durability (completely broken)`);
+      const repairSuccess = await this.repairGear(gear.gearInstanceId);
+      
+      if (repairSuccess) {
+        console.log(`🔧 Repaired ${gear.name} successfully!`);
+      } else {
+        console.log(`❌ Failed to repair ${gear.name}`);
+      }
+      
       // Small delay between repairs
       await new Promise(resolve => setTimeout(resolve, 1000));
     }

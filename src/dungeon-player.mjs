@@ -6,11 +6,13 @@ import { sendDungeonAction } from './dungeon-api-direct.mjs';
 import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
 import { getEquippedGearIds } from './direct-api-gear.mjs';
 import { getNoobIdFromJWT } from './jwt-utils.mjs';
+import { GearManager } from './gear-manager.mjs';
 import axios from 'axios';
 
 export class DungeonPlayer {
   constructor(walletAddress = null) {
     this.decisionEngine = new DecisionEngine();
+    this.gearManager = new GearManager();
     this.currentDungeon = null;
     this.isPlaying = false;
     this.consecutiveErrors = 0;
@@ -708,6 +710,9 @@ export class DungeonPlayer {
           console.log(`\n=== DUNGEON ${result} ===`);
         }
         finalStatus = 'completed';  // Change to 'completed' to distinguish from no energy
+        
+        // Check and repair any 0% durability gear after dungeon completion
+        await this.checkAndRepairGear();
       }
 
       return finalStatus;
@@ -947,6 +952,53 @@ export class DungeonPlayer {
     } catch (handleError) {
       // Don't throw errors in error handling - just log
       console.log('Could not extract enemy move from error response');
+    }
+  }
+
+  // Check and repair any 0% durability gear
+  async checkAndRepairGear() {
+    try {
+      if (!config.minimalOutput) {
+        console.log('🔧 Checking for broken gear...');
+      }
+      
+      const needsRepair = await this.gearManager.checkGearStatus();
+      const brokenGear = needsRepair.filter(item => item.durability === 0);
+      
+      if (brokenGear.length === 0) {
+        if (!config.minimalOutput) {
+          console.log('All gear is in good condition');
+        }
+        return;
+      }
+      
+      if (!config.minimalOutput) {
+        console.log(`Found ${brokenGear.length} completely broken gear items`);
+      }
+      
+      for (const gear of brokenGear) {
+        if (!config.minimalOutput) {
+          console.log(`Attempting to repair ${gear.name}...`);
+        }
+        
+        const repairSuccess = await this.gearManager.repairGear(gear.gearInstanceId);
+        
+        if (repairSuccess) {
+          console.log(`🔧 Repaired ${gear.name}!`);
+        } else {
+          if (!config.minimalOutput) {
+            console.log(`⚠️ Could not repair ${gear.name} - may need restoration`);
+          }
+        }
+        
+        // Small delay between repairs
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    } catch (error) {
+      if (!config.minimalOutput) {
+        console.log('⚠️ Error checking gear:', error.message);
+      }
+      // Don't throw - just move on as requested
     }
   }
 
