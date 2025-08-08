@@ -495,9 +495,13 @@ export class DungeonPlayer {
             }
           } catch (retryError) {
             console.error('Retry also failed:', retryError.message);
+            // Check if retry error contains game data for statistics recording
+            await this.handleErrorResponse(retryError, action, enemyId, turn, player, playerStats, enemyStatsFull);
             throw error; // Throw original error
           }
         } else {
+          // Check if error contains game data for statistics recording
+          await this.handleErrorResponse(error, action, enemyId, turn, player, playerStats, enemyStatsFull);
           throw error;
         }
       }
@@ -879,6 +883,70 @@ export class DungeonPlayer {
     } catch (error) {
       console.error('Error handling loot phase:', error);
       return null;
+    }
+  }
+
+  // Handle error response and try to extract enemy move data for statistics
+  async handleErrorResponse(error, playerAction, enemyId, turn, player, playerStats, enemyStatsFull) {
+    try {
+      // Check if error response contains game data
+      const errorData = error.errorResponseData || error.response?.data;
+      if (!errorData) return;
+
+      // Try to extract enemy move from error response
+      let enemyMove = null;
+      let gameState = null;
+
+      // Try to get current dungeon state to extract enemy move
+      try {
+        const stateResponse = await getDirectDungeonState();
+        gameState = stateResponse?.data?.run;
+      } catch (stateError) {
+        // If we can't get state, check if error response has it
+        if (errorData.data?.run) {
+          gameState = errorData.data.run;
+        }
+      }
+
+      // Extract enemy's last move from game state
+      if (gameState?.players?.[1]?.lastMove) {
+        enemyMove = gameState.players[1].lastMove;
+      }
+
+      // If we got the enemy move, record the statistics
+      if (enemyMove && playerAction) {
+        // Determine result based on the actions
+        let result = 'draw';
+        if (playerAction === 'rock' && enemyMove === 'scissor') result = 'win';
+        else if (playerAction === 'scissor' && enemyMove === 'paper') result = 'win';
+        else if (playerAction === 'paper' && enemyMove === 'rock') result = 'win';
+        else if (playerAction === enemyMove) result = 'draw';
+        else result = 'lose';
+
+        // Get weapon stats for recording
+        const weaponStats = {
+          rock: { attack: player.rock.currentATK, defense: player.rock.currentDEF, charges: player.rock.currentCharges },
+          paper: { attack: player.paper.currentATK, defense: player.paper.currentDEF, charges: player.paper.currentCharges },
+          scissor: { attack: player.scissor.currentATK, defense: player.scissor.currentDEF, charges: player.scissor.currentCharges }
+        };
+
+        // Record the turn for statistics
+        this.decisionEngine.recordTurn(
+          enemyId,
+          turn,
+          playerAction,
+          enemyMove,
+          result,
+          playerStats,
+          enemyStatsFull,
+          weaponStats
+        );
+
+        console.log(`${enemyId} T${turn}: ${playerAction}→${enemyMove} ${result} [DEATH]`);
+      }
+    } catch (handleError) {
+      // Don't throw errors in error handling - just log
+      console.log('Could not extract enemy move from error response');
     }
   }
 

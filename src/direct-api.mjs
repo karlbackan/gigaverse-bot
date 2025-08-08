@@ -118,6 +118,10 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       }
     }
     
+    // Preserve error response data for statistics recording
+    if (error.response?.data) {
+      error.errorResponseData = error.response.data;
+    }
     throw error;
   }
 }
