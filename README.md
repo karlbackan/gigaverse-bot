@@ -12,7 +12,7 @@ An automated dungeon crawler bot for Gigaverse.io that plays the Dungetron 5000 
 
 ## Features
 
-- **Automated Dungeon Crawling**: Plays Dungetron 5000 automatically
+- **Automated Dungeon Crawling**: Plays both Dungetron 5000 and Dungetron Underhaul automatically
 - **Advanced Pattern Recognition**: Tracks enemy move sequences and predicts with high accuracy
 - **Smart Decision Making**: Uses multi-factor analysis including move patterns, turn behavior, and stat correlations
 - **Statistics System**: Records all battles and analyzes enemy-specific patterns
@@ -163,9 +163,18 @@ node src/statistics-analyzer.mjs export data.json
 ## API Implementation
 
 The bot uses direct API calls instead of the SDK due to parameter naming issues:
-- Uses `dungeonType` instead of `dungeonId`
-- Implements proper action token chaining
+- **Dual Endpoint System**: Regular dungeons use `/api/game/dungeon/action`, Underhaul uses `/api/game/underhaul/action`
+- **Smart Routing**: Automatically selects correct endpoint based on dungeon type (1-2 = regular, 3 = Underhaul)
+- Uses `dungeonType` instead of `dungeonId` for regular dungeons
+- Implements proper action token chaining across both endpoint types
 - Handles token errors with automatic retry
+- **Complete Underhaul Support**: All actions (start, combat, loot) use correct Underhaul endpoints
+
+### API Endpoints Used:
+- `POST /api/game/dungeon/action` - Dungetron 5000 (dungeonType 1-2)
+- `POST /api/game/underhaul/action` - Dungetron Underhaul (dungeonType 3)
+- `GET /api/game/dungeon/state` - Current dungeon state (both types)
+- `GET /api/gear/instances/{address}` - Equipment data for Underhaul
 
 ## Development
 
