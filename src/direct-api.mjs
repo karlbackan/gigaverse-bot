@@ -40,7 +40,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     // Build payload with optional action token
     const payload = {
       action,
-      dungeonType,
+      dungeonId: dungeonType,  // API uses dungeonId, not dungeonType
       data
     };
     
@@ -92,7 +92,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       
       const retryPayload = {
         action,
-        dungeonType,
+        dungeonId: dungeonType,  // API uses dungeonId, not dungeonType
         data
       };
       
@@ -340,7 +340,7 @@ export async function sendDirectLootAction(action, dungeonType) {
     // Build payload for loot action
     const payload = {
       action,
-      dungeonType
+      dungeonId: dungeonType  // API uses dungeonId, not dungeonType
     };
     
     // Include action token if we have one from previous response
@@ -378,7 +378,7 @@ export async function sendDirectLootAction(action, dungeonType) {
       
       const retryPayload = {
         action,
-        dungeonType: dungeonId
+        dungeonId: dungeonType  // API uses dungeonId, not dungeonType
       };
       
       try {
