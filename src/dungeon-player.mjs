@@ -3,7 +3,7 @@ import { config } from './config.mjs';
 import { DecisionEngine } from './decision-engine.mjs';
 import { sleep } from './utils.mjs';
 import { sendDungeonAction } from './dungeon-api-direct.mjs';
-import { sendDirectAction, sendDirectLootAction, sendUnderhaulAction, sendUnderhaulLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
+import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
 import { getEquippedGearIds } from './direct-api-gear.mjs';
 import { getNoobIdFromJWT } from './jwt-utils.mjs';
 import axios from 'axios';
@@ -41,38 +41,32 @@ export class DungeonPlayer {
       try {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
-          // Detect which dungeon type we're in
-          // The entity should have DUNGEON_TYPE_CID or we can infer from the enemy types
+          // Detect which dungeon type we're in using entity.ID_CID
           const entity = dungeonState.data.entity;
           
-          // Try to detect dungeon type from entity data
-          if (entity?.DUNGEON_TYPE_CID) {
-            this.currentDungeonType = entity.DUNGEON_TYPE_CID;
+          if (entity?.ID_CID) {
+            const detectedType = parseInt(entity.ID_CID);
+            this.currentDungeonType = detectedType;
             this.decisionEngine.setDungeonType(this.currentDungeonType);
-          } else if (dungeonState.data.run?.runEntityId) {
-            // Try to infer from run ID - Underhaul runs might have different ID patterns
-            const runId = dungeonState.data.run.runEntityId;
-            // Log the run ID to help us understand the pattern
-            console.log(`Active run ID: ${runId}`);
             
-            // For now, check if we can get dungeon type from the run structure
-            // The actual logic will depend on how the API structures the data
-            if (dungeonState.data.run.dungeonType) {
-              this.currentDungeonType = dungeonState.data.run.dungeonType;
-              this.decisionEngine.setDungeonType(this.currentDungeonType);
+            const dungeonName = detectedType === 1 ? 'Dungetron 5000' : 
+                              detectedType === 2 ? 'Gigus Dungeon' :
+                              detectedType === 3 ? 'Dungetron Underhaul' :
+                              detectedType === 4 ? 'Dungetron Void' : `Unknown (${detectedType})`;
+            
+            if (!config.minimalOutput) {
+              console.log(`✅ Detected active ${dungeonName} dungeon - will continue playing`);
+              console.log(`   Room ${entity.ROOM_NUM_CID}, Enemy ${entity.ENEMY_CID}`);
+              if (dungeonState.data.run.lootPhase) {
+                console.log('   (Currently in loot phase)');
+              }
             } else {
-              // Keep current dungeon type as fallback
-              console.log(`Warning: Could not detect dungeon type from active run. Using default: ${this.currentDungeonType}`);
+              console.log(`Active: ${dungeonName} R${entity.ROOM_NUM_CID} E${entity.ENEMY_CID}`);
             }
+          } else {
+            console.log(`Warning: Could not detect dungeon type from active run. Using default: ${this.currentDungeonType}`);
           }
           
-          if (!config.minimalOutput) {
-            const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Underhaul';
-            console.log(`Already in an active ${dungeonName} dungeon - will continue playing`);
-            if (dungeonState.data.run.lootPhase) {
-              console.log('(Currently in loot phase)');
-            }
-          }
           return 'continue_existing';
         }
       } catch (error) {
@@ -209,15 +203,8 @@ export class DungeonPlayer {
         gearInstanceIds: gearInstanceIds // Pass equipped gear IDs for Underhaul
       };
 
-      // Use correct API endpoint based on dungeon type
-      let response;
-      if (this.currentDungeonType === 3) {
-        // Use Underhaul-specific endpoint
-        response = await sendUnderhaulAction('start_run', data);
-      } else {
-        // Use regular dungeon endpoint
-        response = await sendDirectAction('start_run', this.currentDungeonType, data);
-      }
+      // Use unified API with both parameters for maximum compatibility
+      response = await sendDirectAction('start_run', this.currentDungeonType, data);
       
       if (response && response.success) {
         this.currentDungeon = response.data;
@@ -477,13 +464,8 @@ export class DungeonPlayer {
           gearInstanceIds: []
         };
         
-        if (this.currentDungeonType === 3) {
-          // Use Underhaul-specific endpoint
-          response = await sendUnderhaulAction(action, actionData);
-        } else {
-          // Use regular dungeon endpoint
-          response = await sendDirectAction(action, this.currentDungeonType, actionData);
-        }
+        // Use unified API with both parameters for maximum compatibility
+        response = await sendDirectAction(action, this.currentDungeonType, actionData);
       } catch (error) {
         console.error('First attempt failed:', error.message);
         
@@ -506,13 +488,8 @@ export class DungeonPlayer {
                 gearInstanceIds: []
               };
               
-              if (this.currentDungeonType === 3) {
-                // Use Underhaul-specific endpoint for retry
-                response = await sendUnderhaulAction(action, retryActionData);
-              } else {
-                // Use regular dungeon endpoint for retry
-                response = await sendDirectAction(action, this.currentDungeonType, retryActionData);
-              }
+              // Use unified API with both parameters for retry
+              response = await sendDirectAction(action, this.currentDungeonType, retryActionData);
             } else {
               throw new Error('Could not get fresh game state');
             }
@@ -861,14 +838,8 @@ export class DungeonPlayer {
       console.log(`\nSending loot action: ${lootAction}`);
       let response;
       try {
-        // Use correct API endpoint based on dungeon type
-        if (this.currentDungeonType === 3) {
-          // Use Underhaul-specific endpoint for loot
-          response = await sendUnderhaulLootAction(lootAction);
-        } else {
-          // Use regular dungeon endpoint for loot
-          response = await sendDirectLootAction(lootAction, this.currentDungeonType);
-        }
+        // Use unified API with both parameters for loot selection
+        response = await sendDirectLootAction(lootAction, this.currentDungeonType);
       } catch (error) {
         console.error('Loot selection error:', error.message);
         throw error;

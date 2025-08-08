@@ -12,7 +12,9 @@ An automated dungeon crawler bot for Gigaverse.io that plays the Dungetron 5000 
 
 ## Features
 
-- **Automated Dungeon Crawling**: Plays both Dungetron 5000 and Dungetron Underhaul automatically
+- **Auto-Switch Strategy**: Prioritizes Underhaul (9 runs/day) → automatically switches to Dungetron 5000 when full
+- **Active Dungeon Detection**: Automatically detects and continues existing dungeons with proper type identification
+- **Dual Statistics Tracking**: Separate enemy pattern analysis for Underhaul vs Dungetron 5000
 - **Advanced Pattern Recognition**: Tracks enemy move sequences and predicts with high accuracy
 - **Smart Decision Making**: Uses multi-factor analysis including move patterns, turn behavior, and stat correlations
 - **Statistics System**: Records all battles and analyzes enemy-specific patterns
@@ -99,9 +101,10 @@ npm run dev
 
 ## Configuration
 
-Edit `src/config.mjs` or use environment variables to customize:
-- Dungeon type (DUNGEON_TYPE: REGULAR/JUICED/UNDERHAUL)
-- Energy threshold (ENERGY_THRESHOLD: 40 for regular, 120 for juiced)
+The bot automatically prioritizes **Dungetron Underhaul** (9 runs/day) and switches to **Dungetron 5000** when Underhaul is full. Configure with environment variables:
+
+- Auto-switch behavior (AUTO_SWITCH_TO_DUNGETRON: default true)
+- Energy threshold (ENERGY_THRESHOLD: default 40)
 - Check interval (CHECK_INTERVAL: default 60000ms)
 - Repair threshold (REPAIR_THRESHOLD: default 30%)
 - Minimal output mode (MINIMAL_OUTPUT: default true)
@@ -109,26 +112,29 @@ Edit `src/config.mjs` or use environment variables to customize:
 Add to `.env` file:
 ```env
 # Bot Settings
-DUNGEON_TYPE=JUICED      # REGULAR, JUICED, or UNDERHAUL
-ENERGY_THRESHOLD=120     # Energy required to start
-MINIMAL_OUTPUT=true      # Clean output for statistics
+DUNGEON_TYPE=JUICED             # Enable juiced mode for Dungetron 5000 
+AUTO_SWITCH_TO_DUNGETRON=true   # Auto-switch when Underhaul is 9/9
+ENERGY_THRESHOLD=40             # Energy required to start
+MINIMAL_OUTPUT=true             # Clean output for statistics
 ```
 
 ## How It Works
 
 The bot:
-1. Checks energy levels periodically
-2. Starts a dungeon run when enough energy is available
-3. Analyzes enemy patterns using advanced statistics:
+1. **Auto-detects active dungeons** and continues with proper dungeon type detection
+2. **Smart dungeon selection**: Prioritizes Underhaul (9/day) → Auto-switches to Dungetron 5000 when full
+3. **Checks energy levels** and daily limits periodically
+4. **Starts optimal dungeon** based on availability and energy
+5. **Analyzes enemy patterns** using advanced statistics (tracked separately by dungeon type):
    - **Move Sequences** (40% weight) - Tracks patterns like "rock-paper→scissor"
    - **Turn-Specific** (20% weight) - Different behavior on different turns
    - **Stat Correlations** (15% weight) - Changes based on health/shield levels
    - **Time-Based Shifts** (15% weight) - Patterns change over days (noobId tracking)
    - **Overall Distribution** (10% weight) - General move preferences
-4. Makes predictions when confidence exceeds 60%
-5. Selects optimal loot upgrades
-6. Handles charge regeneration (1 per turn, 2-turn delay when depleted)
-7. Continues until victory or defeat
+6. **Makes predictions** when confidence exceeds 60%
+7. **Selects optimal loot upgrades** using weighted scoring
+8. **Handles charge regeneration** (1 per turn, 2-turn delay when depleted)
+9. **Continues until victory or defeat** with unified API compatibility
 
 ### Statistics Analysis
 

@@ -9,10 +9,11 @@ export const config = {
 
   // Bot Settings
   // Dungeon types: 1 = Dungetron 5000, 3 = Underhaul
-  dungeonType: process.env.DUNGEON_TYPE === 'UNDERHAUL' ? 3 : 1, // Default to Dungetron 5000 (1), use Underhaul (3) if explicitly set
+  // NOTE: Bot will auto-prioritize Underhaul (3) when available, fallback to Dungetron 5000 (1) when 9/9
+  dungeonType: 3, // Default to prioritize Underhaul - bot will auto-switch based on availability
   isJuiced: process.env.DUNGEON_TYPE === 'JUICED', // Enable juiced mode (not used for Underhaul)
   dungetron5000Type: 1, // Dungetron 5000 (Fallback when Underhaul hits limits)
-  autoSwitchToDungetron: process.env.AUTO_SWITCH_UNDERHAUL !== 'false', // Auto-switch to Dungetron 5000 when Underhaul is full
+  autoSwitchToDungetron: process.env.AUTO_SWITCH_TO_DUNGETRON !== 'false', // Auto-switch to Dungetron 5000 when Underhaul is full
   energyThreshold: parseInt(process.env.ENERGY_THRESHOLD || '40'),
   repairThreshold: parseInt(process.env.REPAIR_THRESHOLD || '30'),
   minEnergyToRun: parseInt(process.env.MIN_ENERGY_TO_RUN || '40'),

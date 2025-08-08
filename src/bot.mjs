@@ -5,15 +5,14 @@ import { GearManager } from './gear-manager.mjs';
 import { sleep, formatTime, calculateEnergyRegenTime } from './utils.mjs';
 
 if (!config.minimalOutput) {
-  const modeText = config.isJuiced ? 'Juiced Mode (120 Energy)' : 'Regular Mode (40 Energy)';
   console.log(`
 ╔═══════════════════════════════════════╗
-║      Gigaverse Dungetron Bot          ║
-║       ${modeText.padEnd(32)} ║
+║      Gigaverse Auto-Switch Bot        ║
+║    Underhaul Priority + Dungetron     ║
 ╚═══════════════════════════════════════╝
 `);
 } else {
-  console.log('\nGigaverse Bot (Minimal/Stats Mode)');
+  console.log('\nGigaverse Auto-Switch Bot (Minimal/Stats Mode)');
 }
 
 // Initialize components
@@ -179,7 +178,9 @@ console.log('Using bots may violate the game\'s Terms of Service.\n');
 
 console.log('Configuration:');
 const dungeonMode = config.isJuiced ? 'Juiced' : 'Regular';
-console.log(`- Dungeon: Dungetron 5000 (${dungeonMode}, ${config.energyThreshold} energy)`);
+console.log(`- Dungeon Strategy: Prioritize Underhaul (9 runs/day) → Auto-switch to Dungetron 5000 (${dungeonMode})`);
+console.log(`- Energy threshold: ${config.energyThreshold} energy`);
+console.log(`- Auto-switch enabled: ${config.autoSwitchToDungetron ? 'Yes' : 'No'}`);
 console.log(`- Repair threshold: ${config.repairThreshold}%`);
 console.log(`- Check interval: ${formatTime(config.checkInterval)}`);
 console.log('\nStatistics & Analysis:');
