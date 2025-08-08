@@ -204,7 +204,7 @@ export class DungeonPlayer {
       };
 
       // Use unified API with both parameters for maximum compatibility
-      response = await sendDirectAction('start_run', this.currentDungeonType, data);
+      let response = await sendDirectAction('start_run', this.currentDungeonType, data);
       
       if (response && response.success) {
         this.currentDungeon = response.data;
