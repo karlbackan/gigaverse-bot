@@ -3,7 +3,7 @@ import { config } from './config.mjs';
 import { DecisionEngine } from './decision-engine.mjs';
 import { sleep } from './utils.mjs';
 import { sendDungeonAction } from './dungeon-api-direct.mjs';
-import { sendDirectAction, sendDirectLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
+import { sendDirectAction, sendDirectLootAction, sendUnderhaulAction, sendUnderhaulLootAction, getDirectDungeonState, getDirectEnergy, getDirectInventory } from './direct-api.mjs';
 import { getEquippedGearIds } from './direct-api-gear.mjs';
 import { getNoobIdFromJWT } from './jwt-utils.mjs';
 import axios from 'axios';
@@ -209,8 +209,15 @@ export class DungeonPlayer {
         gearInstanceIds: gearInstanceIds // Pass equipped gear IDs for Underhaul
       };
 
-      // Use direct API call with current dungeon type
-      const response = await sendDirectAction('start_run', this.currentDungeonType, data);
+      // Use correct API endpoint based on dungeon type
+      let response;
+      if (this.currentDungeonType === 3) {
+        // Use Underhaul-specific endpoint
+        response = await sendUnderhaulAction('start_run', data);
+      } else {
+        // Use regular dungeon endpoint
+        response = await sendDirectAction('start_run', this.currentDungeonType, data);
+      }
       
       if (response && response.success) {
         this.currentDungeon = response.data;
@@ -461,14 +468,22 @@ export class DungeonPlayer {
       // Send action using direct API (bypassing SDK issues)
       let response;
       try {
-        // Use direct API with current dungeon type
-        response = await sendDirectAction(action, this.currentDungeonType, {
+        // Use correct API endpoint based on dungeon type
+        const actionData = {
           consumables: [],
           itemId: 0,
           index: 0,
           isJuiced: false,
           gearInstanceIds: []
-        });
+        };
+        
+        if (this.currentDungeonType === 3) {
+          // Use Underhaul-specific endpoint
+          response = await sendUnderhaulAction(action, actionData);
+        } else {
+          // Use regular dungeon endpoint
+          response = await sendDirectAction(action, this.currentDungeonType, actionData);
+        }
       } catch (error) {
         console.error('First attempt failed:', error.message);
         
@@ -483,13 +498,21 @@ export class DungeonPlayer {
             const freshState = await getDirectDungeonState();
             if (freshState?.data?.run) {
               console.log('Retrying with fresh state...');
-              response = await sendDirectAction(action, this.currentDungeonType, {
+              const retryActionData = {
                 consumables: [],
                 itemId: 0,
                 index: 0,
                 isJuiced: false,
                 gearInstanceIds: []
-              });
+              };
+              
+              if (this.currentDungeonType === 3) {
+                // Use Underhaul-specific endpoint for retry
+                response = await sendUnderhaulAction(action, retryActionData);
+              } else {
+                // Use regular dungeon endpoint for retry
+                response = await sendDirectAction(action, this.currentDungeonType, retryActionData);
+              }
             } else {
               throw new Error('Could not get fresh game state');
             }
@@ -838,8 +861,14 @@ export class DungeonPlayer {
       console.log(`\nSending loot action: ${lootAction}`);
       let response;
       try {
-        // Use direct API with current dungeon type
-        response = await sendDirectLootAction(lootAction, this.currentDungeonType);
+        // Use correct API endpoint based on dungeon type
+        if (this.currentDungeonType === 3) {
+          // Use Underhaul-specific endpoint for loot
+          response = await sendUnderhaulLootAction(lootAction);
+        } else {
+          // Use regular dungeon endpoint for loot
+          response = await sendDirectLootAction(lootAction, this.currentDungeonType);
+        }
       } catch (error) {
         console.error('Loot selection error:', error.message);
         throw error;
