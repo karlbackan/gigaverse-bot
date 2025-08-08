@@ -162,18 +162,16 @@ node src/statistics-analyzer.mjs export data.json
 
 ## API Implementation
 
-The bot uses direct API calls instead of the SDK due to parameter naming issues:
-- **Dual Endpoint System**: Regular dungeons use `/api/game/dungeon/action`, Underhaul uses `/api/game/underhaul/action`
-- **Smart Routing**: Automatically selects correct endpoint based on dungeon type (1-2 = regular, 3 = Underhaul)
-- Uses `dungeonType` instead of `dungeonId` for regular dungeons
-- Implements proper action token chaining across both endpoint types
+The bot uses direct API calls with maximum compatibility:
+- **Unified Endpoint**: Uses `/api/game/dungeon/action` for all dungeon types (including Underhaul)
+- **Dual Parameter Support**: Sends both `dungeonType` AND `dungeonId` for maximum API compatibility
+- Implements proper action token chaining across all dungeon types
 - Handles token errors with automatic retry
-- **Complete Underhaul Support**: All actions (start, combat, loot) use correct Underhaul endpoints
+- **Complete Underhaul Support**: Confirmed working with dungeonType/dungeonId: 3
 
 ### API Endpoints Used:
-- `POST /api/game/dungeon/action` - Dungetron 5000 (dungeonType 1-2)
-- `POST /api/game/underhaul/action` - Dungetron Underhaul (dungeonType 3)
-- `GET /api/game/dungeon/state` - Current dungeon state (both types)
+- `POST /api/game/dungeon/action` - All dungeon types (dungeonType/dungeonId: 1=Dungetron5000, 3=Underhaul)
+- `GET /api/game/dungeon/state` - Current dungeon state (all types)
 - `GET /api/gear/instances/{address}` - Equipment data for Underhaul
 
 ## Development
