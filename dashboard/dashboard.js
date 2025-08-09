@@ -28,6 +28,8 @@ class DashboardApp {
             statistics: {
                 totalBattles: 245,
                 globalWinRate: 67.8,
+                globalLossRate: 25.7,
+                globalDrawRate: 6.5,
                 activeAccounts: 2,
                 predictionAccuracy: 72.5
             }
@@ -231,6 +233,13 @@ class DashboardApp {
         document.getElementById('globalWinRate').textContent = `${data.globalWinRate}%`;
         document.getElementById('activeAccounts').textContent = data.activeAccounts;
         
+        // Calculate and display loss rate and draw rate
+        const lossRate = data.globalLossRate || (100 - data.globalWinRate - (data.globalDrawRate || 0));
+        const drawRate = data.globalDrawRate || 0;
+        
+        document.getElementById('globalLossRate').textContent = `${lossRate.toFixed(1)}%`;
+        document.getElementById('globalDrawRate').textContent = `${drawRate.toFixed(1)}%`;
+        
         if (document.getElementById('predictionAccuracy')) {
             document.getElementById('predictionAccuracy').textContent = `${data.predictionAccuracy}%`;
         }
@@ -243,12 +252,15 @@ class DashboardApp {
             this.charts.winRate = new Chart(winRateCtx, {
                 type: 'line',
                 data: {
-                    labels: ['1h ago', '45m', '30m', '15m', 'Now'],
+                    labels: ['Last 5h', '4h ago', '3h ago', '2h ago', '1h ago', 'Now'],
                     datasets: [{
                         label: 'Win Rate %',
-                        data: [65, 68, 72, 70, 68],
+                        data: [65, 68, 72, 70, 75, 68],
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
                         fill: true,
                         tension: 0.4
                     }]
@@ -256,16 +268,53 @@ class DashboardApp {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 13 }
                         }
                     },
                     scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                color: '#666',
+                                font: { size: 12 }
+                            }
+                        },
                         y: {
                             beginAtZero: false,
-                            min: 50,
-                            max: 80
+                            min: 40,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                color: '#666',
+                                font: { size: 12 },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
                         }
                     }
                 }
@@ -278,24 +327,47 @@ class DashboardApp {
             this.charts.enemy = new Chart(enemyCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Goblin', 'Orc', 'Dragon', 'Skeleton', 'Others'],
+                    labels: ['Enemy ID: 1', 'Enemy ID: 2', 'Enemy ID: 3', 'Enemy ID: 4', 'Others'],
                     datasets: [{
-                        data: [25, 20, 10, 15, 30],
+                        data: [35, 25, 20, 15, 5],
                         backgroundColor: [
                             '#ff6b6b',
                             '#4ecdc4',
                             '#45b7d1',
                             '#96ceb4',
                             '#feca57'
-                        ]
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '40%',
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    size: 12
+                                },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    return `${context.label}: ${context.raw} battles (${percentage}%)`;
+                                }
+                            }
                         }
                     }
                 }
@@ -316,10 +388,19 @@ class DashboardApp {
             this.charts.prediction = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Correct', 'Incorrect'],
+                    labels: ['Correct Predictions', 'Incorrect Predictions'],
                     datasets: [{
+                        label: 'Prediction Results',
                         data: [72, 28],
-                        backgroundColor: ['#28a745', '#dc3545']
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(220, 53, 69, 0.8)'
+                        ],
+                        borderColor: [
+                            '#28a745',
+                            '#dc3545'
+                        ],
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -327,7 +408,41 @@ class DashboardApp {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
+                            labels: {
+                                color: '#333',
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    return `${context.label}: ${context.raw} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#666',
+                                font: { size: 11 }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#666',
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
                         }
                     }
                 }
