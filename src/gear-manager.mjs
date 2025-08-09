@@ -32,10 +32,13 @@ export class GearManager {
         // Max durability is based on rarity: Common=40, Uncommon=50, Rare=60, Epic=70
         const maxDurability = [40, 50, 60, 70][item.RARITY_CID] || 40;
         
-        if (durability !== undefined && durability < maxDurability) {
+        // Only consider equipped gear (EQUIPPED_TO_SLOT_CID > -1) 
+        const isEquipped = item.EQUIPPED_TO_SLOT_CID !== null && item.EQUIPPED_TO_SLOT_CID > -1;
+        
+        if (isEquipped && durability !== undefined && durability < maxDurability) {
           const durabilityPercent = (durability / maxDurability) * 100;
           
-          // Only repair gear that's completely broken (0% durability)
+          // Only repair gear that's completely broken (0% durability) and equipped
           if (durability === 0) {
             needsRepair.push({
               ...item,
@@ -44,7 +47,8 @@ export class GearManager {
               durability: durability,
               maxDurability: maxDurability,
               durabilityPercent,
-              name: `Gear #${itemId}`
+              slot: item.EQUIPPED_TO_SLOT_CID,
+              name: `Gear #${itemId} (Slot ${item.EQUIPPED_TO_SLOT_CID})`
             });
           }
         }

@@ -20,6 +20,7 @@ export class StatisticsEngine {
       enemies: new Map()
     };
     this.currentDungeonType = 1; // Default to Dungetron 5000
+    this.lastPrediction = null; // Track last prediction for validation
     this.loadData();
   }
 
@@ -49,6 +50,16 @@ export class StatisticsEngine {
                 if (!enemy.chargePatterns) {
                   enemy.chargePatterns = {};
                 }
+                // Initialize new tracking fields for backwards compatibility
+                if (enemy.wins === undefined) enemy.wins = 0;
+                if (enemy.losses === undefined) enemy.losses = 0;
+                if (enemy.ties === undefined) enemy.ties = 0;
+                if (enemy.winRate === undefined) enemy.winRate = 0;
+                if (!enemy.predictionHistory) enemy.predictionHistory = [];
+                if (enemy.predictionAccuracy === undefined) enemy.predictionAccuracy = 0;
+                if (!enemy.healthPatterns) enemy.healthPatterns = {};
+                if (!enemy.longerSequences) enemy.longerSequences = {};
+                if (!enemy.chargeUtilization) enemy.chargeUtilization = {};
               }
             }
           }
@@ -65,6 +76,16 @@ export class StatisticsEngine {
             if (!enemy.chargePatterns) {
               enemy.chargePatterns = {};
             }
+            // Initialize new tracking fields for backwards compatibility
+            if (enemy.wins === undefined) enemy.wins = 0;
+            if (enemy.losses === undefined) enemy.losses = 0;
+            if (enemy.ties === undefined) enemy.ties = 0;
+            if (enemy.winRate === undefined) enemy.winRate = 0;
+            if (!enemy.predictionHistory) enemy.predictionHistory = [];
+            if (enemy.predictionAccuracy === undefined) enemy.predictionAccuracy = 0;
+            if (!enemy.healthPatterns) enemy.healthPatterns = {};
+            if (!enemy.longerSequences) enemy.longerSequences = {};
+            if (!enemy.chargeUtilization) enemy.chargeUtilization = {};
           }
         }
         
@@ -162,7 +183,18 @@ export class StatisticsEngine {
         statCorrelations: {},
         noobIdPatterns: {},
         recentBattles: [], // For recency weighting
-        chargePatterns: {} // NEW: Track behavior by charge state
+        chargePatterns: {}, // Track behavior by charge state
+        
+        // New tracking fields
+        wins: 0,
+        losses: 0,
+        ties: 0,
+        winRate: 0,
+        predictionHistory: [], // Track prediction accuracy
+        predictionAccuracy: 0,
+        healthPatterns: {}, // Track behavior by health thresholds
+        longerSequences: {}, // Track 4-5 move patterns
+        chargeUtilization: {} // Track charge efficiency
       });
     }
 
@@ -231,6 +263,73 @@ export class StatisticsEngine {
         enemy.chargePatterns[chargeKey] = { rock: 0, paper: 0, scissor: 0 };
       }
       enemy.chargePatterns[chargeKey][enemyAction]++;
+      
+      // Track charge utilization efficiency
+      const totalCharges = (enemyStats.charges.rock || 0) + (enemyStats.charges.paper || 0) + (enemyStats.charges.scissor || 0);
+      const chargeUtilKey = `turn${turn}_charges${totalCharges}`;
+      if (!enemy.chargeUtilization[chargeUtilKey]) {
+        enemy.chargeUtilization[chargeUtilKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.chargeUtilization[chargeUtilKey][enemyAction]++;
+    }
+    
+    // Track win/loss/tie results
+    if (result === 'win') {
+      enemy.wins++;
+    } else if (result === 'loss') {
+      enemy.losses++;
+    } else if (result === 'tie') {
+      enemy.ties++;
+    }
+    
+    // Update win rate
+    const totalResults = enemy.wins + enemy.losses;
+    if (totalResults > 0) {
+      enemy.winRate = enemy.wins / totalResults;
+    }
+    
+    // Track health-based patterns
+    if (enemyStats && enemyStats.health !== undefined) {
+      const healthThreshold = this.getHealthThreshold(enemyStats.health);
+      if (!enemy.healthPatterns[healthThreshold]) {
+        enemy.healthPatterns[healthThreshold] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.healthPatterns[healthThreshold][enemyAction]++;
+    }
+    
+    // Track longer sequences (4-5 moves)
+    const longerSequenceKey = this.getLongerSequenceKey(enemyId);
+    if (longerSequenceKey && longerSequenceKey.length >= 3) {
+      if (!enemy.longerSequences[longerSequenceKey]) {
+        enemy.longerSequences[longerSequenceKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.longerSequences[longerSequenceKey][enemyAction]++;
+    }
+    
+    // Store prediction for next turn (will be validated on next battle)
+    if (this.lastPrediction && this.lastPrediction.enemyId === enemyId) {
+      // Validate previous prediction
+      const predictedMove = this.getHighestProbMove(this.lastPrediction.predictions);
+      const wasCorrect = predictedMove === enemyAction;
+      
+      enemy.predictionHistory.push({
+        predicted: predictedMove,
+        actual: enemyAction,
+        correct: wasCorrect,
+        confidence: this.lastPrediction.confidence,
+        timestamp
+      });
+      
+      // Keep only last 50 predictions
+      if (enemy.predictionHistory.length > 50) {
+        enemy.predictionHistory.shift();
+      }
+      
+      // Update accuracy
+      const correctPredictions = enemy.predictionHistory.filter(p => p.correct).length;
+      enemy.predictionAccuracy = enemy.predictionHistory.length > 0 
+        ? correctPredictions / enemy.predictionHistory.length 
+        : 0;
     }
 
     // Record to session
@@ -315,6 +414,47 @@ export class StatisticsEngine {
     // General charge levels
     return `r${r}_p${p}_s${s}`;
   }
+  
+  getHealthThreshold(health) {
+    // Categorize health into meaningful thresholds
+    if (health >= 80) return 'high';
+    if (health >= 60) return 'medium-high';
+    if (health >= 40) return 'medium';
+    if (health >= 20) return 'low';
+    return 'critical';
+  }
+  
+  getLongerSequenceKey(enemyId) {
+    // Get last 4-5 moves for longer pattern recognition
+    const dungeonSequences = this.moveSequences[this.currentDungeonType];
+    if (!dungeonSequences || !dungeonSequences.has(enemyId)) {
+      return null;
+    }
+    
+    const sequence = dungeonSequences.get(enemyId);
+    if (sequence.length < 3) {
+      return null;
+    }
+    
+    // Create a key from last 3-5 moves (for next move prediction)
+    // We'll use up to last 4 moves to predict the 5th
+    return sequence.slice(-4).join('-');
+  }
+  
+  getHighestProbMove(predictions) {
+    // Get the move with highest probability
+    let maxProb = -1;
+    let bestMove = 'rock';
+    
+    for (const [move, prob] of Object.entries(predictions)) {
+      if (prob > maxProb) {
+        maxProb = prob;
+        bestMove = move;
+      }
+    }
+    
+    return bestMove;
+  }
 
   predictNextMove(enemyId, turn, playerStats, enemyStats, weaponStats, noobId, enemyPossibleMoves = null) {
     const enemy = this.enemyStats[this.currentDungeonType].get(enemyId);
@@ -329,16 +469,34 @@ export class StatisticsEngine {
       scissor: 0
     };
 
-    // Weight factors (configurable)
-    const weights = {
-      overall: 0.05,       // Overall move distribution (reduced)
-      turnSpecific: 0.10,  // Turn-specific patterns (reduced)
-      sequence: 0.25,      // Move sequences (reduced for charge priority)
-      statCorrelation: 0.1, // Stat-based patterns (reduced)
-      noobIdPattern: 0.05,  // Time-based shifts (reduced)
-      recent: 0.20,        // Recent battles
-      chargePattern: 0.25  // NEW: Charge-based behavior (high priority!)
+    // Weight factors (adjusted based on prediction accuracy)
+    const baseWeights = {
+      overall: 0.03,       // Overall move distribution
+      turnSpecific: 0.08,  // Turn-specific patterns
+      sequence: 0.15,      // Move sequences (3-move)
+      longerSequence: 0.20, // Longer sequences (4-5 moves)
+      statCorrelation: 0.08, // Stat-based patterns
+      noobIdPattern: 0.03,  // Time-based shifts
+      recent: 0.15,        // Recent battles
+      chargePattern: 0.20,  // Charge-based behavior
+      healthPattern: 0.08   // Health-based patterns
     };
+    
+    // Adjust weights based on prediction accuracy if available
+    const weights = { ...baseWeights };
+    if (enemy.predictionAccuracy !== undefined && enemy.predictionHistory.length >= 10) {
+      // If we're predicting well, increase confidence in our patterns
+      if (enemy.predictionAccuracy > 0.6) {
+        weights.sequence *= 1.2;
+        weights.longerSequence *= 1.3;
+        weights.chargePattern *= 1.2;
+      } else if (enemy.predictionAccuracy < 0.4) {
+        // If predictions are poor, rely more on recent and overall patterns
+        weights.recent *= 1.3;
+        weights.overall *= 1.5;
+        weights.sequence *= 0.8;
+      }
+    }
 
     // 1. Overall move distribution
     const totalMoves = enemy.moves.rock + enemy.moves.paper + enemy.moves.scissor;
@@ -441,6 +599,36 @@ export class StatisticsEngine {
         }
       }
     }
+    
+    // 8. Health-based patterns
+    if (enemyStats && enemyStats.health !== undefined && enemy.healthPatterns) {
+      const healthThreshold = this.getHealthThreshold(enemyStats.health);
+      if (enemy.healthPatterns[healthThreshold]) {
+        const healthMoves = enemy.healthPatterns[healthThreshold];
+        const healthTotal = healthMoves.rock + healthMoves.paper + healthMoves.scissor;
+        if (healthTotal >= 5) { // Need at least 5 samples
+          predictions.rock += weights.healthPattern * (healthMoves.rock / healthTotal);
+          predictions.paper += weights.healthPattern * (healthMoves.paper / healthTotal);
+          predictions.scissor += weights.healthPattern * (healthMoves.scissor / healthTotal);
+        }
+      }
+    }
+    
+    // 9. Longer sequence patterns (4-5 moves)
+    const longerSequenceKey = this.getLongerSequenceKey(enemyId);
+    if (longerSequenceKey && enemy.longerSequences && enemy.longerSequences[longerSequenceKey]) {
+      const longSeqMoves = enemy.longerSequences[longerSequenceKey];
+      const longSeqTotal = longSeqMoves.rock + longSeqMoves.paper + longSeqMoves.scissor;
+      if (longSeqTotal >= 2) { // Need at least 2 samples for longer patterns
+        predictions.rock += weights.longerSequence * (longSeqMoves.rock / longSeqTotal);
+        predictions.paper += weights.longerSequence * (longSeqMoves.paper / longSeqTotal);
+        predictions.scissor += weights.longerSequence * (longSeqMoves.scissor / longSeqTotal);
+        
+        if (!config.minimalOutput) {
+          console.log(`  Long sequence pattern found: R${(longSeqMoves.rock/longSeqTotal*100).toFixed(0)}% P${(longSeqMoves.paper/longSeqTotal*100).toFixed(0)}% S${(longSeqMoves.scissor/longSeqTotal*100).toFixed(0)}%`);
+        }
+      }
+    }
 
     // Normalize predictions
     let total = predictions.rock + predictions.paper + predictions.scissor;
@@ -484,13 +672,38 @@ export class StatisticsEngine {
       if (enemyPossibleMoves.length === 1) chargeConfidenceBoost = 0.5;  // 100% certain
       else if (enemyPossibleMoves.length === 2) chargeConfidenceBoost = 0.2;  // 50/50
     }
-
-    return {
+    
+    // Calculate base confidence
+    let baseConfidence = this.calculateConfidence(enemy, sequenceKey);
+    
+    // Adjust confidence based on actual prediction accuracy
+    if (enemy.predictionAccuracy !== undefined && enemy.predictionHistory.length >= 10) {
+      // Scale confidence based on how well we're actually predicting
+      const accuracyMultiplier = 0.5 + enemy.predictionAccuracy; // 0.5 to 1.5
+      baseConfidence *= accuracyMultiplier;
+      
+      if (!config.minimalOutput && enemy.predictionHistory.length >= 20) {
+        const recent10 = enemy.predictionHistory.slice(-10);
+        const recent10Accuracy = recent10.filter(p => p.correct).length / 10;
+        console.log(`  Prediction accuracy: Overall ${(enemy.predictionAccuracy*100).toFixed(0)}%, Recent ${(recent10Accuracy*100).toFixed(0)}%`);
+      }
+    }
+    
+    const finalConfidence = Math.min(0.9, baseConfidence + chargeConfidenceBoost);
+    
+    // Store this prediction for future validation
+    const prediction = {
+      enemyId,
       predictions,
       weaponScores,
-      confidence: Math.min(0.9, this.calculateConfidence(enemy, sequenceKey) + chargeConfidenceBoost),
-      possibleMoves: enemyPossibleMoves  // Include for decision making
+      confidence: finalConfidence,
+      possibleMoves: enemyPossibleMoves,
+      timestamp: Date.now()
     };
+    
+    this.lastPrediction = prediction;
+
+    return prediction;
   }
 
   calculateWeaponScores(predictions, weaponStats) {
@@ -552,7 +765,17 @@ export class StatisticsEngine {
         favoriteMove: this.getFavoriteMove(enemy.moves),
         turnPatterns: this.analyzeTurnPatterns(enemy.movesByTurn),
         strongestSequences: this.getStrongestSequences(enemy.moveSequences),
-        noobIdShifts: this.analyzeNoobIdShifts(enemy.noobIdPatterns)
+        noobIdShifts: this.analyzeNoobIdShifts(enemy.noobIdPatterns),
+        // New statistics
+        wins: enemy.wins,
+        losses: enemy.losses,
+        ties: enemy.ties,
+        winRate: enemy.winRate,
+        predictionAccuracy: enemy.predictionAccuracy,
+        predictionSampleSize: enemy.predictionHistory.length,
+        healthPatternCount: Object.keys(enemy.healthPatterns).length,
+        longerSequenceCount: Object.keys(enemy.longerSequences).length,
+        chargePatternCount: Object.keys(enemy.chargePatterns).length
       };
     }
     
