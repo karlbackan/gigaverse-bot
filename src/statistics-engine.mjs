@@ -471,30 +471,37 @@ export class StatisticsEngine {
 
     // Weight factors (adjusted based on prediction accuracy)
     const baseWeights = {
-      overall: 0.03,       // Overall move distribution
-      turnSpecific: 0.08,  // Turn-specific patterns
-      sequence: 0.15,      // Move sequences (3-move)
-      longerSequence: 0.20, // Longer sequences (4-5 moves)
-      statCorrelation: 0.08, // Stat-based patterns
-      noobIdPattern: 0.03,  // Time-based shifts
-      recent: 0.15,        // Recent battles
-      chargePattern: 0.20,  // Charge-based behavior
-      healthPattern: 0.08   // Health-based patterns
+      overall: 0.05,       // Overall move distribution
+      turnSpecific: 0.10,  // Turn-specific patterns
+      sequence: 0.25,      // Move sequences (3-move) - RESTORED
+      longerSequence: 0.05, // Longer sequences (4-5 moves) - REDUCED until we have data
+      statCorrelation: 0.10, // Stat-based patterns
+      noobIdPattern: 0.05,  // Time-based shifts
+      recent: 0.20,        // Recent battles - RESTORED
+      chargePattern: 0.25,  // Charge-based behavior - RESTORED
+      healthPattern: 0.00   // Health-based patterns - DISABLED until we have data
     };
     
     // Adjust weights based on prediction accuracy if available
     const weights = { ...baseWeights };
-    if (enemy.predictionAccuracy !== undefined && enemy.predictionHistory.length >= 10) {
-      // If we're predicting well, increase confidence in our patterns
-      if (enemy.predictionAccuracy > 0.6) {
-        weights.sequence *= 1.2;
-        weights.longerSequence *= 1.3;
-        weights.chargePattern *= 1.2;
-      } else if (enemy.predictionAccuracy < 0.4) {
+    // Only adjust weights if we have significant prediction history
+    if (enemy.predictionAccuracy !== undefined && enemy.predictionHistory.length >= 30) {
+      // If we're predicting well, slightly increase confidence in our patterns
+      if (enemy.predictionAccuracy > 0.65) {
+        weights.sequence *= 1.1;
+        weights.chargePattern *= 1.1;
+        // Only boost new patterns if they have data
+        if (Object.keys(enemy.longerSequences || {}).length > 5) {
+          weights.longerSequence *= 1.2;
+        }
+        if (Object.keys(enemy.healthPatterns || {}).length > 5) {
+          weights.healthPattern = 0.05; // Enable with small weight
+        }
+      } else if (enemy.predictionAccuracy < 0.35) {
         // If predictions are poor, rely more on recent and overall patterns
-        weights.recent *= 1.3;
-        weights.overall *= 1.5;
-        weights.sequence *= 0.8;
+        weights.recent *= 1.2;
+        weights.overall *= 1.3;
+        weights.sequence *= 0.9;
       }
     }
 
