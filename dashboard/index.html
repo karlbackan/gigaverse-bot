@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gigaverse Bot Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>🎮 Gigaverse Bot Dashboard</h1>
+                <div class="header-stats">
+                    <div class="stat">
+                        <span class="stat-label">Total Battles:</span>
+                        <span id="totalBattles" class="stat-value">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Win Rate:</span>
+                        <span id="globalWinRate" class="stat-value">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Active Accounts:</span>
+                        <span id="activeAccounts" class="stat-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Account Cards Section -->
+            <section class="accounts-section">
+                <h2>Account Status</h2>
+                <div class="accounts-grid" id="accountsGrid">
+                    <!-- Account cards will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Activity Feed & Statistics Row -->
+            <div class="dashboard-row">
+                <!-- Live Activity Feed -->
+                <section class="activity-section">
+                    <h2>🔴 Live Activity Feed</h2>
+                    <div class="activity-feed" id="activityFeed">
+                        <div class="activity-item connecting">
+                            <span class="activity-time">--:--:--</span>
+                            <span class="activity-text">Connecting to bot...</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Battle Statistics -->
+                <section class="stats-section">
+                    <h2>📊 Battle Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Win Rate Trend</h3>
+                            <canvas id="winRateChart" width="300" height="200"></canvas>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Enemy Encounters</h3>
+                            <canvas id="enemyChart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Gear Status Section -->
+            <section class="gear-section">
+                <h2>⚔️ Gear & Equipment Status</h2>
+                <div class="gear-grid" id="gearGrid">
+                    <!-- Gear status will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Comprehensive Metrics Section -->
+            <section class="metrics-section">
+                <h2>🎯 Advanced Metrics</h2>
+                <div class="metrics-tabs">
+                    <button class="tab-button active" data-tab="prediction">Prediction Analysis</button>
+                    <button class="tab-button" data-tab="patterns">Battle Patterns</button>
+                    <button class="tab-button" data-tab="performance">Performance</button>
+                    <button class="tab-button" data-tab="health">Health & Charge</button>
+                </div>
+                
+                <div class="metrics-content">
+                    <!-- Prediction Tab -->
+                    <div id="prediction-tab" class="tab-content active">
+                        <div class="metrics-row">
+                            <div class="metric-card">
+                                <h4>Prediction Accuracy</h4>
+                                <div class="metric-value" id="predictionAccuracy">-</div>
+                                <canvas id="predictionChart" width="200" height="150"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <h4>Win Rate by Enemy</h4>
+                                <div class="enemy-list" id="enemyWinRates"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Patterns Tab -->
+                    <div id="patterns-tab" class="tab-content">
+                        <div class="metrics-row">
+                            <div class="metric-card">
+                                <h4>Move Sequences</h4>
+                                <canvas id="sequenceChart" width="200" height="150"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <h4>Turn Performance</h4>
+                                <canvas id="turnChart" width="200" height="150"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Tab -->
+                    <div id="performance-tab" class="tab-content">
+                        <div class="metrics-row">
+                            <div class="metric-card">
+                                <h4>Response Time</h4>
+                                <canvas id="responseChart" width="200" height="150"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <h4>Battle Speed</h4>
+                                <canvas id="speedChart" width="200" height="150"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health & Charge Tab -->
+                    <div id="health-tab" class="tab-content">
+                        <div class="metrics-row">
+                            <div class="metric-card">
+                                <h4>Health Patterns</h4>
+                                <canvas id="healthChart" width="200" height="150"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <h4>Charge Utilization</h4>
+                                <canvas id="chargeChart" width="200" height="150"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Control Panel -->
+            <section class="controls-section">
+                <h2>🎮 Control Panel</h2>
+                <div class="controls-grid">
+                    <button class="control-btn repair-btn" id="repairAllBtn">
+                        🔧 Repair All Gear
+                    </button>
+                    <button class="control-btn stop-btn" id="emergencyStopBtn">
+                        ⛔ Emergency Stop
+                    </button>
+                    <button class="control-btn refresh-btn" id="refreshDataBtn">
+                        🔄 Refresh Data
+                    </button>
+                    <button class="control-btn settings-btn" id="settingsBtn">
+                        ⚙️ Settings
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Connection Status -->
+        <div class="connection-status" id="connectionStatus">
+            <span class="status-dot"></span>
+            <span class="status-text">Connecting...</span>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Dashboard Settings</h2>
+            <div class="settings-form">
+                <label>
+                    <input type="checkbox" id="autoRefresh" checked> Auto-refresh data
+                </label>
+                <label>
+                    Refresh interval: 
+                    <select id="refreshInterval">
+                        <option value="1000">1 second</option>
+                        <option value="2000" selected>2 seconds</option>
+                        <option value="5000">5 seconds</option>
+                        <option value="10000">10 seconds</option>
+                    </select>
+                </label>
+                <label>
+                    <input type="checkbox" id="soundNotifications" checked> Sound notifications
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

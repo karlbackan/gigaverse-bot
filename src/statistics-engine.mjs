@@ -121,6 +121,91 @@ export class StatisticsEngine {
     }
   }
 
+  // Initialize comprehensive metrics for backward compatibility
+  initializeComprehensiveMetrics(enemy) {
+    // Only add metrics if they don't already exist
+    if (enemy.wins === undefined) {
+      // 1. Win/Loss Tracking
+      enemy.wins = 0;
+      enemy.losses = 0;
+      enemy.ties = 0;
+      enemy.winRate = 0;
+      
+      // 2. Prediction Validation
+      enemy.predictionHistory = [];
+      enemy.predictionAccuracy = 0;
+      
+      // 3. Health-based Patterns
+      enemy.healthPatterns = {};
+      
+      // 4. Extended Sequences
+      enemy.longerSequences = {};
+      
+      // 5. Charge Utilization
+      enemy.chargeUtilization = {};
+      
+      // 6. Turn Performance
+      enemy.turnPerformance = {};
+      
+      // 7. Player Stat Correlations
+      enemy.playerStatPatterns = {};
+      
+      // 8. Enemy Stat Correlations  
+      enemy.enemyStatPatterns = {};
+      
+      // 9. Weapon Effectiveness
+      enemy.weaponEffectiveness = {};
+      
+      // 10. Consecutive Patterns
+      enemy.consecutivePatterns = {};
+      
+      // 11. Response Patterns
+      enemy.responsePatterns = {};
+      
+      // 12. Momentum Tracking
+      enemy.momentumPatterns = {};
+      
+      // 13. Time Patterns
+      enemy.timePatterns = {};
+      
+      // 14. Session Patterns
+      enemy.sessionPatterns = {};
+      
+      // 15. Damage Patterns
+      enemy.damagePatterns = {};
+      
+      // 16. Healing Patterns
+      enemy.healingPatterns = {};
+      
+      // 17. Shield Patterns
+      enemy.shieldPatterns = {};
+      
+      // 18. Energy Patterns
+      enemy.energyPatterns = {};
+      
+      // 19. Granular NoobId Patterns
+      enemy.detailedNoobPatterns = {};
+      
+      // 20. Turn Duration Patterns
+      enemy.turnDurationPatterns = {};
+      
+      // 21. Conservation Patterns
+      enemy.conservationPatterns = {};
+      
+      // 22. Multi-turn Effectiveness
+      enemy.multiTurnEffectiveness = {};
+      
+      // 23. Counter-move Success
+      enemy.counterMoveSuccess = {};
+      
+      // 24. Tie-breaker Patterns
+      enemy.tieBreakerPatterns = {};
+      
+      // 25. Recovery Patterns
+      enemy.recoveryPatterns = {};
+    }
+  }
+
   saveData() {
     try {
       const dir = path.dirname(this.dataPath);
@@ -332,6 +417,9 @@ export class StatisticsEngine {
         : 0;
     }
 
+    // COMPREHENSIVE METRICS TRACKING (NOT USED FOR DECISIONS)
+    this.trackComprehensiveMetrics(enemy, battleData, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp);
+
     // Record to session
     this.sessionData.battles.push({
       enemyId,
@@ -346,6 +434,267 @@ export class StatisticsEngine {
     // Auto-save every 10 battles
     if (this.sessionData.battles.length % 10 === 0) {
       this.saveData();
+    }
+  }
+
+  // Track comprehensive metrics (NOT used for decisions)
+  trackComprehensiveMetrics(enemy, battleData, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp) {
+    // 1. Win/Loss Tracking
+    if (result === 'win') enemy.wins++;
+    else if (result === 'loss') enemy.losses++;
+    else if (result === 'tie') enemy.ties++;
+    enemy.winRate = enemy.wins / (enemy.wins + enemy.losses + enemy.ties);
+
+    // 2. Prediction Validation (store for future analysis)
+    enemy.predictionHistory.push({
+      turn,
+      predicted: null, // TODO: Store prediction when available
+      actual: enemyAction,
+      correct: false, // TODO: Calculate when prediction available
+      timestamp
+    });
+    if (enemy.predictionHistory.length > 50) enemy.predictionHistory.shift();
+
+    // 3. Health-based Patterns
+    if (enemyStats?.healthPercent !== undefined) {
+      const healthBracket = Math.floor(enemyStats.healthPercent / 10) * 10; // 0-9 -> 0, 10-19 -> 10, etc.
+      const healthKey = `hp_${healthBracket}`;
+      if (!enemy.healthPatterns[healthKey]) {
+        enemy.healthPatterns[healthKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.healthPatterns[healthKey][enemyAction]++;
+    }
+
+    // 4. Extended Sequences (4-5 moves)
+    const sequence = this.moveSequences[this.currentDungeonType].get(battleData.enemyId) || [];
+    if (sequence.length >= 3) {
+      const longerSeq = sequence.slice(-3).join('-');
+      if (!enemy.longerSequences[longerSeq]) {
+        enemy.longerSequences[longerSeq] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.longerSequences[longerSeq][enemyAction]++;
+    }
+
+    // 5. Charge Utilization (efficiency tracking)
+    if (enemyStats?.charges) {
+      const totalCharges = Math.max(0, enemyStats.charges.rock) + 
+                          Math.max(0, enemyStats.charges.paper) + 
+                          Math.max(0, enemyStats.charges.scissor);
+      const chargeLevel = totalCharges <= 2 ? 'low' : totalCharges <= 5 ? 'medium' : 'high';
+      
+      if (!enemy.chargeUtilization[chargeLevel]) {
+        enemy.chargeUtilization[chargeLevel] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.chargeUtilization[chargeLevel][enemyAction]++;
+    }
+
+    // 6. Turn Performance
+    if (!enemy.turnPerformance[turn]) {
+      enemy.turnPerformance[turn] = { wins: 0, losses: 0, ties: 0, total: 0 };
+    }
+    enemy.turnPerformance[turn].total++;
+    if (result === 'win') enemy.turnPerformance[turn].wins++;
+    else if (result === 'loss') enemy.turnPerformance[turn].losses++;
+    else if (result === 'tie') enemy.turnPerformance[turn].ties++;
+
+    // 7. Player Stat Correlations
+    if (playerStats?.healthPercent !== undefined) {
+      const playerHealthKey = `player_hp_${Math.floor(playerStats.healthPercent / 20) * 20}`;
+      if (!enemy.playerStatPatterns[playerHealthKey]) {
+        enemy.playerStatPatterns[playerHealthKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.playerStatPatterns[playerHealthKey][enemyAction]++;
+    }
+
+    // 8. Enemy Stat Correlations
+    if (enemyStats?.healthPercent !== undefined && enemyStats?.shield !== undefined) {
+      const enemyKey = `enemy_hp${Math.floor(enemyStats.healthPercent / 25) * 25}_sh${enemyStats.shield > 0 ? 'yes' : 'no'}`;
+      if (!enemy.enemyStatPatterns[enemyKey]) {
+        enemy.enemyStatPatterns[enemyKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.enemyStatPatterns[enemyKey][enemyAction]++;
+    }
+
+    // 9. Weapon Effectiveness
+    if (weaponStats && playerAction) {
+      const weaponKey = `vs_${playerAction}`;
+      if (!enemy.weaponEffectiveness[weaponKey]) {
+        enemy.weaponEffectiveness[weaponKey] = { rock: 0, paper: 0, scissor: 0, win: 0, loss: 0 };
+      }
+      enemy.weaponEffectiveness[weaponKey][enemyAction]++;
+      if (result === 'win') enemy.weaponEffectiveness[weaponKey].win++;
+      else if (result === 'loss') enemy.weaponEffectiveness[weaponKey].loss++;
+    }
+
+    // 10. Consecutive Patterns
+    const lastMove = sequence.length > 0 ? sequence[sequence.length - 1] : null;
+    if (lastMove === enemyAction) {
+      const consecKey = `repeat_${enemyAction}`;
+      if (!enemy.consecutivePatterns[consecKey]) {
+        enemy.consecutivePatterns[consecKey] = { count: 0, maxStreak: 0, currentStreak: 0 };
+      }
+      enemy.consecutivePatterns[consecKey].currentStreak++;
+      enemy.consecutivePatterns[consecKey].count++;
+      enemy.consecutivePatterns[consecKey].maxStreak = Math.max(
+        enemy.consecutivePatterns[consecKey].maxStreak,
+        enemy.consecutivePatterns[consecKey].currentStreak
+      );
+    } else if (lastMove) {
+      // Reset streak for previous move
+      Object.keys(enemy.consecutivePatterns).forEach(key => {
+        if (key !== `repeat_${enemyAction}`) {
+          enemy.consecutivePatterns[key].currentStreak = 0;
+        }
+      });
+    }
+
+    // 11. Response Patterns
+    if (playerAction) {
+      const responseKey = `after_${playerAction}`;
+      if (!enemy.responsePatterns[responseKey]) {
+        enemy.responsePatterns[responseKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.responsePatterns[responseKey][enemyAction]++;
+    }
+
+    // 12. Momentum Tracking
+    const recentResults = enemy.recentBattles.slice(-5).map(b => b.result || 'unknown');
+    let momentum = 'neutral';
+    const recentWins = recentResults.filter(r => r === 'win').length;
+    const recentLosses = recentResults.filter(r => r === 'loss').length;
+    
+    if (recentWins >= 3) momentum = 'winning';
+    else if (recentLosses >= 3) momentum = 'losing';
+    
+    if (!enemy.momentumPatterns[momentum]) {
+      enemy.momentumPatterns[momentum] = { rock: 0, paper: 0, scissor: 0 };
+    }
+    enemy.momentumPatterns[momentum][enemyAction]++;
+
+    // 13. Time Patterns (hourly)
+    const hour = new Date(timestamp).getHours();
+    const timeKey = `hour_${hour}`;
+    if (!enemy.timePatterns[timeKey]) {
+      enemy.timePatterns[timeKey] = { rock: 0, paper: 0, scissor: 0 };
+    }
+    enemy.timePatterns[timeKey][enemyAction]++;
+
+    // 14. Session Patterns
+    const sessionLength = Math.floor((timestamp - enemy.firstSeen) / (1000 * 60)); // minutes
+    const sessionKey = sessionLength < 10 ? 'early' : sessionLength < 30 ? 'mid' : 'late';
+    if (!enemy.sessionPatterns[sessionKey]) {
+      enemy.sessionPatterns[sessionKey] = { rock: 0, paper: 0, scissor: 0 };
+    }
+    enemy.sessionPatterns[sessionKey][enemyAction]++;
+
+    // 15. Damage Patterns (if available in future)
+    // Placeholder for damage-based behavior tracking
+    
+    // 16. Healing Patterns
+    if (enemyStats?.healthPercent !== undefined && enemyStats.healthPercent < 30) {
+      const healKey = 'low_health';
+      if (!enemy.healingPatterns[healKey]) {
+        enemy.healingPatterns[healKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.healingPatterns[healKey][enemyAction]++;
+    }
+
+    // 17. Shield Patterns
+    if (enemyStats?.shield !== undefined) {
+      const shieldKey = enemyStats.shield > 0 ? 'with_shield' : 'no_shield';
+      if (!enemy.shieldPatterns[shieldKey]) {
+        enemy.shieldPatterns[shieldKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.shieldPatterns[shieldKey][enemyAction]++;
+    }
+
+    // 18. Energy Patterns (based on charges as proxy)
+    if (enemyStats?.charges) {
+      const totalEnergy = Math.max(0, enemyStats.charges.rock) + 
+                         Math.max(0, enemyStats.charges.paper) + 
+                         Math.max(0, enemyStats.charges.scissor);
+      const energyKey = `energy_${Math.floor(totalEnergy / 3) * 3}`;
+      if (!enemy.energyPatterns[energyKey]) {
+        enemy.energyPatterns[energyKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.energyPatterns[energyKey][enemyAction]++;
+    }
+
+    // 19. Granular NoobId Patterns (more detailed time tracking)
+    if (noobId) {
+      const detailedRange = Math.floor(noobId / 50) * 50; // Groups of 50 instead of 100
+      if (!enemy.detailedNoobPatterns[detailedRange]) {
+        enemy.detailedNoobPatterns[detailedRange] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.detailedNoobPatterns[detailedRange][enemyAction]++;
+    }
+
+    // 20. Turn Duration Patterns (battle speed)
+    const duration = timestamp - (enemy.lastSeen || timestamp);
+    const speedKey = duration < 1000 ? 'fast' : duration < 3000 ? 'normal' : 'slow';
+    if (!enemy.turnDurationPatterns[speedKey]) {
+      enemy.turnDurationPatterns[speedKey] = { rock: 0, paper: 0, scissor: 0 };
+    }
+    enemy.turnDurationPatterns[speedKey][enemyAction]++;
+
+    // 21. Conservation Patterns
+    if (enemyStats?.charges) {
+      const usedLowChargeWeapon = (enemyAction === 'rock' && enemyStats.charges.rock <= 1) ||
+                                 (enemyAction === 'paper' && enemyStats.charges.paper <= 1) ||
+                                 (enemyAction === 'scissor' && enemyStats.charges.scissor <= 1);
+      const conservationKey = usedLowChargeWeapon ? 'risky_use' : 'safe_use';
+      if (!enemy.conservationPatterns[conservationKey]) {
+        enemy.conservationPatterns[conservationKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.conservationPatterns[conservationKey][enemyAction]++;
+    }
+
+    // 22. Multi-turn Effectiveness
+    const multiTurnKey = `turn_${Math.min(turn, 10)}`; // Cap at turn 10
+    if (!enemy.multiTurnEffectiveness[multiTurnKey]) {
+      enemy.multiTurnEffectiveness[multiTurnKey] = { 
+        rock: { wins: 0, total: 0 }, 
+        paper: { wins: 0, total: 0 }, 
+        scissor: { wins: 0, total: 0 } 
+      };
+    }
+    enemy.multiTurnEffectiveness[multiTurnKey][enemyAction].total++;
+    if (result === 'win') enemy.multiTurnEffectiveness[multiTurnKey][enemyAction].wins++;
+
+    // 23. Counter-move Success
+    if (playerAction) {
+      const expectedCounter = { rock: 'paper', paper: 'scissor', scissor: 'rock' }[playerAction];
+      const counterKey = enemyAction === expectedCounter ? 'successful_counter' : 'failed_counter';
+      if (!enemy.counterMoveSuccess[counterKey]) {
+        enemy.counterMoveSuccess[counterKey] = { count: 0, wins: 0 };
+      }
+      enemy.counterMoveSuccess[counterKey].count++;
+      if (result === 'win') enemy.counterMoveSuccess[counterKey].wins++;
+    }
+
+    // 24. Tie-breaker Patterns
+    if (result === 'tie') {
+      const nextMoveKey = 'after_tie';
+      // Store for next battle analysis
+      if (!enemy.tieBreakerPatterns[nextMoveKey]) {
+        enemy.tieBreakerPatterns[nextMoveKey] = { rock: 0, paper: 0, scissor: 0, nextBattleMove: null };
+      }
+      // This will be filled in the next battle
+    } else if (enemy.tieBreakerPatterns.after_tie?.nextBattleMove === null && 
+               enemy.recentBattles.length > 0 && 
+               enemy.recentBattles[enemy.recentBattles.length - 1].result === 'tie') {
+      // Previous battle was a tie, record this as the tie-breaker move
+      enemy.tieBreakerPatterns.after_tie[enemyAction]++;
+    }
+
+    // 25. Recovery Patterns (after taking damage)
+    const prevBattle = enemy.recentBattles.length > 0 ? enemy.recentBattles[enemy.recentBattles.length - 1] : null;
+    if (prevBattle?.result === 'loss') {
+      const recoveryKey = 'after_loss';
+      if (!enemy.recoveryPatterns[recoveryKey]) {
+        enemy.recoveryPatterns[recoveryKey] = { rock: 0, paper: 0, scissor: 0 };
+      }
+      enemy.recoveryPatterns[recoveryKey][enemyAction]++;
     }
   }
 
