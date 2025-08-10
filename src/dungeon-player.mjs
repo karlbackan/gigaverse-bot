@@ -156,11 +156,12 @@ export class DungeonPlayer {
           const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1" || e.ID_CID === 1);
           const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1 || d.ID_CID === "1");
           
-          console.log(`🔍 Dungetron 5000 progress data:`, dungetron5000Progress ? 'Found' : 'Not found');
+          console.log(`🔍 Dungetron 5000 progress data:`, dungetron5000Progress ? 'Found' : 'Not found (assuming 0 runs)');
           console.log(`🔍 Dungetron 5000 info data:`, dungetron5000Info ? 'Found' : 'Not found');
           
-          if (dungetron5000Progress && dungetron5000Info) {
-            const runsToday = dungetron5000Progress.UINT256_CID || 0;
+          if (dungetron5000Info) {
+            // Progress missing = 0 runs today (common for unused dungeons)
+            const runsToday = dungetron5000Progress?.UINT256_CID || 0;
             const maxRuns = isJuiced ? dungetron5000Info.juicedMaxRunsPerDay : dungetron5000Info.UINT256_CID;
             
             if (runsToday < maxRuns) {
@@ -172,7 +173,7 @@ export class DungeonPlayer {
               console.log(`⚠️  Dungetron 5000 also at daily limit: ${runsToday}/${maxRuns}`);
             }
           } else {
-            console.log(`⚠️  Cannot switch: Missing Dungetron 5000 data (progress: ${dungetron5000Progress ? 'found' : 'missing'}, info: ${dungetron5000Info ? 'found' : 'missing'})`);
+            console.log(`⚠️  Cannot switch: Missing Dungetron 5000 info data (needed for max run limits)`);
           }
         } else {
           console.log('ℹ️  Auto-switch to Dungetron 5000 is disabled');
