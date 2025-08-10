@@ -337,38 +337,40 @@ export class DungeonPlayer {
       // === ENEMY ID & TURN VALIDATION ===
       // Detect and correct API inconsistencies that corrupt statistics
       
-      // Initialize tracking on first enemy of dungeon
+      // Initialize tracking on first turn (new dungeon or continuing existing)
       if (this.dungeonState.startEnemyId === null) {
         this.dungeonState.startEnemyId = enemyId;
         this.dungeonState.expectedEnemyId = enemyId;
         this.dungeonState.currentEnemyId = enemyId;
-        this.dungeonState.currentEnemyTurn = 1;
+        this.dungeonState.currentEnemyTurn = turn; // Use API turn for first turn
         this.dungeonState.lastRoom = room;
-      }
-      
-      // Check if we moved to a new room (enemy should increment by 1)
-      if (room > this.dungeonState.lastRoom) {
-        this.dungeonState.expectedEnemyId++;
-        this.dungeonState.currentEnemyTurn = 1;
-        this.dungeonState.lastRoom = room;
-        
-        // Validate enemy ID matches our expectation
-        if (enemyId !== this.dungeonState.expectedEnemyId) {
-          console.log(`⚠️  Enemy ID inconsistency detected!`);
-          console.log(`   API says: Enemy ${enemyId}, but expected: Enemy ${this.dungeonState.expectedEnemyId}`);
-          console.log(`   Using corrected Enemy ID to prevent statistics corruption`);
-          enemyId = this.dungeonState.expectedEnemyId;
+        console.log(`🎯 Initialized enemy tracking: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
+      } else {
+        // Check if we moved to a new room (enemy should increment by 1)
+        if (room > this.dungeonState.lastRoom) {
+          this.dungeonState.expectedEnemyId++;
+          this.dungeonState.currentEnemyTurn = 1;
+          this.dungeonState.lastRoom = room;
+          
+          // Validate enemy ID matches our expectation
+          if (enemyId !== this.dungeonState.expectedEnemyId) {
+            console.log(`⚠️  Enemy ID inconsistency detected!`);
+            console.log(`   API says: Enemy ${enemyId}, but expected: Enemy ${this.dungeonState.expectedEnemyId}`);
+            console.log(`   Using corrected Enemy ID to prevent statistics corruption`);
+            enemyId = this.dungeonState.expectedEnemyId;
+          }
+          this.dungeonState.currentEnemyId = enemyId;
+          console.log(`🎯 New room: Enemy ${enemyId}, Room ${room}, resetting to Turn 1`);
         }
-        this.dungeonState.currentEnemyId = enemyId;
-      }
-      
-      // Validate turn number for current enemy
-      const expectedTurn = this.dungeonState.currentEnemyTurn;
-      if (Math.abs(turn - expectedTurn) > 1) {  // Allow small variance
-        console.log(`⚠️  Turn number inconsistency detected!`);
-        console.log(`   API calculation: Turn ${turn}, but expected: Turn ${expectedTurn}`);
-        console.log(`   Using corrected turn number to prevent statistics corruption`);
-        turn = expectedTurn;
+        
+        // Validate turn number for current enemy
+        const expectedTurn = this.dungeonState.currentEnemyTurn;
+        if (Math.abs(turn - expectedTurn) > 1) {  // Allow small variance
+          console.log(`⚠️  Turn number inconsistency detected!`);
+          console.log(`   API calculation: Turn ${turn}, but expected: Turn ${expectedTurn}`);
+          console.log(`   Using corrected turn number to prevent statistics corruption`);
+          turn = expectedTurn;
+        }
       }
       
       // Update turn counter for next validation
@@ -709,6 +711,16 @@ export class DungeonPlayer {
         console.log('Continuing existing dungeon...');
         // Make sure decision engine knows which dungeon type we're in
         this.decisionEngine.setDungeonType(this.currentDungeonType);
+        
+        // Initialize dungeon state tracking for existing dungeon
+        // We don't know the starting enemy, so validation will learn from current state
+        this.dungeonState = {
+          expectedEnemyId: null,      // Will be set on first turn
+          currentEnemyId: null,       // Will be set on first turn  
+          currentEnemyTurn: 0,        // Will be set on first turn
+          lastRoom: 0,                // Will be set on first turn
+          startEnemyId: null          // Unknown for existing dungeons
+        };
       }
 
       // Play through the dungeon continuously until completion or failure
