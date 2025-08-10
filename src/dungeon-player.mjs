@@ -749,16 +749,22 @@ export class DungeonPlayer {
         // Make sure decision engine knows which dungeon type we're in
         this.decisionEngine.setDungeonType(this.currentDungeonType);
         
-        // Initialize dungeon state tracking for existing dungeon
-        // We don't know the starting enemy, so validation will learn from current state
-        this.dungeonState = {
-          expectedEnemyId: null,      // Will be set on first turn
-          currentEnemyId: null,       // Will be set on first turn  
-          currentEnemyTurn: 0,        // Will be set on first turn
-          lastRoom: 0,                // Will be set on first turn
-          startEnemyId: null,         // Unknown for existing dungeons
-          initialized: false          // Track whether we've initialized for this dungeon
-        };
+        // Only reset dungeon state tracking if not already initialized for this dungeon
+        if (!this.dungeonState.initialized) {
+          // Initialize dungeon state tracking for existing dungeon
+          // We don't know the starting enemy, so validation will learn from current state
+          this.dungeonState = {
+            expectedEnemyId: null,      // Will be set on first turn
+            currentEnemyId: null,       // Will be set on first turn  
+            currentEnemyTurn: 0,        // Will be set on first turn
+            lastRoom: 0,                // Will be set on first turn
+            startEnemyId: null,         // Unknown for existing dungeons
+            initialized: false          // Will be set to true on first turn
+          };
+          console.log('🔄 Reset validation state for existing dungeon');
+        } else {
+          console.log('🔄 Validation state already initialized, continuing...');
+        }
       }
 
       // Play through the dungeon continuously until completion or failure
