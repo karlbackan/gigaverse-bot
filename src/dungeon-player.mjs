@@ -28,6 +28,18 @@ export class DungeonPlayer {
       startEnemyId: null        // First enemy ID of this dungeon run
     };
     
+    // Known dungeon layouts for validation
+    this.dungeonLayouts = {
+      3: { // Underhaul
+        1: 21, // Room 1 = Enemy 21
+        2: 22, // Room 2 = Enemy 22  
+        3: 23, // Room 3 = Enemy 23
+        4: 24  // Room 4 = Enemy 24
+        // Pattern continues: Room N = Enemy (20 + N)
+      }
+      // TODO: Add other dungeon types when we know their layouts
+    };
+    
     // Log the initial dungeon type for clarity
     const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
     console.log(`Initialized with dungeon type: ${this.currentDungeonType} (${dungeonName})`)
@@ -322,7 +334,19 @@ export class DungeonPlayer {
       // player already declared above
       const enemy = run.players[1];
       let enemyId = entity.ENEMY_CID;
-      const room = entity.ROOM_NUM_CID;
+      const apiRoom = entity.ROOM_NUM_CID;
+      
+      // Derive actual room from enemy ID (more reliable than API room number)
+      let room = apiRoom;
+      if (this.currentDungeonType === 3 && enemyId >= 21) {
+        const derivedRoom = enemyId - 20; // Enemy 21=Room 1, 22=Room 2, 23=Room 3, etc.
+        if (derivedRoom !== apiRoom) {
+          console.log(`⚠️  Room number inconsistency detected!`);
+          console.log(`   API room: ${apiRoom}, but Enemy ${enemyId} indicates Room ${derivedRoom}`);
+          console.log(`   Using enemy-derived room number (more reliable)`);
+          room = derivedRoom;
+        }
+      }
       // Room structure may vary by dungeon type
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
       const floor = Math.floor((room - 1) / 4) + 1;
