@@ -373,18 +373,25 @@ export class DungeonPlayer {
       // === ENEMY ID & TURN VALIDATION ===
       // Detect and correct API inconsistencies that corrupt statistics
       
+      let correctedEnemyId = enemyId;
+      let correctedTurn = turn;
+      
       // Initialize tracking on first turn (new dungeon or continuing existing)
       if (!this.dungeonState.initialized) {
         this.dungeonState.startEnemyId = enemyId;
         this.dungeonState.expectedEnemyId = enemyId;
         this.dungeonState.currentEnemyId = enemyId;
-        this.dungeonState.currentEnemyTurn = turn; // Use API turn for first turn
+        this.dungeonState.currentEnemyTurn = 1; // Start turn tracking at 1 for first enemy
         this.dungeonState.lastRoom = room;
         this.dungeonState.initialized = true; // Mark as initialized
-        console.log(`🎯 Initialized enemy tracking: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
+        
+        // For first turn, always use turn 1 regardless of API calculation
+        correctedTurn = 1;
+        console.log(`🎯 Initialized enemy tracking: Enemy ${correctedEnemyId}, Room ${room}, Turn ${correctedTurn}`);
       } else {
-        // Check if we moved to a new room (enemy should increment by 1)
+        // Check if we moved to a new room (enemy should change)
         if (room > this.dungeonState.lastRoom) {
+          // New room detected - enemy should increment and turn should reset to 1
           this.dungeonState.expectedEnemyId++;
           this.dungeonState.currentEnemyTurn = 1;
           this.dungeonState.lastRoom = room;
@@ -394,24 +401,31 @@ export class DungeonPlayer {
             console.log(`⚠️  Enemy ID inconsistency detected!`);
             console.log(`   API says: Enemy ${enemyId}, but expected: Enemy ${this.dungeonState.expectedEnemyId}`);
             console.log(`   Using corrected Enemy ID to prevent statistics corruption`);
-            enemyId = this.dungeonState.expectedEnemyId;
+            correctedEnemyId = this.dungeonState.expectedEnemyId;
           }
-          this.dungeonState.currentEnemyId = enemyId;
-          console.log(`🎯 New room: Enemy ${enemyId}, Room ${room}, resetting to Turn 1`);
-        }
-        
-        // Validate turn number for current enemy
-        const expectedTurn = this.dungeonState.currentEnemyTurn;
-        if (Math.abs(turn - expectedTurn) > 1) {  // Allow small variance
-          console.log(`⚠️  Turn number inconsistency detected!`);
-          console.log(`   API calculation: Turn ${turn}, but expected: Turn ${expectedTurn}`);
-          console.log(`   Using corrected turn number to prevent statistics corruption`);
-          turn = expectedTurn;
+          
+          // For new room, always reset to turn 1
+          correctedTurn = 1;
+          this.dungeonState.currentEnemyId = correctedEnemyId;
+          console.log(`🎯 New room: Enemy ${correctedEnemyId}, Room ${room}, Turn ${correctedTurn}`);
+        } else {
+          // Same room - validate turn progression
+          const expectedTurn = this.dungeonState.currentEnemyTurn;
+          if (turn !== expectedTurn) {
+            console.log(`⚠️  Turn number inconsistency detected!`);
+            console.log(`   API calculation: Turn ${turn}, but expected: Turn ${expectedTurn}`);
+            console.log(`   Using corrected turn number to prevent statistics corruption`);
+            correctedTurn = expectedTurn;
+          }
         }
       }
       
-      // Update turn counter for next validation
-      this.dungeonState.currentEnemyTurn = turn + 1;
+      // Update turn counter for next validation (increment expected turn)
+      this.dungeonState.currentEnemyTurn++;
+      
+      // IMPORTANT: Use corrected values for all subsequent logic
+      enemyId = correctedEnemyId;
+      turn = correctedTurn;
       const playerHealth = player.health.current;
       const enemyHealth = enemy.health.current;
       
@@ -629,6 +643,11 @@ export class DungeonPlayer {
           paper: { attack: player.paper.currentATK, defense: player.paper.currentDEF, charges: player.paper.currentCharges },
           scissor: { attack: player.scissor.currentATK, defense: player.scissor.currentDEF, charges: player.scissor.currentCharges }
         };
+        
+        // Debug log to confirm corrected values are being recorded
+        if (config.debug || !config.minimalOutput) {
+          console.log(`📊 Recording battle: Enemy ${enemyId} T${turn}: ${action}→${enemyMove} ${result}`);
+        }
         
         this.decisionEngine.recordTurn(
           enemyId,
@@ -1050,6 +1069,9 @@ export class DungeonPlayer {
           scissor: { attack: player.scissor.currentATK, defense: player.scissor.currentDEF, charges: player.scissor.currentCharges }
         };
 
+        // Debug log to confirm corrected values are being recorded in error path
+        console.log(`📊 Recording battle (error path): Enemy ${enemyId} T${turn}: ${playerAction}→${enemyMove} ${result}`);
+        
         // Record the turn for statistics
         this.decisionEngine.recordTurn(
           enemyId,
