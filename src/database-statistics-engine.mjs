@@ -114,11 +114,12 @@ export class DatabaseStatisticsEngine {
         enemy.battles++;
         
         // Update win/loss from bot's perspective
-        if (battleData.result === 'win') {
+        const normalizedResult = battleData.result === 'draw' ? 'tie' : battleData.result;
+        if (normalizedResult === 'win') {
             enemy.losses++; // Bot won, enemy lost
-        } else if (battleData.result === 'loss') {
+        } else if (normalizedResult === 'loss') {
             enemy.wins++;   // Bot lost, enemy won
-        } else if (battleData.result === 'tie') {
+        } else if (normalizedResult === 'tie') {
             enemy.ties++;
         }
         

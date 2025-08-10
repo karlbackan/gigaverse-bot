@@ -160,6 +160,9 @@ class DatabaseManager {
             confidenceLevel
         } = battleData;
         
+        // Convert 'draw' to 'tie' for database compatibility
+        const normalizedResult = result === 'draw' ? 'tie' : result;
+        
         // Insert battle record
         await this.run(`
             INSERT INTO battles (
@@ -168,14 +171,14 @@ class DatabaseManager {
                 weapon_stats, noob_id, prediction_made, prediction_correct, confidence_level
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [
-            enemyId, dungeonId, turn, timestamp, playerMove, enemyMove, result,
+            enemyId, dungeonId, turn, timestamp, playerMove, enemyMove, normalizedResult,
             sequenceKey, playerHealth, enemyHealth, 
             JSON.stringify(playerStats), JSON.stringify(enemyStats), JSON.stringify(weaponStats),
             noobId, predictionMade, predictionCorrect ? 1 : 0, confidenceLevel
         ]);
         
         // Update enemy statistics
-        await this.updateEnemyStats(enemyId, dungeonId, result, enemyMove, turn, timestamp);
+        await this.updateEnemyStats(enemyId, dungeonId, normalizedResult, enemyMove, turn, timestamp);
         
         // Update move tracking
         await this.updateMoveTracking(enemyId, dungeonId, enemyMove, turn, sequenceKey);
