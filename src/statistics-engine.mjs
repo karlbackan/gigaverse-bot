@@ -358,11 +358,12 @@ export class StatisticsEngine {
       enemy.chargeUtilization[chargeUtilKey][enemyAction]++;
     }
     
-    // Track win/loss/tie results
+    // Track win/loss/tie results (from bot's perspective)
+    // When bot wins, enemy loses; when bot loses, enemy wins
     if (result === 'win') {
-      enemy.wins++;
+      enemy.losses++;  // Bot won, so enemy lost
     } else if (result === 'loss') {
-      enemy.losses++;
+      enemy.wins++;    // Bot lost, so enemy won
     } else if (result === 'tie') {
       enemy.ties++;
     }
@@ -439,9 +440,10 @@ export class StatisticsEngine {
 
   // Track comprehensive metrics (NOT used for decisions)
   trackComprehensiveMetrics(enemy, battleData, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp) {
-    // 1. Win/Loss Tracking
-    if (result === 'win') enemy.wins++;
-    else if (result === 'loss') enemy.losses++;
+    // 1. Win/Loss Tracking (from bot's perspective)
+    // When bot wins, enemy loses; when bot loses, enemy wins
+    if (result === 'win') enemy.losses++;      // Bot won, so enemy lost
+    else if (result === 'loss') enemy.wins++;  // Bot lost, so enemy won
     else if (result === 'tie') enemy.ties++;
     enemy.winRate = enemy.wins / (enemy.wins + enemy.losses + enemy.ties);
 
@@ -493,8 +495,8 @@ export class StatisticsEngine {
       enemy.turnPerformance[turn] = { wins: 0, losses: 0, ties: 0, total: 0 };
     }
     enemy.turnPerformance[turn].total++;
-    if (result === 'win') enemy.turnPerformance[turn].wins++;
-    else if (result === 'loss') enemy.turnPerformance[turn].losses++;
+    if (result === 'win') enemy.turnPerformance[turn].losses++;  // Bot won, enemy lost
+    else if (result === 'loss') enemy.turnPerformance[turn].wins++;   // Bot lost, enemy won
     else if (result === 'tie') enemy.turnPerformance[turn].ties++;
 
     // 7. Player Stat Correlations
@@ -522,8 +524,8 @@ export class StatisticsEngine {
         enemy.weaponEffectiveness[weaponKey] = { rock: 0, paper: 0, scissor: 0, win: 0, loss: 0 };
       }
       enemy.weaponEffectiveness[weaponKey][enemyAction]++;
-      if (result === 'win') enemy.weaponEffectiveness[weaponKey].win++;
-      else if (result === 'loss') enemy.weaponEffectiveness[weaponKey].loss++;
+      if (result === 'win') enemy.weaponEffectiveness[weaponKey].loss++;  // Bot won, enemy lost
+      else if (result === 'loss') enemy.weaponEffectiveness[weaponKey].win++;   // Bot lost, enemy won
     }
 
     // 10. Consecutive Patterns
@@ -659,7 +661,7 @@ export class StatisticsEngine {
       };
     }
     enemy.multiTurnEffectiveness[multiTurnKey][enemyAction].total++;
-    if (result === 'win') enemy.multiTurnEffectiveness[multiTurnKey][enemyAction].wins++;
+    if (result === 'loss') enemy.multiTurnEffectiveness[multiTurnKey][enemyAction].wins++;  // Bot lost, enemy won
 
     // 23. Counter-move Success
     if (playerAction) {
@@ -669,7 +671,7 @@ export class StatisticsEngine {
         enemy.counterMoveSuccess[counterKey] = { count: 0, wins: 0 };
       }
       enemy.counterMoveSuccess[counterKey].count++;
-      if (result === 'win') enemy.counterMoveSuccess[counterKey].wins++;
+      if (result === 'loss') enemy.counterMoveSuccess[counterKey].wins++;  // Bot lost, enemy won
     }
 
     // 24. Tie-breaker Patterns

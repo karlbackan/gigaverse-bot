@@ -1,6 +1,6 @@
 import { initializeFireballApi } from './api.mjs';
 import { config } from './config.mjs';
-import { StatisticsEngine } from './statistics-engine.mjs';
+import { DatabaseStatisticsEngine } from './database-statistics-engine.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -28,7 +28,7 @@ export class DecisionEngine {
     this.enemyPatterns = new Map();
     this.turnHistory = [];
     this.dungeonHistory = [];
-    this.statisticsEngine = new StatisticsEngine();
+    this.statisticsEngine = new DatabaseStatisticsEngine();
     this.currentEnemyId = null;
     this.currentNoobId = null;
     this.currentDungeonType = 1; // Default to Dungetron 5000
@@ -125,7 +125,7 @@ export class DecisionEngine {
     }
 
     // Get prediction from statistics engine
-    const prediction = this.statisticsEngine.predictNextMove(
+    const prediction = await this.statisticsEngine.predictNextMove(
       enemyId,
       turn,
       processedPlayerStats,
@@ -141,7 +141,7 @@ export class DecisionEngine {
     const isWinningStreak = recentPerformance.winRate > this.params.winStreakThreshold;
     
     // Apply confidence scaling based on battle count
-    const battleCount = this.statisticsEngine.getBattleCount(enemyId);
+    const battleCount = await this.statisticsEngine.getBattleCount(enemyId);
     const confidenceMultiplier = Math.min(1, battleCount / this.params.minBattlesForConfidence);
     
     // CRITICAL: Check if enemy has only one possible move - NEVER explore in this case!

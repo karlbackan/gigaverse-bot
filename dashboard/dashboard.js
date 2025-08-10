@@ -18,13 +18,7 @@ class DashboardApp {
                 { id: 5, name: 'Account 5', address: '0x7E42...9a81', status: 'danger', energy: 60, maxEnergy: 120, dungeon: 'Gear Repair Needed', wins: 19, losses: 21 }
             ],
             activities: [],
-            gear: [
-                { name: 'Legendary Sword', type: 'gear', durability: 95, maxDurability: 100, account: 1, equipped: true },
-                { name: 'Dragon Shield', type: 'gear', durability: 78, maxDurability: 100, account: 1, equipped: true },
-                { name: 'Fire Charm', type: 'charm', durability: 0, maxDurability: 100, account: 5, equipped: true },
-                { name: 'Speed Boots', type: 'gear', durability: 45, maxDurability: 100, account: 3, equipped: true },
-                { name: 'Mana Crystal', type: 'charm', durability: 89, maxDurability: 100, account: 2, equipped: true }
-            ],
+            gear: [], // Will be populated with real gear data from WebSocket
             statistics: {
                 totalBattles: 245,
                 globalWinRate: 67.8,
@@ -131,6 +125,23 @@ class DashboardApp {
     
     handleWebSocketMessage(data) {
         switch (data.type) {
+            case 'init':
+                // Handle initial data load
+                if (data.data) {
+                    if (data.data.accounts) {
+                        this.mockData.accounts = data.data.accounts;
+                        this.renderAccountCards();
+                    }
+                    if (data.data.gear) {
+                        this.mockData.gear = data.data.gear;
+                        this.renderGearStatus();
+                        console.log(`🛡️ Frontend: Loaded ${data.data.gear.length} gear items from WebSocket`);
+                    }
+                    if (data.data.statistics) {
+                        this.updateStatistics(data.data.statistics);
+                    }
+                }
+                break;
             case 'accountUpdate':
                 if (data.accounts) {
                     this.mockData.accounts = data.accounts;
@@ -144,6 +155,7 @@ class DashboardApp {
                 if (data.gear) {
                     this.mockData.gear = data.gear;
                     this.renderGearStatus();
+                    console.log(`🛡️ Frontend: Updated ${data.gear.length} gear items from WebSocket`);
                 }
                 break;
             case 'statistics':
@@ -201,6 +213,16 @@ class DashboardApp {
     
     renderGearStatus() {
         const container = document.getElementById('gearGrid');
+        
+        if (!this.mockData.gear || this.mockData.gear.length === 0) {
+            container.innerHTML = `
+                <div class="gear-item" style="text-align: center; color: #666;">
+                    <div>Loading equipped gear...</div>
+                </div>
+            `;
+            return;
+        }
+        
         container.innerHTML = this.mockData.gear.map(item => {
             const durabilityPercent = (item.durability / item.maxDurability) * 100;
             let statusClass = 'healthy';
@@ -218,6 +240,7 @@ class DashboardApp {
                     <div>Account: ${item.account}</div>
                     <div>Status: ${item.equipped ? 'Equipped' : 'Unequipped'}</div>
                     <div>Durability: ${item.durability}/${item.maxDurability}</div>
+                    ${item.slot !== undefined ? `<div>Slot: ${item.slot}</div>` : ''}
                     <div class="durability-bar">
                         <div class="durability-fill ${durabilityClass}" style="width: ${durabilityPercent}%"></div>
                     </div>
@@ -606,31 +629,10 @@ class DashboardApp {
     }
     
     startActivitySimulation() {
-        // Simulate real-time activities for demo
-        const activities = [
-            { text: '⚔️ Account 1: Battle started against Goblin Warrior', type: 'info' },
-            { text: '🎉 Account 1: Victory! +25 XP', type: 'success' },
-            { text: '🔧 Account 5: Fire Charm repaired (0% → 100%)', type: 'success' },
-            { text: '⚡ Account 2: Energy recharged to 120/120', type: 'info' },
-            { text: '⚠️ Account 3: Low energy warning (25/120)', type: 'warning' },
-            { text: '🏆 Account 4: New win streak: 5 battles', type: 'success' },
-            { text: '📊 Statistics updated: Global win rate now 68.2%', type: 'info' },
-            { text: '⚔️ Account 1: Entering Underhaul dungeon', type: 'info' },
-            { text: '💎 Account 2: Rare loot acquired: Dragon Scale', type: 'success' }
-        ];
-        
-        let index = 0;
-        setInterval(() => {
-            if (index < activities.length) {
-                this.addActivity(activities[index]);
-                index++;
-            } else {
-                // Reset and continue with random activities
-                index = 0;
-                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-                this.addActivity(randomActivity);
-            }
-        }, 3000);
+        // TODO: Replace with real activity feed from WebSocket
+        // Commented out fake activity simulation
+        // Only real activities will be shown through WebSocket messages
+        console.log('Activity simulation disabled - using real data only');
     }
     
     repairAllGear() {
@@ -703,23 +705,16 @@ class DashboardApp {
     }
     
     simulateDataUpdates() {
-        // Simulate small changes in data
-        this.mockData.accounts.forEach(account => {
-            // Randomly adjust energy
-            if (Math.random() < 0.3) {
-                account.energy = Math.max(0, Math.min(account.maxEnergy, 
-                    account.energy + Math.floor(Math.random() * 10) - 5));
-            }
-        });
+        // TODO: Use real data updates from WebSocket instead of simulation
+        // Commented out energy randomization that was overriding real data
         
-        // Update charts with new data
+        // Only update charts with real data when available
         if (this.charts.winRate) {
-            const newData = this.charts.winRate.data.datasets[0].data;
-            newData.shift();
-            newData.push(Math.floor(Math.random() * 20) + 60);
-            this.charts.winRate.update();
+            // TODO: Update charts with real win rate data from WebSocket
+            // For now, don't modify chart data randomly
         }
         
+        // Re-render with current data (no modifications)
         this.renderAccountCards();
     }
     

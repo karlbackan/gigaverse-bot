@@ -42,9 +42,7 @@ export class GearManager {
         // Max durability is based on rarity: Common=40, Uncommon=50, Rare=60, Epic=70
         const maxDurability = [40, 50, 60, 70][item.RARITY_CID] || 40;
         
-        // Only consider equipped gear (EQUIPPED_TO_SLOT_CID > -1) 
-        const isEquipped = item.EQUIPPED_TO_SLOT_CID !== null && item.EQUIPPED_TO_SLOT_CID > -1;
-        
+        // Already checked isEquipped above, just check durability now
         if (isEquipped && durability !== undefined && durability < maxDurability) {
           const durabilityPercent = (durability / maxDurability) * 100;
           
