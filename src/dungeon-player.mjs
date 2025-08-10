@@ -25,7 +25,8 @@ export class DungeonPlayer {
       currentEnemyId: null,     // Current enemy we're fighting
       currentEnemyTurn: 0,      // Turn count for current enemy
       lastRoom: 0,              // Last room number we were in
-      startEnemyId: null        // First enemy ID of this dungeon run
+      startEnemyId: null,       // First enemy ID of this dungeon run
+      initialized: false        // Track whether we've initialized for this dungeon
     };
     
     // Known dungeon layouts for validation
@@ -248,7 +249,8 @@ export class DungeonPlayer {
           currentEnemyId: null,
           currentEnemyTurn: 0,
           lastRoom: 0,
-          startEnemyId: null
+          startEnemyId: null,
+          initialized: false
         };
         
         if (!config.minimalOutput) {
@@ -372,12 +374,13 @@ export class DungeonPlayer {
       // Detect and correct API inconsistencies that corrupt statistics
       
       // Initialize tracking on first turn (new dungeon or continuing existing)
-      if (this.dungeonState.startEnemyId === null) {
+      if (!this.dungeonState.initialized) {
         this.dungeonState.startEnemyId = enemyId;
         this.dungeonState.expectedEnemyId = enemyId;
         this.dungeonState.currentEnemyId = enemyId;
         this.dungeonState.currentEnemyTurn = turn; // Use API turn for first turn
         this.dungeonState.lastRoom = room;
+        this.dungeonState.initialized = true; // Mark as initialized
         console.log(`🎯 Initialized enemy tracking: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
       } else {
         // Check if we moved to a new room (enemy should increment by 1)
@@ -753,7 +756,8 @@ export class DungeonPlayer {
           currentEnemyId: null,       // Will be set on first turn  
           currentEnemyTurn: 0,        // Will be set on first turn
           lastRoom: 0,                // Will be set on first turn
-          startEnemyId: null          // Unknown for existing dungeons
+          startEnemyId: null,         // Unknown for existing dungeons
+          initialized: false          // Track whether we've initialized for this dungeon
         };
       }
 
