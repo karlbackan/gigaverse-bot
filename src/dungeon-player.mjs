@@ -147,10 +147,17 @@ export class DungeonPlayer {
         }
         
         // Check if we should try Dungetron 5000 when Underhaul is full
+        console.log(`🔍 Auto-switch config value:`, config.autoSwitchToDungetron);
         if (config.autoSwitchToDungetron) {
+          console.log(`🔍 Attempting to switch to Dungetron 5000...`);
+          
           // Check Dungetron 5000 if Underhaul is full (ID 1)
-          const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1");
-          const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1);
+          // Try both string and number formats for compatibility
+          const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1" || e.ID_CID === 1);
+          const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1 || d.ID_CID === "1");
+          
+          console.log(`🔍 Dungetron 5000 progress data:`, dungetron5000Progress ? 'Found' : 'Not found');
+          console.log(`🔍 Dungetron 5000 info data:`, dungetron5000Info ? 'Found' : 'Not found');
           
           if (dungetron5000Progress && dungetron5000Info) {
             const runsToday = dungetron5000Progress.UINT256_CID || 0;
@@ -164,6 +171,8 @@ export class DungeonPlayer {
             } else {
               console.log(`⚠️  Dungetron 5000 also at daily limit: ${runsToday}/${maxRuns}`);
             }
+          } else {
+            console.log(`⚠️  Cannot switch: Missing Dungetron 5000 data (progress: ${dungetron5000Progress ? 'found' : 'missing'}, info: ${dungetron5000Info ? 'found' : 'missing'})`);
           }
         } else {
           console.log('ℹ️  Auto-switch to Dungetron 5000 is disabled');
