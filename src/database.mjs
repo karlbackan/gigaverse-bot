@@ -160,8 +160,10 @@ class DatabaseManager {
             confidenceLevel
         } = battleData;
         
-        // Convert 'draw' to 'tie' for database compatibility
-        const normalizedResult = result === 'draw' ? 'tie' : result;
+        // Convert result values to match database CHECK constraint: ('win', 'loss', 'tie')
+        let normalizedResult = result;
+        if (result === 'draw') normalizedResult = 'tie';
+        if (result === 'lose') normalizedResult = 'loss';
         
         // Insert battle record
         await this.run(`
