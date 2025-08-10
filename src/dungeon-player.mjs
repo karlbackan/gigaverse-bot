@@ -19,6 +19,15 @@ export class DungeonPlayer {
     this.currentDungeonType = config.dungeonType; // Initialize from config
     this.walletAddress = walletAddress; // Store wallet address for this player
     
+    // State tracking for enemy/turn validation
+    this.dungeonState = {
+      expectedEnemyId: null,    // What enemy ID we expect based on room progression
+      currentEnemyId: null,     // Current enemy we're fighting
+      currentEnemyTurn: 0,      // Turn count for current enemy
+      lastRoom: 0,              // Last room number we were in
+      startEnemyId: null        // First enemy ID of this dungeon run
+    };
+    
     // Log the initial dungeon type for clarity
     const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
     console.log(`Initialized with dungeon type: ${this.currentDungeonType} (${dungeonName})`)
@@ -210,6 +219,16 @@ export class DungeonPlayer {
       
       if (response && response.success) {
         this.currentDungeon = response.data;
+        
+        // Reset dungeon state tracking for new run
+        this.dungeonState = {
+          expectedEnemyId: null,
+          currentEnemyId: null,
+          currentEnemyTurn: 0,
+          lastRoom: 0,
+          startEnemyId: null
+        };
+        
         if (!config.minimalOutput) {
           console.log('Dungeon started successfully!');
           const room = response.data.entity.ROOM_NUM_CID;
@@ -302,7 +321,7 @@ export class DungeonPlayer {
       // Extract game state from the run data
       // player already declared above
       const enemy = run.players[1];
-      const enemyId = entity.ENEMY_CID;
+      let enemyId = entity.ENEMY_CID;
       const room = entity.ROOM_NUM_CID;
       // Room structure may vary by dungeon type
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
@@ -313,7 +332,47 @@ export class DungeonPlayer {
       const paperUsed = Math.max(0, 3 - Math.max(0, player.paper.currentCharges));
       const scissorUsed = Math.max(0, 3 - Math.max(0, player.scissor.currentCharges));
       const totalChargesUsed = rockUsed + paperUsed + scissorUsed;
-      const turn = totalChargesUsed + 1;
+      let turn = totalChargesUsed + 1;
+      
+      // === ENEMY ID & TURN VALIDATION ===
+      // Detect and correct API inconsistencies that corrupt statistics
+      
+      // Initialize tracking on first enemy of dungeon
+      if (this.dungeonState.startEnemyId === null) {
+        this.dungeonState.startEnemyId = enemyId;
+        this.dungeonState.expectedEnemyId = enemyId;
+        this.dungeonState.currentEnemyId = enemyId;
+        this.dungeonState.currentEnemyTurn = 1;
+        this.dungeonState.lastRoom = room;
+      }
+      
+      // Check if we moved to a new room (enemy should increment by 1)
+      if (room > this.dungeonState.lastRoom) {
+        this.dungeonState.expectedEnemyId++;
+        this.dungeonState.currentEnemyTurn = 1;
+        this.dungeonState.lastRoom = room;
+        
+        // Validate enemy ID matches our expectation
+        if (enemyId !== this.dungeonState.expectedEnemyId) {
+          console.log(`⚠️  Enemy ID inconsistency detected!`);
+          console.log(`   API says: Enemy ${enemyId}, but expected: Enemy ${this.dungeonState.expectedEnemyId}`);
+          console.log(`   Using corrected Enemy ID to prevent statistics corruption`);
+          enemyId = this.dungeonState.expectedEnemyId;
+        }
+        this.dungeonState.currentEnemyId = enemyId;
+      }
+      
+      // Validate turn number for current enemy
+      const expectedTurn = this.dungeonState.currentEnemyTurn;
+      if (Math.abs(turn - expectedTurn) > 1) {  // Allow small variance
+        console.log(`⚠️  Turn number inconsistency detected!`);
+        console.log(`   API calculation: Turn ${turn}, but expected: Turn ${expectedTurn}`);
+        console.log(`   Using corrected turn number to prevent statistics corruption`);
+        turn = expectedTurn;
+      }
+      
+      // Update turn counter for next validation
+      this.dungeonState.currentEnemyTurn = turn + 1;
       const playerHealth = player.health.current;
       const enemyHealth = enemy.health.current;
       
