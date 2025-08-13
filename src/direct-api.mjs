@@ -4,6 +4,34 @@ import { config } from './config.mjs';
 // Track the action token from previous responses
 let currentActionToken = null;
 
+/*
+COMMON API ERROR PATTERNS:
+
+Status Code Guide:
+- 400 Bad Request: Invalid parameters, malformed request, validation errors
+- 401 Unauthorized: Invalid JWT token, token expired, authentication failed
+- 403 Forbidden: Valid token but insufficient permissions
+- 404 Not Found: Endpoint doesn't exist, resource not found
+- 429 Too Many Requests: Rate limiting in effect
+- 500+ Server Error: Internal server issues, database problems, API crashes
+
+Common Error Messages:
+- "Error handling action" → Usually stale action token, reset and retry
+- "Invalid action token" → Token mismatch, retry without token
+- "Dungeon not found" → Invalid dungeon type or session expired
+- "Insufficient energy" → Player doesn't have enough energy for action
+- "Player not found" → Invalid wallet address or player doesn't exist
+- "Invalid move" → Rock/paper/scissor move not recognized
+- "Dungeon already completed" → Trying to continue finished dungeon
+- "Maximum attempts reached" → Daily dungeon limit exceeded
+
+Token Management:
+- Action tokens are required for dungeon actions after the first API call
+- Tokens become invalid when sessions expire or dungeons end
+- Always retry once without token if "Invalid action token" error occurs
+- Reset tokens on "Error handling action" to clear stale state
+*/
+
 // Create axios instance without auth (will be added in interceptor)
 const api = axios.create({
   baseURL: 'https://gigaverse.io/api',
@@ -68,11 +96,25 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       message: response.data.message
     };
   } catch (error) {
-    console.error('Direct API Error:', {
-      status: error.response?.status,
-      message: error.response?.data?.message || error.message,
-      data: error.response?.data
-    });
+    const status = error.response?.status;
+    const message = error.response?.data?.message || error.message;
+    
+    // Show concise, user-friendly error messages
+    if (status === 400) {
+      console.error(`❌ API Error (${status}): ${message}`);
+    } else if (status === 401) {
+      console.error(`🔐 Authentication Error (${status}): ${message}`);
+    } else if (status === 403) {
+      console.error(`⛔ Access Denied (${status}): ${message}`);
+    } else if (status === 404) {
+      console.error(`🔍 Not Found (${status}): ${message}`);
+    } else if (status === 429) {
+      console.error(`⏰ Rate Limited (${status}): ${message}`);
+    } else if (status >= 500) {
+      console.error(`🔥 Server Error (${status}): ${message}`);
+    } else {
+      console.error(`⚠️  API Error: ${message || 'Unknown error'}`);
+    }
     
     // Save action token even from error responses
     if (error.response?.data?.actionToken) {
@@ -133,7 +175,7 @@ export async function getDirectDungeonState() {
     // Don't reset token here - only reset on actual session start or errors
     return response.data;
   } catch (error) {
-    console.error('Failed to get dungeon state:', error.message);
+    console.error(`🏰 Dungeon State Error: ${error.message}`);
     throw error;
   }
 }
@@ -144,7 +186,7 @@ export async function getDirectEnergy(address = config.walletAddress) {
     const response = await api.get(`/offchain/player/energy/${address}`);
     return response.data;
   } catch (error) {
-    console.error('Failed to get energy:', error.message);
+    console.error(`⚡ Energy Error: ${error.message}`);
     throw error;
   }
 }
@@ -155,7 +197,7 @@ export async function getDirectAccount(address = config.walletAddress) {
     const response = await api.get(`/account/${address}`);
     return response.data;
   } catch (error) {
-    console.error('Failed to get account:', error.message);
+    console.error(`👤 Account Error: ${error.message}`);
     throw error;
   }
 }
@@ -166,7 +208,7 @@ export async function getDirectInventory(address = config.walletAddress) {
     const response = await api.get(`/indexer/player/gameitems/${address}`);
     return response.data;
   } catch (error) {
-    console.error('Failed to get inventory:', error.message);
+    console.error(`🎒 Inventory Error: ${error.message}`);
     throw error;
   }
 }
@@ -177,7 +219,7 @@ export async function getDirectAvailableDungeons() {
     const response = await api.get('/game/dungeon/today');
     return response.data;
   } catch (error) {
-    console.error('Failed to get available dungeons:', error.message);
+    console.error(`🗂️  Available Dungeons Error: ${error.message}`);
     throw error;
   }
 }
@@ -226,10 +268,19 @@ export async function sendDirectLootAction(action, dungeonType) {
       message: response.data.message
     };
   } catch (error) {
-    console.error('Direct API Loot Error:', {
-      status: error.response?.status,
-      message: error.response?.data?.message || error.message
-    });
+    const status = error.response?.status;
+    const message = error.response?.data?.message || error.message;
+    
+    // Show concise loot error messages
+    if (status === 400) {
+      console.error(`❌ Loot Error (${status}): ${message}`);
+    } else if (status === 401) {
+      console.error(`🔐 Loot Auth Error (${status}): ${message}`);
+    } else if (status >= 500) {
+      console.error(`🔥 Loot Server Error (${status}): ${message}`);
+    } else {
+      console.error(`⚠️  Loot Error: ${message || 'Unknown loot error'}`);
+    }
     
     // If token error and we had a token, try once without it
     if (error.response?.data?.message?.includes('Invalid action token') && currentActionToken) {
