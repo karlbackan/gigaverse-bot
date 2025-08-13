@@ -255,7 +255,9 @@ export class DungeonPlayer {
         
         if (!config.minimalOutput) {
           console.log('Dungeon started successfully!');
-          const room = response.data.entity.ROOM_NUM_CID;
+          // Use enemy-derived room for consistency (API room can be session-relative)
+          const enemyId = response.data.entity.ENEMY_CID;
+          const room = this.currentDungeonType === 3 && enemyId >= 21 ? enemyId - 20 : response.data.entity.ROOM_NUM_CID;
           const floor = Math.floor((room - 1) / 4) + 1;
           const roomInFloor = ((room - 1) % 4) + 1;
           console.log(`Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/16)`);
@@ -349,7 +351,9 @@ export class DungeonPlayer {
       const apiRoom = entity.ROOM_NUM_CID;
       
       // Use enemy-derived room for dungeon logic (absolute room position)
-      // Note: API room is session-relative, enemy-derived room is absolute dungeon position
+      // VERIFIED: API room is session-relative (2nd room played this session), 
+      // but enemy IDs give absolute dungeon position (Enemy 24 = Room 4)
+      // Database confirms sequential progression: Enemy 23→24→25 = Rooms 3→4→5
       let room = apiRoom;
       if (this.currentDungeonType === 3 && enemyId >= 21) {
         room = enemyId - 20; // Enemy 21=Room 1, 22=Room 2, 23=Room 3, etc.
