@@ -348,16 +348,11 @@ export class DungeonPlayer {
       let enemyId = entity.ENEMY_CID;
       const apiRoom = entity.ROOM_NUM_CID;
       
-      // Derive actual room from enemy ID (more reliable than API room number)
+      // Use enemy-derived room for dungeon logic (absolute room position)
+      // Note: API room is session-relative, enemy-derived room is absolute dungeon position
       let room = apiRoom;
       if (this.currentDungeonType === 3 && enemyId >= 21) {
-        const derivedRoom = enemyId - 20; // Enemy 21=Room 1, 22=Room 2, 23=Room 3, etc.
-        if (derivedRoom !== apiRoom) {
-          console.log(`⚠️  Room number inconsistency detected!`);
-          console.log(`   API room: ${apiRoom}, but Enemy ${enemyId} indicates Room ${derivedRoom}`);
-          console.log(`   Using enemy-derived room number (more reliable)`);
-          room = derivedRoom;
-        }
+        room = enemyId - 20; // Enemy 21=Room 1, 22=Room 2, 23=Room 3, etc.
       }
       // Room structure may vary by dungeon type
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
