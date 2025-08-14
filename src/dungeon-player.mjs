@@ -636,6 +636,11 @@ export class DungeonPlayer {
         else if (action === enemyMove) result = 'draw';
         else result = 'lose';
         
+        // DEBUG: Log moves and result for tie bug investigation
+        if ((action === 'paper' && enemyMove === 'rock') || (action === 'scissor' && enemyMove === 'rock')) {
+          console.log(`🐛 DEBUG TIE BUG: action="${action}" (${typeof action}), enemyMove="${enemyMove}" (${typeof enemyMove}), result="${result}"`);
+        }
+        
         // Record the result with full stats
         const weaponStats = {
           rock: { attack: player.rock.currentATK, defense: player.rock.currentDEF, charges: player.rock.currentCharges },
@@ -1060,6 +1065,11 @@ export class DungeonPlayer {
         else if (playerAction === 'paper' && enemyMove === 'rock') result = 'win';
         else if (playerAction === enemyMove) result = 'draw';
         else result = 'lose';
+        
+        // DEBUG: Log moves and result for tie bug investigation (ERROR PATH)
+        if ((playerAction === 'paper' && enemyMove === 'rock') || (playerAction === 'scissor' && enemyMove === 'rock')) {
+          console.log(`🐛 DEBUG TIE BUG (ERROR PATH): playerAction="${playerAction}" (${typeof playerAction}), enemyMove="${enemyMove}" (${typeof enemyMove}), result="${result}"`);
+        }
 
         // Get weapon stats for recording
         const weaponStats = {
