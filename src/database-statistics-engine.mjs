@@ -42,7 +42,7 @@ export class DatabaseStatisticsEngine {
         }
     }
     
-    async recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp) {
+    async recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp, predictionMade = null, predictionCorrect = false, confidenceLevel = null) {
         await this.ensureInitialized();
         
         try {
@@ -65,9 +65,9 @@ export class DatabaseStatisticsEngine {
                 enemyStats: enemyStats,
                 weaponStats: weaponStats,
                 noobId: noobId,
-                predictionMade: this.lastPrediction,
-                predictionCorrect: this.lastPrediction === enemyAction,
-                confidenceLevel: this.getConfidenceLevel(enemyId)
+                predictionMade: predictionMade,
+                predictionCorrect: predictionCorrect,
+                confidenceLevel: confidenceLevel
             };
             
             await this.db.recordBattle(battleData);
@@ -433,7 +433,10 @@ export class DatabaseStatisticsEngine {
             battleData.enemyStats,
             battleData.weaponStats,
             battleData.noobId,
-            battleData.timestamp
+            battleData.timestamp,
+            battleData.predictionMade,
+            battleData.predictionCorrect,
+            battleData.confidenceLevel
         );
     }
     

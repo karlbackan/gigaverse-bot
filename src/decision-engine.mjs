@@ -45,6 +45,11 @@ export class DecisionEngine {
     
     // Track recent performance by enemy
     this.enemyRecentPerformance = new Map();
+    
+    // Track last prediction made for recording battle results
+    this.lastPrediction = null;
+    this.lastPredictionEnemy = null;
+    this.lastPredictionTurn = null;
   }
 
   // Set current noobId for tracking time-based patterns
@@ -134,6 +139,11 @@ export class DecisionEngine {
       this.currentNoobId,
       enemyPossibleMoves  // Pass possible moves to filter predictions
     );
+    
+    // Store prediction for later recording in battle results
+    this.lastPrediction = prediction;
+    this.lastPredictionEnemy = enemyId;
+    this.lastPredictionTurn = turn;
     
     // Check recent performance for this enemy
     const recentPerformance = this.getRecentPerformance(enemyId);
@@ -420,6 +430,37 @@ export class DecisionEngine {
     // Update recent performance tracking
     this.updateRecentPerformance(enemyId, result);
 
+    // Determine if prediction was correct and extract confidence
+    let predictionMade = null;
+    let predictionCorrect = false;
+    let confidenceLevel = null;
+    
+    if (this.lastPrediction && 
+        this.lastPredictionEnemy === enemyId && 
+        this.lastPredictionTurn === turn) {
+      
+      // Find the predicted move (highest probability)
+      const predictions = this.lastPrediction.predictions;
+      let bestMove = null;
+      let bestProb = 0;
+      
+      for (const [move, prob] of Object.entries(predictions)) {
+        if (prob > bestProb) {
+          bestProb = prob;
+          bestMove = move;
+        }
+      }
+      
+      predictionMade = bestMove;
+      predictionCorrect = bestMove === enemyAction;
+      confidenceLevel = this.lastPrediction.confidence;
+      
+      // Clear the stored prediction
+      this.lastPrediction = null;
+      this.lastPredictionEnemy = null;
+      this.lastPredictionTurn = null;
+    }
+
     // Record to statistics engine
     this.statisticsEngine.recordBattle({
       enemyId,
@@ -432,7 +473,10 @@ export class DecisionEngine {
       weaponStats,
       noobId: this.currentNoobId,
       dungeonType: this.currentDungeonType,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      predictionMade,
+      predictionCorrect,
+      confidenceLevel
     });
   }
 
