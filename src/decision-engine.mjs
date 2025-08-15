@@ -1,6 +1,7 @@
 import { initializeFireballApi } from './api.mjs';
 import { config } from './config.mjs';
 import { DatabaseStatisticsEngine } from './database-statistics-engine.mjs';
+import { MLDecisionEngine } from './ml-decision-engine.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -29,9 +30,19 @@ export class DecisionEngine {
     this.turnHistory = [];
     this.dungeonHistory = [];
     this.statisticsEngine = new DatabaseStatisticsEngine();
+    this.mlEngine = new MLDecisionEngine();
     this.currentEnemyId = null;
     this.currentNoobId = null;
     this.currentDungeonType = 1; // Default to Dungetron 5000
+    
+    // Hybrid decision mode settings
+    this.hybridMode = {
+      enabled: true,
+      mlWeight: 0.6,        // 60% ML, 40% rule-based initially
+      adaptiveWeighting: true, // adjust weights based on performance
+      mlMinBattles: 5,      // minimum battles before using ML heavily
+      fallbackToRules: true // fallback to rules when ML confidence is low
+    };
     
     // Robustness parameters (optimized for wins > losses)
     this.params = {
@@ -74,6 +85,21 @@ export class DecisionEngine {
     }
 
     this.currentEnemyId = enemyId;
+    
+    // HYBRID DECISION SYSTEM: Try ML first, fallback to rule-based
+    if (this.hybridMode.enabled) {
+      const mlDecision = await this.tryMLDecision(enemyId, turn, playerHealth, enemyHealth, availableWeapons, weaponCharges, playerStats, enemyStats);
+      
+      if (mlDecision) {
+        // ML made a confident decision
+        return mlDecision.action;
+      }
+      
+      // ML not confident or not enough data, use rule-based system
+      if (!config.minimalOutput) {
+        console.log('🔄 ML not confident, falling back to rule-based system');
+      }
+    }
 
     // Prepare player and enemy stats for analysis
     const processedPlayerStats = {
@@ -465,6 +491,76 @@ export class DecisionEngine {
 
     return this.getWeightedRandomAction(weights, availableWeapons);
   }
+  
+  // Try ML decision first in hybrid mode
+  async tryMLDecision(enemyId, turn, playerHealth, enemyHealth, availableWeapons, weaponCharges, playerStats, enemyStats) {
+    try {
+      // Check if we have enough data for ML to be effective
+      const battleCount = await this.statisticsEngine.getBattleCount(enemyId);
+      
+      if (battleCount < this.hybridMode.mlMinBattles && this.hybridMode.fallbackToRules) {
+        if (!config.minimalOutput) {
+          console.log(`🤖 ML needs more data (${battleCount}/${this.hybridMode.mlMinBattles} battles)`);
+        }
+        return null; // Not enough data, use rule-based
+      }
+      
+      // Get recent game history for ML context
+      const gameHistory = this.getRecentGameHistory(enemyId);
+      
+      // Get ML decision
+      const mlResult = await this.mlEngine.makeMLDecision(
+        enemyId, turn, playerHealth, enemyHealth, 
+        availableWeapons, weaponCharges, playerStats, enemyStats,
+        gameHistory
+      );
+      
+      if (!mlResult) return null;
+      
+      // Check confidence threshold
+      const minConfidence = this.getMLConfidenceThreshold(enemyId, battleCount);
+      
+      if (mlResult.confidence < minConfidence) {
+        if (!config.minimalOutput) {
+          console.log(`🤖 ML confidence too low: ${(mlResult.confidence * 100).toFixed(0)}% < ${(minConfidence * 100).toFixed(0)}%`);
+        }
+        return null; // Low confidence, use rule-based
+      }
+      
+      // ML is confident, use its decision
+      this.lastMLDecision = mlResult;
+      return mlResult;
+      
+    } catch (error) {
+      console.error('❌ ML Decision Error:', error.message);
+      return null; // Error, fallback to rule-based
+    }
+  }
+  
+  // Get confidence threshold based on enemy and battle count
+  getMLConfidenceThreshold(enemyId, battleCount) {
+    // Start with high threshold, lower it as we have more data
+    let baseThreshold = 0.6;
+    
+    // Reduce threshold as we learn more about this enemy
+    const dataFactor = Math.min(1, battleCount / 30); // max reduction after 30 battles
+    baseThreshold *= (1 - dataFactor * 0.3); // can reduce by up to 30%
+    
+    return Math.max(0.3, baseThreshold); // minimum 30% confidence required
+  }
+  
+  // Get recent game history for ML context
+  getRecentGameHistory(enemyId) {
+    return this.turnHistory
+      .filter(turn => turn.enemyId === enemyId)
+      .slice(-20) // last 20 turns with this enemy
+      .map(turn => ({
+        playerAction: turn.playerAction,
+        enemyAction: turn.enemyAction,
+        result: turn.result,
+        turn: turn.turn
+      }));
+  }
 
   // Get random action
   getRandomAction(availableWeapons = null) {
@@ -531,6 +627,30 @@ export class DecisionEngine {
     
     // Update loss streak tracking for anti-counter strategy
     this.updateLossStreak(enemyId, result, playerAction);
+    
+    // Update ML engine with battle outcome
+    if (this.lastMLDecision && this.hybridMode.enabled) {
+      try {
+        const gameHistory = this.getRecentGameHistory(enemyId);
+        const features = this.extractMLFeatures(enemyId, turn, playerStats, enemyStats, gameHistory);
+        
+        this.mlEngine.learnFromOutcome(
+          enemyId, 
+          playerAction, 
+          enemyAction, 
+          result, 
+          this.lastMLDecision.strategy, 
+          features, 
+          turn
+        );
+        
+        // Clear the stored ML decision
+        this.lastMLDecision = null;
+        
+      } catch (error) {
+        console.error('❌ ML Learning Error:', error.message);
+      }
+    }
 
     // Determine if prediction was correct and extract confidence
     let predictionMade = null;
@@ -758,5 +878,87 @@ export class DecisionEngine {
     const moves = this.enemyLastMoves.get(enemyId);
     if (!moves || moves.length === 0) return null;
     return moves.slice(-count);
+  }
+  
+  // Extract features for ML engine
+  extractMLFeatures(enemyId, turn, playerStats, enemyStats, gameHistory) {
+    // Create comprehensive feature set for ML
+    const recentPerformance = this.getRecentPerformance(enemyId);
+    const consecutiveLosses = this.getConsecutiveLosses(enemyId);
+    const recentMoves = this.getRecentMoves(enemyId, 5) || [];
+    
+    return [
+      turn / 100,                                    // normalized turn number
+      (playerStats?.health || 50) / 100,            // normalized player health
+      (enemyStats?.health || 50) / 100,             // normalized enemy health
+      recentPerformance.winRate,                     // recent win rate vs this enemy
+      recentPerformance.battleCount / 50,           // battle count (normalized)
+      consecutiveLosses / 10,                       // consecutive losses (normalized)
+      this.countMoveInRecent(recentMoves, 'rock') / Math.max(1, recentMoves.length),
+      this.countMoveInRecent(recentMoves, 'paper') / Math.max(1, recentMoves.length),
+      this.countMoveInRecent(recentMoves, 'scissor') / Math.max(1, recentMoves.length),
+      gameHistory.length / 20,                      // game history length
+      gameHistory.length > 0 ? gameHistory.filter(g => g.result === 'win').length / gameHistory.length : 0.5,
+      (playerStats?.shield || 0) / 100,            // normalized shield
+      Math.sin(turn / 10),                          // cyclic pattern 1
+      Math.cos(turn / 10),                          // cyclic pattern 2
+      Math.random() * 0.1                          // small random noise for exploration
+    ];
+  }
+  
+  // Count occurrences of specific move in recent moves
+  countMoveInRecent(moves, targetMove) {
+    return moves.filter(move => move === targetMove).length;
+  }
+  
+  // Enhanced statistics that include ML performance
+  getEnhancedStats() {
+    const baseStats = this.getStatsSummary();
+    
+    if (this.hybridMode.enabled) {
+      const mlStats = this.mlEngine.getMLStats();
+      
+      return {
+        ...baseStats,
+        mlEnabled: true,
+        mlStats: mlStats,
+        hybridMode: this.hybridMode,
+        decisionMethods: {
+          ml: mlStats.totalBattles,
+          ruleBased: this.turnHistory.length - mlStats.totalBattles,
+          total: this.turnHistory.length
+        }
+      };
+    }
+    
+    return {
+      ...baseStats,
+      mlEnabled: false
+    };
+  }
+  
+  // Adaptive ML weight adjustment based on performance
+  adjustMLWeights() {
+    if (!this.hybridMode.adaptiveWeighting || this.turnHistory.length < 20) return;
+    
+    const recent = this.turnHistory.slice(-20);
+    const mlTurns = recent.filter(turn => turn.mlGenerated);
+    const ruleTurns = recent.filter(turn => !turn.mlGenerated);
+    
+    if (mlTurns.length > 0 && ruleTurns.length > 0) {
+      const mlWinRate = mlTurns.filter(turn => turn.result === 'win').length / mlTurns.length;
+      const ruleWinRate = ruleTurns.filter(turn => turn.result === 'win').length / ruleTurns.length;
+      
+      // Adjust weights based on relative performance
+      if (mlWinRate > ruleWinRate + 0.1) {
+        this.hybridMode.mlWeight = Math.min(0.8, this.hybridMode.mlWeight + 0.05);
+      } else if (ruleWinRate > mlWinRate + 0.1) {
+        this.hybridMode.mlWeight = Math.max(0.2, this.hybridMode.mlWeight - 0.05);
+      }
+      
+      if (!config.minimalOutput && Math.random() < 0.1) { // Log occasionally
+        console.log(`🔧 ML weight adjusted to ${(this.hybridMode.mlWeight * 100).toFixed(0)}% (ML: ${(mlWinRate * 100).toFixed(0)}% vs Rules: ${(ruleWinRate * 100).toFixed(0)}%)`);
+      }
+    }
   }
 }
