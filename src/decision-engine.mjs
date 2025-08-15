@@ -18,6 +18,51 @@ const actionWins = {
 export class DecisionEngine {
   constructor() {
     this.battleHistory = []; // Simple battle tracking for basic patterns
+    this.noobId = null;
+    this.dungeonType = null;
+  }
+  
+  // Set the noob ID for this session
+  setNoobId(noobId) {
+    this.noobId = noobId;
+    if (config.debug) {
+      console.log(`Decision engine noob ID set to: ${noobId}`);
+    }
+  }
+  
+  // Set the dungeon type
+  setDungeonType(dungeonType) {
+    this.dungeonType = dungeonType;
+    if (config.debug) {
+      console.log(`Decision engine dungeon type set to: ${dungeonType}`);
+    }
+  }
+  
+  // Get statistics summary
+  getStatsSummary() {
+    const totalBattles = this.battleHistory.length;
+    if (totalBattles === 0) {
+      return {
+        totalBattles: 0,
+        winRate: 0,
+        wins: 0,
+        losses: 0,
+        ties: 0
+      };
+    }
+    
+    const wins = this.battleHistory.filter(b => b.result === 'win').length;
+    const losses = this.battleHistory.filter(b => b.result === 'loss').length;
+    const ties = this.battleHistory.filter(b => b.result === 'tie').length;
+    const winRate = wins / totalBattles;
+    
+    return {
+      totalBattles,
+      winRate,
+      wins,
+      losses,
+      ties
+    };
   }
 
   // Make decision based on charges and simple weighting
@@ -168,7 +213,7 @@ export class DecisionEngine {
   }
   
   // Record battle result (minimal tracking)
-  recordTurn(enemyId, turn, playerAction, enemyAction, result) {
+  recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats = null, enemyStats = null, weaponStats = null) {
     this.battleHistory.push({
       enemyId,
       turn,
