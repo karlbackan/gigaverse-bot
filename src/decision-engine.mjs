@@ -33,13 +33,13 @@ export class DecisionEngine {
     this.currentNoobId = null;
     this.currentDungeonType = 1; // Default to Dungetron 5000
     
-    // Robustness parameters
+    // Robustness parameters (optimized for wins > losses)
     this.params = {
-      explorationRate: 0.05,       // 5% random exploration (reduced for better performance)
-      minBattlesForConfidence: 15, // Need 15 battles for full confidence (slightly reduced)
+      explorationRate: 0.02,       // 2% random exploration (further reduced for better performance)
+      minBattlesForConfidence: 12, // Need 12 battles for full confidence (faster learning)
       lossStreakThreshold: 0.35,   // Trigger fallback if win rate < 35%
       recentWindowSize: 20,        // Look at last 20 battles for win rate
-      winStreakThreshold: 0.75,    // Reduce exploration if win rate > 75%
+      winStreakThreshold: 0.70,    // Reduce exploration if win rate > 70% (more aggressive)
       mixedStrategyWeight: 0.5     // For game theory optimal play
     };
     
@@ -168,10 +168,18 @@ export class DecisionEngine {
       }
     }
     
-    // Determine exploration rate based on performance
+    // Determine exploration rate based on performance and battle count  
     let effectiveExplorationRate = this.params.explorationRate;
+    
+    // Adaptive exploration: reduce as we learn more about this enemy
+    if (battleCount > 30) {
+      effectiveExplorationRate *= 0.3; // Very low exploration for well-known enemies
+    } else if (battleCount > this.params.minBattlesForConfidence) {
+      effectiveExplorationRate *= 0.5; // Reduced exploration for known enemies
+    }
+    
     if (isWinningStreak && battleCount > this.params.minBattlesForConfidence) {
-      effectiveExplorationRate *= 0.5; // Reduce exploration when winning
+      effectiveExplorationRate *= 0.2; // Much less exploration when winning
     } else if (isLosingStreak) {
       effectiveExplorationRate *= 1.5; // Increase exploration when losing
     }
@@ -239,7 +247,7 @@ export class DecisionEngine {
         }
       }
 
-      // SIMPLIFIED OPTIMAL DECISION LOGIC
+      // AGGRESSIVE OPTIMAL DECISION LOGIC (optimized for wins > losses)
       // Find the highest scoring available weapon
       let bestWeapon = null;
       let bestScore = -1;
@@ -254,33 +262,46 @@ export class DecisionEngine {
       }
       
       if (bestWeapon && bestScore > 0) {
-        // Apply confidence-based mixed strategy
-        const confidenceThreshold = 0.7;
+        // Aggressive confidence thresholds for better performance
+        const highConfidenceThreshold = 0.5;  // Lowered from 0.7
+        const mediumConfidenceThreshold = 0.25; // New threshold
         
-        if (scaledConfidence > confidenceThreshold) {
+        if (scaledConfidence > highConfidenceThreshold) {
           // High confidence: always pick the best weapon
           if (!config.minimalOutput) {
             console.log(`High confidence (${(scaledConfidence * 100).toFixed(0)}%): choosing best weapon ${bestWeapon} (score: ${bestScore.toFixed(3)})`);
           }
           return bestWeapon;
-        } else {
-          // Medium confidence: 80% best weapon, 20% random from available
-          if (Math.random() < 0.8) {
+        } else if (scaledConfidence > mediumConfidenceThreshold) {
+          // Medium confidence: 95% best weapon, 5% random (much more aggressive)
+          if (Math.random() < 0.95) {
             if (!config.minimalOutput) {
               console.log(`Medium confidence (${(scaledConfidence * 100).toFixed(0)}%): choosing best weapon ${bestWeapon} (score: ${bestScore.toFixed(3)})`);
             }
             return bestWeapon;
           } else {
-            // Random from available weapons
-            const availableWeaponList = Object.keys(prediction.weaponScores).filter(weapon => 
-              (!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0
-            );
-            const randomWeapon = availableWeaponList[Math.floor(Math.random() * availableWeaponList.length)];
+            // 5% chance of selecting second-best weapon for unpredictability
+            const sortedWeapons = Object.entries(prediction.weaponScores)
+              .filter(([weapon, score]) => 
+                (!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0
+              )
+              .sort(([,a], [,b]) => b - a);
+            
+            const secondBest = sortedWeapons.length > 1 ? sortedWeapons[1][0] : bestWeapon;
             if (!config.minimalOutput) {
-              console.log(`Medium confidence (${(scaledConfidence * 100).toFixed(0)}%): mixed strategy chose ${randomWeapon} over best ${bestWeapon}`);
+              console.log(`Medium confidence (${(scaledConfidence * 100).toFixed(0)}%): tactical variation chose ${secondBest}`);
             }
-            return randomWeapon;
+            return secondBest;
           }
+        } else {
+          // Low confidence: still favor best weapon 70% of the time
+          if (Math.random() < 0.7) {
+            if (!config.minimalOutput) {
+              console.log(`Low confidence (${(scaledConfidence * 100).toFixed(0)}%): cautiously choosing best weapon ${bestWeapon}`);
+            }
+            return bestWeapon;
+          }
+          // 30% fallback to enhanced random strategy below
         }
       }
     } else if (prediction && config.minimalOutput) {
@@ -289,15 +310,26 @@ export class DecisionEngine {
       console.log('Low confidence prediction:', prediction.confidence.toFixed(2));
     }
 
-    // Fallback to enhanced random strategy with weapon weighting
+    // Fallback to enhanced random strategy with statistical hints
     if (!config.minimalOutput) {
-      console.log('Using enhanced random strategy with weapon stats');
+      console.log('Using enhanced random strategy with statistical hints');
     } else if (!prediction) {
       console.log('No data');
     }
     
-    // Create weights based on weapon stats and charges
+    // Create weights based on weapon stats, charges, and any statistical hints
     let weights = { rock: 1, paper: 1, scissor: 1 };
+    
+    // If we have a weak prediction, still use it as a hint (even if confidence is low)
+    if (prediction && prediction.weaponScores) {
+      const maxScore = Math.max(...Object.values(prediction.weaponScores));
+      if (maxScore > 0) {
+        // Apply statistical hints as weight multipliers (even with low confidence)
+        weights.rock *= (1 + 0.5 * (prediction.weaponScores.rock / maxScore));
+        weights.paper *= (1 + 0.5 * (prediction.weaponScores.paper / maxScore));
+        weights.scissor *= (1 + 0.5 * (prediction.weaponScores.scissor / maxScore));
+      }
+    }
     
     // Apply charge-based adjustments
     if (weaponCharges) {
