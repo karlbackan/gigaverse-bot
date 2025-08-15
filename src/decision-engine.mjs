@@ -46,6 +46,10 @@ export class DecisionEngine {
     // Track recent performance by enemy
     this.enemyRecentPerformance = new Map();
     
+    // Track immediate loss streaks for tactical adaptation
+    this.enemyLossStreaks = new Map(); // Track consecutive losses by enemy
+    this.enemyLastMoves = new Map();   // Track what we played recently
+    
     // Track last prediction made for recording battle results
     this.lastPrediction = null;
     this.lastPredictionEnemy = null;
@@ -150,6 +154,11 @@ export class DecisionEngine {
     const isLosingStreak = recentPerformance.winRate < this.params.lossStreakThreshold;
     const isWinningStreak = recentPerformance.winRate > this.params.winStreakThreshold;
     
+    // CRITICAL: Check for immediate consecutive losses (being actively countered)
+    const consecutiveLosses = this.getConsecutiveLosses(enemyId);
+    const isBeingCountered = consecutiveLosses >= 2; // 2+ losses = likely being countered
+    const isHardCountered = consecutiveLosses >= 3;  // 3+ losses = definitely being countered
+    
     // Apply confidence scaling based on battle count
     const battleCount = await this.statisticsEngine.getBattleCount(enemyId);
     const confidenceMultiplier = Math.min(1, battleCount / this.params.minBattlesForConfidence);
@@ -165,6 +174,64 @@ export class DecisionEngine {
           console.log(`💯 Guaranteed win! Enemy can only play ${onlyMove}, countering with ${guaranteed}`);
         }
         return guaranteed;
+      }
+    }
+    
+    // CRITICAL: Anti-Counter Strategy - React to consecutive losses immediately!
+    if (isHardCountered) {
+      // 3+ losses in a row = enemy has figured us out completely
+      console.log(`🚨 HARD COUNTERED! ${consecutiveLosses} losses in a row - switching to chaos mode`);
+      
+      // Abandon all patterns, go pure random for unpredictability
+      const availableWeaponList = availableWeapons || ['rock', 'paper', 'scissor'];
+      const randomChoice = availableWeaponList[Math.floor(Math.random() * availableWeaponList.length)];
+      
+      if (!config.minimalOutput) {
+        console.log(`💀 Enemy cracked our code - going random: ${randomChoice}`);
+      } else {
+        console.log(`Counter-Counter: Random ${randomChoice}`);
+      }
+      
+      return randomChoice;
+      
+    } else if (isBeingCountered) {
+      // 2 losses in a row = likely being countered, try reverse psychology
+      console.log(`⚠️ BEING COUNTERED! ${consecutiveLosses} losses in a row - trying reverse psychology`);
+      
+      const ourRecentMoves = this.getRecentMoves(enemyId, 3); // Our last 3 moves
+      if (ourRecentMoves && ourRecentMoves.length > 0) {
+        // What would they expect us to do? (continue our pattern)
+        // Let's do something different
+        const allMoves = ['rock', 'paper', 'scissor'];
+        const unexpectedMoves = allMoves.filter(move => 
+          !ourRecentMoves.includes(move) && (!availableWeapons || availableWeapons.includes(move))
+        );
+        
+        if (unexpectedMoves.length > 0) {
+          const surpriseMove = unexpectedMoves[Math.floor(Math.random() * unexpectedMoves.length)];
+          
+          if (!config.minimalOutput) {
+            console.log(`🎭 Reverse psychology: they expect ${ourRecentMoves.join('/')} pattern, playing ${surpriseMove}`);
+          } else {
+            console.log(`Reverse: ${surpriseMove} (vs ${ourRecentMoves.join('/')})`);
+          }
+          
+          return surpriseMove;
+        }
+      }
+      
+      // Fallback: increase randomization heavily
+      if (Math.random() < 0.7) { // 70% random when being countered
+        const availableWeaponList = availableWeapons || ['rock', 'paper', 'scissor'];
+        const randomChoice = availableWeaponList[Math.floor(Math.random() * availableWeaponList.length)];
+        
+        if (!config.minimalOutput) {
+          console.log(`🎲 Counter-strategy: going 70% random - ${randomChoice}`);
+        } else {
+          console.log(`Counter: Random ${randomChoice}`);
+        }
+        
+        return randomChoice;
       }
     }
     
@@ -461,6 +528,9 @@ export class DecisionEngine {
     
     // Update recent performance tracking
     this.updateRecentPerformance(enemyId, result);
+    
+    // Update loss streak tracking for anti-counter strategy
+    this.updateLossStreak(enemyId, result, playerAction);
 
     // Determine if prediction was correct and extract confidence
     let predictionMade = null;
@@ -647,5 +717,46 @@ export class DecisionEngine {
     // Recalculate stats
     perf.total = perf.history.length;
     perf.wins = perf.history.filter(r => r === 1).length;
+  }
+  
+  // Track consecutive losses for anti-counter strategy
+  updateLossStreak(enemyId, result, playerMove) {
+    if (!this.enemyLossStreaks.has(enemyId)) {
+      this.enemyLossStreaks.set(enemyId, { consecutiveLosses: 0, lastResults: [] });
+    }
+    
+    if (!this.enemyLastMoves.has(enemyId)) {
+      this.enemyLastMoves.set(enemyId, []);
+    }
+    
+    const streak = this.enemyLossStreaks.get(enemyId);
+    const moves = this.enemyLastMoves.get(enemyId);
+    
+    // Track our move
+    moves.push(playerMove);
+    if (moves.length > 5) moves.shift(); // Keep last 5 moves
+    
+    // Track result streak
+    streak.lastResults.push(result);
+    if (streak.lastResults.length > 10) streak.lastResults.shift(); // Keep last 10 results
+    
+    if (result === 'loss') {
+      streak.consecutiveLosses++;
+    } else {
+      streak.consecutiveLosses = 0; // Reset on non-loss
+    }
+  }
+  
+  // Get consecutive losses against specific enemy
+  getConsecutiveLosses(enemyId) {
+    const streak = this.enemyLossStreaks.get(enemyId);
+    return streak ? streak.consecutiveLosses : 0;
+  }
+  
+  // Get our recent moves against specific enemy
+  getRecentMoves(enemyId, count = 3) {
+    const moves = this.enemyLastMoves.get(enemyId);
+    if (!moves || moves.length === 0) return null;
+    return moves.slice(-count);
   }
 }
