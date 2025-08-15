@@ -117,6 +117,28 @@ class DatabaseManager {
     
     // Statistics-specific methods
     
+    async getOrCreateDungeon(dungeonId) {
+        let dungeon = await this.get(`
+            SELECT * FROM dungeons 
+            WHERE id = ?
+        `, [dungeonId]);
+        
+        if (!dungeon) {
+            const now = Date.now();
+            await this.run(`
+                INSERT INTO dungeons (id, first_seen, last_seen)
+                VALUES (?, ?, ?)
+            `, [dungeonId, now, now]);
+            
+            dungeon = await this.get(`
+                SELECT * FROM dungeons 
+                WHERE id = ?
+            `, [dungeonId]);
+        }
+        
+        return dungeon;
+    }
+    
     async getOrCreateEnemy(enemyId, dungeonId) {
         let enemy = await this.get(`
             SELECT * FROM enemies 
@@ -164,6 +186,10 @@ class DatabaseManager {
         let normalizedResult = result;
         if (result === 'draw') normalizedResult = 'tie';
         if (result === 'lose') normalizedResult = 'loss';
+        
+        // Ensure dungeon and enemy records exist before inserting battle (foreign key requirements)
+        await this.getOrCreateDungeon(dungeonId);
+        await this.getOrCreateEnemy(enemyId, dungeonId);
         
         // Insert battle record
         await this.run(`

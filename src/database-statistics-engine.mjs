@@ -42,6 +42,32 @@ export class DatabaseStatisticsEngine {
         }
     }
     
+    // Convert enemyId to integer for database storage
+    convertEnemyIdToInt(enemyId) {
+        // If already a number, return it
+        if (typeof enemyId === 'number') {
+            return Math.floor(enemyId);
+        }
+        
+        // If it's a string that can be parsed as integer, use that
+        const parsed = parseInt(enemyId);
+        if (!isNaN(parsed)) {
+            return parsed;
+        }
+        
+        // For string IDs like "test_enemy", create a consistent hash
+        let hash = 0;
+        const str = String(enemyId);
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        
+        // Ensure positive integer and avoid conflicts with real enemy IDs
+        return Math.abs(hash) + 1000000;
+    }
+    
     async recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp, predictionMade = null, predictionCorrect = false, confidenceLevel = null) {
         await this.ensureInitialized();
         
@@ -49,9 +75,12 @@ export class DatabaseStatisticsEngine {
             // Build sequence key from recent moves
             const sequenceKey = this.buildSequenceKey(enemyId, this.currentDungeonType, playerAction, enemyAction);
             
+            // Convert enemyId to integer (handle both string and numeric IDs)
+            const numericEnemyId = this.convertEnemyIdToInt(enemyId);
+            
             // Record battle in database
             const battleData = {
-                enemyId: parseInt(enemyId),
+                enemyId: numericEnemyId,
                 dungeonId: this.currentDungeonType,
                 turn: parseInt(turn),
                 timestamp: timestamp || Date.now(),
@@ -171,7 +200,7 @@ export class DatabaseStatisticsEngine {
         
         try {
             // Get enemy data from database
-            const enemyData = await this.db.getEnemyStats(parseInt(enemyId), this.currentDungeonType);
+            const enemyData = await this.db.getEnemyStats(this.convertEnemyIdToInt(enemyId), this.currentDungeonType);
             
             if (!enemyData.enemy || enemyData.enemy.total_battles < 3) {
                 // Not enough data, use random prediction
@@ -213,7 +242,7 @@ export class DatabaseStatisticsEngine {
             FROM enemy_moves 
             WHERE enemy_id = ? AND dungeon_id = ?
             ORDER BY count DESC
-        `, [parseInt(enemyId), this.currentDungeonType]);
+        `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
         
         if (moves.length === 0) return 'rock';
         
@@ -227,7 +256,7 @@ export class DatabaseStatisticsEngine {
             FROM enemy_moves_by_turn 
             WHERE enemy_id = ? AND dungeon_id = ? AND turn = ?
             ORDER BY count DESC
-        `, [parseInt(enemyId), this.currentDungeonType, turn]);
+        `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType, turn]);
         
         if (turnMoves.length === 0) {
             // Fallback to overall frequency
@@ -245,7 +274,7 @@ export class DatabaseStatisticsEngine {
             WHERE enemy_id = ? AND dungeon_id = ?
             ORDER BY timestamp DESC 
             LIMIT 1
-        `, [parseInt(enemyId), this.currentDungeonType]);
+        `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
         
         if (!lastBattle) return 'rock';
         
@@ -255,7 +284,7 @@ export class DatabaseStatisticsEngine {
             FROM move_sequences 
             WHERE enemy_id = ? AND dungeon_id = ? AND sequence_key LIKE ?
             ORDER BY count DESC
-        `, [parseInt(enemyId), this.currentDungeonType, `%-${lastBattle.enemy_move}`]);
+        `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType, `%-${lastBattle.enemy_move}`]);
         
         if (sequences.length === 0) {
             return this.predictByMoveFrequency(enemyId);
@@ -331,7 +360,7 @@ export class DatabaseStatisticsEngine {
         
         try {
             // Get enemy data from database
-            const enemyData = await this.db.getEnemyStats(parseInt(enemyId), this.currentDungeonType);
+            const enemyData = await this.db.getEnemyStats(this.convertEnemyIdToInt(enemyId), this.currentDungeonType);
             
             if (!enemyData.enemy || enemyData.enemy.total_battles < 3) {
                 // Not enough data, return random prediction with low confidence
@@ -349,7 +378,7 @@ export class DatabaseStatisticsEngine {
                 FROM enemy_moves 
                 WHERE enemy_id = ? AND dungeon_id = ?
                 ORDER BY count DESC
-            `, [parseInt(enemyId), this.currentDungeonType]);
+            `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
             
             // Calculate move probabilities
             const totalMoves = moves.reduce((sum, move) => sum + move.count, 0);
@@ -481,7 +510,7 @@ export class DatabaseStatisticsEngine {
         await this.ensureInitialized();
         
         try {
-            return await this.db.getEnemyStats(parseInt(enemyId), this.currentDungeonType);
+            return await this.db.getEnemyStats(this.convertEnemyIdToInt(enemyId), this.currentDungeonType);
         } catch (error) {
             console.error('❌ Failed to get enemy statistics:', error);
             
@@ -551,7 +580,7 @@ export class DatabaseStatisticsEngine {
                 FROM enemy_moves 
                 WHERE enemy_id = ? AND dungeon_id = ?
                 ORDER BY count DESC
-            `, [parseInt(enemyId), this.currentDungeonType]);
+            `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
             
             if (moves.length > 0) {
                 const dominantMove = moves[0].move;

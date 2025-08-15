@@ -2,6 +2,7 @@ import { initializeFireballApi } from './api.mjs';
 import { config } from './config.mjs';
 import { DatabaseStatisticsEngine } from './database-statistics-engine.mjs';
 import { MLDecisionEngine } from './ml-decision-engine.mjs';
+import { MLStatePersistence } from './ml-state-persistence.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -31,9 +32,20 @@ export class DecisionEngine {
     this.dungeonHistory = [];
     this.statisticsEngine = new DatabaseStatisticsEngine();
     this.mlEngine = new MLDecisionEngine();
+    this.mlPersistence = new MLStatePersistence();
     this.currentEnemyId = null;
     this.currentNoobId = null;
     this.currentDungeonType = 1; // Default to Dungetron 5000
+    
+    // Performance monitoring
+    this.performanceHistory = [];
+    this.maxPerformanceHistory = 100;
+    this.autoCorrectEnabled = true;
+    this.lastPerformanceCheck = 0;
+    this.performanceCheckInterval = 20; // Check every 20 battles
+    
+    // Load ML state asynchronously
+    this.initializeMLState();
     
     // Hybrid decision mode settings
     this.hybridMode = {
@@ -65,6 +77,8 @@ export class DecisionEngine {
     this.lastPrediction = null;
     this.lastPredictionEnemy = null;
     this.lastPredictionTurn = null;
+    
+    console.log('🎯 Decision Engine initialized with optimized parameters');
   }
 
   // Set current noobId for tracking time-based patterns
@@ -76,6 +90,91 @@ export class DecisionEngine {
   setDungeonType(dungeonType) {
     this.currentDungeonType = dungeonType;
     this.statisticsEngine.setDungeonType(dungeonType);
+  }
+
+  // Initialize ML state persistence
+  async initializeMLState() {
+    try {
+      await this.mlPersistence.loadMLState(this.mlEngine);
+      console.log('🧠 ML continuity established - learning from previous sessions');
+    } catch (error) {
+      console.error('⚠️ Failed to load ML state, starting fresh:', error);
+    }
+  }
+  
+  // Save ML state (call this periodically and on shutdown)
+  async saveMLState() {
+    try {
+      await this.mlPersistence.saveMLState(this.mlEngine);
+    } catch (error) {
+      console.error('⚠️ Failed to save ML state:', error);
+    }
+  }
+  
+  // Performance monitoring and auto-correction
+  checkPerformanceAndCorrect() {
+    if (this.performanceHistory.length < this.performanceCheckInterval) {
+      return;
+    }
+    
+    const recentResults = this.performanceHistory.slice(-this.performanceCheckInterval);
+    const wins = recentResults.filter(r => r.result === 'win').length;
+    const winRate = wins / recentResults.length;
+    
+    // Performance thresholds
+    const criticalThreshold = 0.25;  // 25%
+    const poorThreshold = 0.35;      // 35%
+    const targetThreshold = 0.42;    // 42%
+    
+    if (winRate <= criticalThreshold && this.autoCorrectEnabled) {
+      console.log(`🚨 CRITICAL PERFORMANCE: ${(winRate * 100).toFixed(1)}% win rate - applying emergency corrections`);
+      
+      // Emergency corrections
+      this.params.explorationRate = Math.min(this.params.explorationRate + 0.05, 0.2);
+      this.hybridMode.mlWeight = Math.max(this.hybridMode.mlWeight - 0.15, 0.2);
+      
+      console.log(`  🔧 Exploration: ${(this.params.explorationRate * 100).toFixed(1)}%`);
+      console.log(`  🔧 ML Weight: ${(this.hybridMode.mlWeight * 100).toFixed(0)}%`);
+      
+    } else if (winRate <= poorThreshold && this.autoCorrectEnabled) {
+      console.log(`⚠️ POOR PERFORMANCE: ${(winRate * 100).toFixed(1)}% win rate - applying corrections`);
+      
+      // Moderate corrections
+      this.params.explorationRate = Math.min(this.params.explorationRate + 0.02, 0.15);
+      console.log(`  🔧 Increased exploration to ${(this.params.explorationRate * 100).toFixed(1)}%`);
+      
+    } else if (winRate >= targetThreshold) {
+      console.log(`✅ GOOD PERFORMANCE: ${(winRate * 100).toFixed(1)}% win rate - optimizing`);
+      
+      // Optimize by reducing exploration
+      this.params.explorationRate = Math.max(this.params.explorationRate - 0.01, 0.005);
+      console.log(`  🔧 Reduced exploration to ${(this.params.explorationRate * 100).toFixed(1)}%`);
+    }
+  }
+  
+  // Record performance for monitoring
+  recordPerformance(result, enemyId, turn) {
+    this.performanceHistory.push({
+      result,
+      enemyId,
+      turn,
+      timestamp: Date.now()
+    });
+    
+    // Trim history
+    if (this.performanceHistory.length > this.maxPerformanceHistory) {
+      this.performanceHistory.shift();
+    }
+    
+    // Check performance periodically
+    if (this.performanceHistory.length % this.performanceCheckInterval === 0) {
+      this.checkPerformanceAndCorrect();
+      
+      // Save ML state periodically
+      if (this.performanceHistory.length % 50 === 0) {
+        this.saveMLState();
+      }
+    }
   }
 
   // Make decision based on all available data
@@ -417,10 +516,30 @@ export class DecisionEngine {
     if (prediction && prediction.weaponScores) {
       const maxScore = Math.max(...Object.values(prediction.weaponScores));
       if (maxScore > 0) {
-        // Apply statistical hints as weight multipliers (even with low confidence)
-        weights.rock *= (1 + 0.5 * (prediction.weaponScores.rock / maxScore));
-        weights.paper *= (1 + 0.5 * (prediction.weaponScores.paper / maxScore));
-        weights.scissor *= (1 + 0.5 * (prediction.weaponScores.scissor / maxScore));
+        // Check if we have a clear best choice (deterministic selection)
+        const bestWeapons = [];
+        for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
+          if (score === maxScore && maxScore > 0.5) { // Clear preference
+            bestWeapons.push(weapon);
+          }
+        }
+        
+        // If we have a single clear best choice, use it deterministically
+        if (bestWeapons.length === 1 && maxScore > 0.7) {
+          const bestWeapon = bestWeapons[0];
+          if ((!availableWeapons || availableWeapons.includes(bestWeapon)) && 
+              (!weaponCharges || weaponCharges[bestWeapon] > 0)) {
+            if (!config.minimalOutput) {
+              console.log(`🎯 Clear weapon preference: ${bestWeapon} (score: ${maxScore.toFixed(2)})`);
+            }
+            return bestWeapon;
+          }
+        }
+        
+        // Otherwise apply statistical hints as weight multipliers
+        weights.rock *= (1 + 1.5 * (prediction.weaponScores.rock / maxScore)); // Increased from 0.5
+        weights.paper *= (1 + 1.5 * (prediction.weaponScores.paper / maxScore));
+        weights.scissor *= (1 + 1.5 * (prediction.weaponScores.scissor / maxScore));
       }
     }
     
@@ -608,6 +727,9 @@ export class DecisionEngine {
 
   // Record turn result for learning
   recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats = null, enemyStats = null, weaponStats = null) {
+    // Record performance for monitoring and auto-correction
+    this.recordPerformance(result, enemyId, turn);
+    
     this.turnHistory.push({
       enemyId,
       turn,
