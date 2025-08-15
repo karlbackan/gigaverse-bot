@@ -35,8 +35,8 @@ export class DecisionEngine {
     
     // Robustness parameters
     this.params = {
-      explorationRate: 0.1,        // 10% random exploration
-      minBattlesForConfidence: 20, // Need 20 battles for full confidence
+      explorationRate: 0.05,       // 5% random exploration (reduced for better performance)
+      minBattlesForConfidence: 15, // Need 15 battles for full confidence (slightly reduced)
       lossStreakThreshold: 0.35,   // Trigger fallback if win rate < 35%
       recentWindowSize: 20,        // Look at last 20 battles for win rate
       winStreakThreshold: 0.75,    // Reduce exploration if win rate > 75%
@@ -239,49 +239,49 @@ export class DecisionEngine {
         }
       }
 
-      // Implement mixed strategy based on weapon scores
-      const availableScores = {};
-      let totalPositiveScore = 0;
+      // SIMPLIFIED OPTIMAL DECISION LOGIC
+      // Find the highest scoring available weapon
+      let bestWeapon = null;
+      let bestScore = -1;
       
       for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
         if ((!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0) {
-          // Convert scores to probabilities (shift to positive)
-          const shiftedScore = score + 1; // Ensure positive
-          availableScores[weapon] = Math.max(0, shiftedScore);
-          totalPositiveScore += availableScores[weapon];
-        }
-      }
-      
-      if (Object.keys(availableScores).length > 0 && totalPositiveScore > 0) {
-        // Find the best weapon
-        let bestWeapon = null;
-        let bestScore = -Infinity;
-        for (const [weapon, score] of Object.entries(prediction.weaponScores)) {
-          if (availableScores[weapon] !== undefined && score > bestScore) {
+          if (score > bestScore) {
             bestScore = score;
             bestWeapon = weapon;
           }
         }
+      }
+      
+      if (bestWeapon && bestScore > 0) {
+        // Apply confidence-based mixed strategy
+        const confidenceThreshold = 0.7;
         
-        // Apply mixed strategy - don't always pick the best
-        const mixedProbabilities = {};
-        for (const [weapon, score] of Object.entries(availableScores)) {
-          if (weapon === bestWeapon) {
-            // Best weapon gets extra weight based on confidence
-            mixedProbabilities[weapon] = score + (totalPositiveScore * this.params.mixedStrategyWeight);
+        if (scaledConfidence > confidenceThreshold) {
+          // High confidence: always pick the best weapon
+          if (!config.minimalOutput) {
+            console.log(`High confidence (${(scaledConfidence * 100).toFixed(0)}%): choosing best weapon ${bestWeapon} (score: ${bestScore.toFixed(3)})`);
+          }
+          return bestWeapon;
+        } else {
+          // Medium confidence: 80% best weapon, 20% random from available
+          if (Math.random() < 0.8) {
+            if (!config.minimalOutput) {
+              console.log(`Medium confidence (${(scaledConfidence * 100).toFixed(0)}%): choosing best weapon ${bestWeapon} (score: ${bestScore.toFixed(3)})`);
+            }
+            return bestWeapon;
           } else {
-            mixedProbabilities[weapon] = score;
+            // Random from available weapons
+            const availableWeaponList = Object.keys(prediction.weaponScores).filter(weapon => 
+              (!availableWeapons || availableWeapons.includes(weapon)) && weaponCharges[weapon] > 0
+            );
+            const randomWeapon = availableWeaponList[Math.floor(Math.random() * availableWeaponList.length)];
+            if (!config.minimalOutput) {
+              console.log(`Medium confidence (${(scaledConfidence * 100).toFixed(0)}%): mixed strategy chose ${randomWeapon} over best ${bestWeapon}`);
+            }
+            return randomWeapon;
           }
         }
-        
-        // Select based on mixed probabilities
-        const selectedWeapon = this.selectFromProbabilities(mixedProbabilities);
-        
-        if (!config.minimalOutput && selectedWeapon !== bestWeapon) {
-          console.log(`Mixed strategy: selected ${selectedWeapon} instead of best ${bestWeapon}`);
-        }
-        
-        return selectedWeapon;
       }
     } else if (prediction && config.minimalOutput) {
       console.log(`Conf:${(prediction.confidence * 100).toFixed(0)}% (low)`);

@@ -628,17 +628,46 @@ export class DungeonPlayer {
         const newEnemyHealth = response.data.run.players[1].health.current;
         const newPlayerHealth = response.data.run.players[0].health.current;
         
-        // Determine result based on the actions
-        let result = 'draw';
-        if (action === 'rock' && enemyMove === 'scissor') result = 'win';
-        else if (action === 'scissor' && enemyMove === 'paper') result = 'win';
-        else if (action === 'paper' && enemyMove === 'rock') result = 'win';
-        else if (action === enemyMove) result = 'draw';
-        else result = 'lose';
+        // Determine result based on the actions using robust lookup table approach
+        // Normalize inputs to prevent string comparison issues
+        const playerMove = String(action || '').toLowerCase().trim();
+        const enemyAction = String(enemyMove || '').toLowerCase().trim();
+        
+        // Rock-Paper-Scissors outcome lookup table (player perspective)
+        const outcomes = {
+          'rock-scissor': 'win',     // Rock beats Scissor
+          'paper-rock': 'win',       // Paper beats Rock  
+          'scissor-paper': 'win',    // Scissor beats Paper
+          'rock-paper': 'lose',      // Rock loses to Paper
+          'paper-scissor': 'lose',   // Paper loses to Scissor
+          'scissor-rock': 'lose',    // Scissor loses to Rock
+          'rock-rock': 'draw',       // Same moves
+          'paper-paper': 'draw',
+          'scissor-scissor': 'draw'
+        };
+        
+        const outcomeKey = `${playerMove}-${enemyAction}`;
+        let result = outcomes[outcomeKey] || 'draw'; // Default to draw for any unexpected combination
         
         // DEBUG: Log moves and result for tie bug investigation
-        if ((action === 'paper' && enemyMove === 'rock') || (action === 'scissor' && enemyMove === 'rock')) {
-          console.log(`🐛 DEBUG TIE BUG: action="${action}" (${typeof action}), enemyMove="${enemyMove}" (${typeof enemyMove}), result="${result}"`);
+        if ((playerMove === 'paper' && enemyAction === 'rock') || (playerMove === 'scissor' && enemyAction === 'rock')) {
+          console.log(`🐛 DEBUG TIE BUG: action="${action}" (${typeof action}), enemyMove="${enemyMove}" (${typeof enemyMove})`);
+          console.log(`🐛 DEBUG NORMALIZED: playerMove="${playerMove}", enemyAction="${enemyAction}", outcomeKey="${outcomeKey}", result="${result}"`);
+        }
+        
+        // CRITICAL FIX: Additional validation for Rock-specific bug
+        if (result === 'draw' && playerMove !== enemyAction) {
+          console.log(`🚨 CRITICAL BUG DETECTED: Invalid tie between ${playerMove} and ${enemyAction}!`);
+          console.log(`🔧 FORCING CORRECT RESULT...`);
+          
+          // Force correct result for known patterns
+          if (playerMove === 'paper' && enemyAction === 'rock') {
+            result = 'win';
+            console.log(`🔧 Fixed Paper vs Rock: draw → win`);
+          } else if (playerMove === 'scissor' && enemyAction === 'rock') {
+            result = 'lose';
+            console.log(`🔧 Fixed Scissor vs Rock: draw → lose`);
+          }
         }
         
         // Record the result with full stats
@@ -1058,17 +1087,46 @@ export class DungeonPlayer {
 
       // If we got the enemy move, record the statistics
       if (enemyMove && playerAction) {
-        // Determine result based on the actions
-        let result = 'draw';
-        if (playerAction === 'rock' && enemyMove === 'scissor') result = 'win';
-        else if (playerAction === 'scissor' && enemyMove === 'paper') result = 'win';
-        else if (playerAction === 'paper' && enemyMove === 'rock') result = 'win';
-        else if (playerAction === enemyMove) result = 'draw';
-        else result = 'lose';
+        // Determine result based on the actions using robust lookup table approach
+        // Normalize inputs to prevent string comparison issues
+        const playerMove = String(playerAction || '').toLowerCase().trim();
+        const enemyAction = String(enemyMove || '').toLowerCase().trim();
+        
+        // Rock-Paper-Scissors outcome lookup table (player perspective)
+        const outcomes = {
+          'rock-scissor': 'win',     // Rock beats Scissor
+          'paper-rock': 'win',       // Paper beats Rock  
+          'scissor-paper': 'win',    // Scissor beats Paper
+          'rock-paper': 'lose',      // Rock loses to Paper
+          'paper-scissor': 'lose',   // Paper loses to Scissor
+          'scissor-rock': 'lose',    // Scissor loses to Rock
+          'rock-rock': 'draw',       // Same moves
+          'paper-paper': 'draw',
+          'scissor-scissor': 'draw'
+        };
+        
+        const outcomeKey = `${playerMove}-${enemyAction}`;
+        let result = outcomes[outcomeKey] || 'draw'; // Default to draw for any unexpected combination
         
         // DEBUG: Log moves and result for tie bug investigation (ERROR PATH)
-        if ((playerAction === 'paper' && enemyMove === 'rock') || (playerAction === 'scissor' && enemyMove === 'rock')) {
-          console.log(`🐛 DEBUG TIE BUG (ERROR PATH): playerAction="${playerAction}" (${typeof playerAction}), enemyMove="${enemyMove}" (${typeof enemyMove}), result="${result}"`);
+        if ((playerMove === 'paper' && enemyAction === 'rock') || (playerMove === 'scissor' && enemyAction === 'rock')) {
+          console.log(`🐛 DEBUG TIE BUG (ERROR PATH): playerAction="${playerAction}" (${typeof playerAction}), enemyMove="${enemyMove}" (${typeof enemyMove})`);
+          console.log(`🐛 DEBUG NORMALIZED (ERROR PATH): playerMove="${playerMove}", enemyAction="${enemyAction}", outcomeKey="${outcomeKey}", result="${result}"`);
+        }
+        
+        // CRITICAL FIX: Additional validation for Rock-specific bug
+        if (result === 'draw' && playerMove !== enemyAction) {
+          console.log(`🚨 CRITICAL BUG DETECTED (ERROR PATH): Invalid tie between ${playerMove} and ${enemyAction}!`);
+          console.log(`🔧 FORCING CORRECT RESULT...`);
+          
+          // Force correct result for known patterns
+          if (playerMove === 'paper' && enemyAction === 'rock') {
+            result = 'win';
+            console.log(`🔧 Fixed Paper vs Rock: draw → win`);
+          } else if (playerMove === 'scissor' && enemyAction === 'rock') {
+            result = 'lose';
+            console.log(`🔧 Fixed Scissor vs Rock: draw → lose`);
+          }
         }
 
         // Get weapon stats for recording
