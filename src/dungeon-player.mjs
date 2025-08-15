@@ -279,11 +279,30 @@ export class DungeonPlayer {
             
             // Check if we're trying to run Underhaul but it's not unlocked
             if (config.dungeonType === 3) {
-              // DISABLED: Automatic fallback to dungeon 1
-              console.log('\n   ❌ Underhaul start failed. NOT falling back to Dungetron 5000.');
-              console.log('   To start Underhaul, you must do it manually in the browser.');
-              // Don't retry - just fail
-              return false;
+              console.log('\n   🔄 Underhaul not available - checking for existing dungeon...');
+              
+              // First check if already in a dungeon before fallback
+              try {
+                const dungeonState = await getDirectDungeonState();
+                if (dungeonState?.data?.run) {
+                  const entity = dungeonState.data.entity;
+                  const detectedType = parseInt(entity.ID_CID);
+                  console.log(`✅ Found active ${detectedType === 1 ? 'Dungetron 5000' : detectedType === 3 ? 'Dungetron Underhaul' : `Type ${detectedType}`} dungeon - continuing`);
+                  this.currentDungeonType = detectedType;
+                  this.decisionEngine.setDungeonType(this.currentDungeonType);
+                  this.currentDungeon = dungeonState.data.run;
+                  return 'continue_existing';
+                }
+              } catch (stateError) {
+                console.log('   Could not check dungeon state, proceeding with fallback');
+              }
+              
+              console.log('   No existing dungeon - falling back to Dungetron 5000');
+              this.currentDungeonType = 1;
+              this.decisionEngine.setDungeonType(this.currentDungeonType);
+              console.log('🏛️  Statistics engine set to dungeon type: 1');
+              // Retry with dungeon type 1
+              return await this.startDungeon();
             }
           } else {
             console.log('   Possible cooldown, daily limit, or state issue');
@@ -305,11 +324,30 @@ export class DungeonPlayer {
         console.log('❗ Dungetron Underhaul may not be unlocked on this account!');
         console.log('   You need to reach checkpoint 2 in Dungetron 5000 first.');
         
-        // DISABLED: Automatic fallback to dungeon 1
-        console.log('\n   ❌ Underhaul start failed. NOT falling back to Dungetron 5000.');
-        console.log('   The API blocks Underhaul starts. Start it manually in browser.');
-        // Don't retry - just fail
-        return false;
+        console.log('\n   🔄 Underhaul blocked by API - checking for existing dungeon...');
+        
+        // First check if already in a dungeon before fallback
+        try {
+          const dungeonState = await getDirectDungeonState();
+          if (dungeonState?.data?.run) {
+            const entity = dungeonState.data.entity;
+            const detectedType = parseInt(entity.ID_CID);
+            console.log(`✅ Found active ${detectedType === 1 ? 'Dungetron 5000' : detectedType === 3 ? 'Dungetron Underhaul' : `Type ${detectedType}`} dungeon - continuing`);
+            this.currentDungeonType = detectedType;
+            this.decisionEngine.setDungeonType(this.currentDungeonType);
+            this.currentDungeon = dungeonState.data.run;
+            return 'continue_existing';
+          }
+        } catch (stateError) {
+          console.log('   Could not check dungeon state, proceeding with fallback');
+        }
+        
+        console.log('   No existing dungeon - falling back to Dungetron 5000');
+        this.currentDungeonType = 1;
+        this.decisionEngine.setDungeonType(this.currentDungeonType);
+        console.log('🏛️  Statistics engine set to dungeon type: 1');
+        // Retry with dungeon type 1
+        return await this.startDungeon();
       }
       
       return false;

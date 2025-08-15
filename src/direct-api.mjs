@@ -117,15 +117,18 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     }
     
     // Save action token even from error responses
-    if (error.response?.data?.actionToken) {
+    // For "Error handling action", save the new token if provided, otherwise reset
+    if (error.response?.data?.message === 'Error handling action') {
+      if (error.response?.data?.actionToken) {
+        currentActionToken = error.response.data.actionToken.toString();
+        console.log(`  Saved new action token from "Error handling action": ${currentActionToken}`);
+      } else {
+        console.log('  Resetting action token due to "Error handling action" error with no new token');
+        currentActionToken = null;
+      }
+    } else if (error.response?.data?.actionToken) {
       currentActionToken = error.response.data.actionToken.toString();
       console.log(`  Saved action token from error: ${currentActionToken}`);
-    }
-    
-    // For "Error handling action", reset token - it might be from previous session
-    if (error.response?.data?.message === 'Error handling action') {
-      console.log('  Resetting action token due to "Error handling action" error');
-      currentActionToken = null;
     }
     
     // If token error and we had a token, try once without it
