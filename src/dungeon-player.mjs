@@ -26,7 +26,14 @@ export class DungeonPlayer {
       currentEnemyTurn: 0,      // Turn count for current enemy
       lastRoom: 0,              // Last room number we were in
       startEnemyId: null,       // First enemy ID of this dungeon run
-      initialized: false        // Track whether we've initialized for this dungeon
+      initialized: false,       // Track whether we've initialized for this dungeon
+      // Charge tracking per room for accurate turn calculation
+      roomChargeState: {
+        rockInitial: 3,
+        paperInitial: 3, 
+        scissorInitial: 3,
+        initialized: false
+      }
     };
     
     // Known dungeon layouts for validation
@@ -250,7 +257,14 @@ export class DungeonPlayer {
           currentEnemyTurn: 0,
           lastRoom: 0,
           startEnemyId: null,
-          initialized: false
+          initialized: false,
+          // Charge tracking per room for accurate turn calculation
+          roomChargeState: {
+            rockInitial: 3,
+            paperInitial: 3, 
+            scissorInitial: 3,
+            initialized: false
+          }
         };
         
         if (!config.minimalOutput) {
@@ -400,12 +414,28 @@ export class DungeonPlayer {
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
       const floor = Math.floor((room - 1) / 4) + 1;
       const roomInFloor = ((room - 1) % 4) + 1;
-      // Count turns based on total charges used (handle negative charges)
-      const rockUsed = Math.max(0, 3 - Math.max(0, player.rock.currentCharges));
-      const paperUsed = Math.max(0, 3 - Math.max(0, player.paper.currentCharges));
-      const scissorUsed = Math.max(0, 3 - Math.max(0, player.scissor.currentCharges));
-      const totalChargesUsed = rockUsed + paperUsed + scissorUsed;
-      let turn = totalChargesUsed + 1;
+      // Count turns based on charges used in CURRENT ROOM only (fixes turn inconsistency)
+      // Initialize room charge state on first encounter or room change
+      if (!this.dungeonState.roomChargeState.initialized || room !== this.dungeonState.lastRoom) {
+        this.dungeonState.roomChargeState = {
+          rockInitial: Math.max(0, player.rock.currentCharges),
+          paperInitial: Math.max(0, player.paper.currentCharges),
+          scissorInitial: Math.max(0, player.scissor.currentCharges),
+          initialized: true
+        };
+      }
+      
+      // Calculate charges used since entering this room
+      const rockUsedInRoom = Math.max(0, this.dungeonState.roomChargeState.rockInitial - Math.max(0, player.rock.currentCharges));
+      const paperUsedInRoom = Math.max(0, this.dungeonState.roomChargeState.paperInitial - Math.max(0, player.paper.currentCharges));
+      const scissorUsedInRoom = Math.max(0, this.dungeonState.roomChargeState.scissorInitial - Math.max(0, player.scissor.currentCharges));
+      const roomChargesUsed = rockUsedInRoom + paperUsedInRoom + scissorUsedInRoom;
+      let turn = roomChargesUsed + 1;
+      
+      // Debug log the improved turn calculation (can be removed later)
+      if (config.debug && this.dungeonState.roomChargeState.initialized) {
+        console.log(`🔧 Room-based turn calc: Initial charges R${this.dungeonState.roomChargeState.rockInitial}/P${this.dungeonState.roomChargeState.paperInitial}/S${this.dungeonState.roomChargeState.scissorInitial}, Current R${player.rock.currentCharges}/P${player.paper.currentCharges}/S${player.scissor.currentCharges}, Used: ${roomChargesUsed}, Turn: ${turn}`);
+      }
       
       // === ENEMY ID & TURN VALIDATION ===
       // Detect and correct API inconsistencies that corrupt statistics
@@ -432,6 +462,14 @@ export class DungeonPlayer {
           this.dungeonState.expectedEnemyId++;
           this.dungeonState.currentEnemyTurn = 1;
           this.dungeonState.lastRoom = room;
+          
+          // Reset room charge tracking for new room
+          this.dungeonState.roomChargeState = {
+            rockInitial: Math.max(0, player.rock.currentCharges),
+            paperInitial: Math.max(0, player.paper.currentCharges),
+            scissorInitial: Math.max(0, player.scissor.currentCharges),
+            initialized: true
+          };
           
           // Validate enemy ID matches our expectation
           if (enemyId !== this.dungeonState.expectedEnemyId) {
@@ -849,7 +887,14 @@ export class DungeonPlayer {
             currentEnemyTurn: 0,        // Will be set on first turn
             lastRoom: 0,                // Will be set on first turn
             startEnemyId: null,         // Unknown for existing dungeons
-            initialized: false          // Will be set to true on first turn
+            initialized: false,          // Will be set to true on first turn
+            // Charge tracking per room for accurate turn calculation
+            roomChargeState: {
+              rockInitial: 3,
+              paperInitial: 3, 
+              scissorInitial: 3,
+              initialized: false
+            }
           };
           console.log('🔄 Reset validation state for existing dungeon');
         } else {
