@@ -19,21 +19,10 @@ export class DungeonPlayer {
     this.currentDungeonType = config.dungeonType; // Initialize from config
     this.walletAddress = walletAddress; // Store wallet address for this player
     
-    // State tracking for enemy/turn validation
+    // Simplified state tracking
     this.dungeonState = {
-      expectedEnemyId: null,    // What enemy ID we expect based on room progression
-      currentEnemyId: null,     // Current enemy we're fighting
-      currentEnemyTurn: 0,      // Turn count for current enemy
-      lastRoom: 0,              // Last room number we were in
-      startEnemyId: null,       // First enemy ID of this dungeon run
-      initialized: false,       // Track whether we've initialized for this dungeon
-      // Charge tracking per room for accurate turn calculation
-      roomChargeState: {
-        rockInitial: 3,
-        paperInitial: 3, 
-        scissorInitial: 3,
-        initialized: false
-      }
+      lastRoom: 0,              // Last room number we were in for logging
+      initialized: false        // Track whether we've initialized for this dungeon
     };
     
     // Known dungeon layouts for validation
@@ -252,19 +241,8 @@ export class DungeonPlayer {
         
         // Reset dungeon state tracking for new run
         this.dungeonState = {
-          expectedEnemyId: null,
-          currentEnemyId: null,
-          currentEnemyTurn: 0,
           lastRoom: 0,
-          startEnemyId: null,
-          initialized: false,
-          // Charge tracking per room for accurate turn calculation
-          roomChargeState: {
-            rockInitial: 3,
-            paperInitial: 3, 
-            scissorInitial: 3,
-            initialized: false
-          }
+          initialized: false
         };
         
         if (!config.minimalOutput) {
@@ -414,93 +392,34 @@ export class DungeonPlayer {
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
       const floor = Math.floor((room - 1) / 4) + 1;
       const roomInFloor = ((room - 1) % 4) + 1;
-      // Count turns based on charges used in CURRENT ROOM only (fixes turn inconsistency)
-      // Initialize room charge state on first encounter or room change
-      if (!this.dungeonState.roomChargeState.initialized || room !== this.dungeonState.lastRoom) {
-        this.dungeonState.roomChargeState = {
-          rockInitial: Math.max(0, player.rock.currentCharges),
-          paperInitial: Math.max(0, player.paper.currentCharges),
-          scissorInitial: Math.max(0, player.scissor.currentCharges),
-          initialized: true
-        };
+      // SIMPLIFIED: Use API's turn information directly
+      // Trust the game's turn calculation instead of trying to derive it
+      const rockUsed = Math.max(0, 3 - Math.max(0, player.rock.currentCharges));
+      const paperUsed = Math.max(0, 3 - Math.max(0, player.paper.currentCharges));
+      const scissorUsed = Math.max(0, 3 - Math.max(0, player.scissor.currentCharges));
+      const totalChargesUsed = rockUsed + paperUsed + scissorUsed;
+      let turn = totalChargesUsed + 1; // Simple calculation as fallback
+      
+      // Check if API provides turn information directly
+      if (run.turn !== undefined && run.turn > 0) {
+        turn = run.turn;
+      } else if (entity.TURN_CID !== undefined && entity.TURN_CID > 0) {
+        turn = entity.TURN_CID;
       }
       
-      // Calculate charges used since entering this room
-      const rockUsedInRoom = Math.max(0, this.dungeonState.roomChargeState.rockInitial - Math.max(0, player.rock.currentCharges));
-      const paperUsedInRoom = Math.max(0, this.dungeonState.roomChargeState.paperInitial - Math.max(0, player.paper.currentCharges));
-      const scissorUsedInRoom = Math.max(0, this.dungeonState.roomChargeState.scissorInitial - Math.max(0, player.scissor.currentCharges));
-      const roomChargesUsed = rockUsedInRoom + paperUsedInRoom + scissorUsedInRoom;
-      let turn = roomChargesUsed + 1;
+      // SIMPLIFIED: Trust API data and track basic room transitions
       
-      // Debug log the improved turn calculation (can be removed later)
-      if (config.debug && this.dungeonState.roomChargeState.initialized) {
-        console.log(`🔧 Room-based turn calc: Initial charges R${this.dungeonState.roomChargeState.rockInitial}/P${this.dungeonState.roomChargeState.paperInitial}/S${this.dungeonState.roomChargeState.scissorInitial}, Current R${player.rock.currentCharges}/P${player.paper.currentCharges}/S${player.scissor.currentCharges}, Used: ${roomChargesUsed}, Turn: ${turn}`);
-      }
-      
-      // === ENEMY ID & TURN VALIDATION ===
-      // Detect and correct API inconsistencies that corrupt statistics
-      
-      let correctedEnemyId = enemyId;
-      let correctedTurn = turn;
-      
-      // Initialize tracking on first turn (new dungeon or continuing existing)
+      // Simple room tracking for logging
       if (!this.dungeonState.initialized) {
-        this.dungeonState.startEnemyId = enemyId;
-        this.dungeonState.expectedEnemyId = enemyId;
-        this.dungeonState.currentEnemyId = enemyId;
-        this.dungeonState.currentEnemyTurn = 1; // Start turn tracking at 1 for first enemy
         this.dungeonState.lastRoom = room;
-        this.dungeonState.initialized = true; // Mark as initialized
-        
-        // For first turn, always use turn 1 regardless of API calculation
-        correctedTurn = 1;
-        console.log(`🎯 Initialized enemy tracking: Enemy ${correctedEnemyId}, Room ${room}, Turn ${correctedTurn}`);
-      } else {
-        // Check if we moved to a new room (enemy should change)
-        if (room > this.dungeonState.lastRoom) {
-          // New room detected - enemy should increment and turn should reset to 1
-          this.dungeonState.expectedEnemyId++;
-          this.dungeonState.currentEnemyTurn = 1;
-          this.dungeonState.lastRoom = room;
-          
-          // Reset room charge tracking for new room
-          this.dungeonState.roomChargeState = {
-            rockInitial: Math.max(0, player.rock.currentCharges),
-            paperInitial: Math.max(0, player.paper.currentCharges),
-            scissorInitial: Math.max(0, player.scissor.currentCharges),
-            initialized: true
-          };
-          
-          // Validate enemy ID matches our expectation
-          if (enemyId !== this.dungeonState.expectedEnemyId) {
-            console.log(`⚠️  Enemy ID inconsistency detected!`);
-            console.log(`   API says: Enemy ${enemyId}, but expected: Enemy ${this.dungeonState.expectedEnemyId}`);
-            console.log(`   Using corrected Enemy ID to prevent statistics corruption`);
-            correctedEnemyId = this.dungeonState.expectedEnemyId;
-          }
-          
-          // For new room, always reset to turn 1
-          correctedTurn = 1;
-          this.dungeonState.currentEnemyId = correctedEnemyId;
-          console.log(`🎯 New room: Enemy ${correctedEnemyId}, Room ${room}, Turn ${correctedTurn}`);
-        } else {
-          // Same room - validate turn progression
-          const expectedTurn = this.dungeonState.currentEnemyTurn;
-          if (turn !== expectedTurn) {
-            console.log(`⚠️  Turn number inconsistency detected!`);
-            console.log(`   API calculation: Turn ${turn}, but expected: Turn ${expectedTurn}`);
-            console.log(`   Using corrected turn number to prevent statistics corruption`);
-            correctedTurn = expectedTurn;
-          }
-        }
+        this.dungeonState.initialized = true;
+        console.log(`🎯 Initialized enemy tracking: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
+      } else if (room > this.dungeonState.lastRoom) {
+        this.dungeonState.lastRoom = room;
+        console.log(`🎯 New room: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
       }
       
-      // Update turn counter for next validation (increment expected turn)
-      this.dungeonState.currentEnemyTurn++;
-      
-      // IMPORTANT: Use corrected values for all subsequent logic
-      enemyId = correctedEnemyId;
-      turn = correctedTurn;
+      // IMPORTANT: Use API values directly - no corrections
       const playerHealth = player.health.current;
       const enemyHealth = enemy.health.current;
       
@@ -880,21 +799,9 @@ export class DungeonPlayer {
         // Only reset dungeon state tracking if not already initialized for this dungeon
         if (!this.dungeonState.initialized) {
           // Initialize dungeon state tracking for existing dungeon
-          // We don't know the starting enemy, so validation will learn from current state
           this.dungeonState = {
-            expectedEnemyId: null,      // Will be set on first turn
-            currentEnemyId: null,       // Will be set on first turn  
-            currentEnemyTurn: 0,        // Will be set on first turn
-            lastRoom: 0,                // Will be set on first turn
-            startEnemyId: null,         // Unknown for existing dungeons
-            initialized: false,          // Will be set to true on first turn
-            // Charge tracking per room for accurate turn calculation
-            roomChargeState: {
-              rockInitial: 3,
-              paperInitial: 3, 
-              scissorInitial: 3,
-              initialized: false
-            }
+            lastRoom: 0,
+            initialized: false
           };
           console.log('🔄 Reset validation state for existing dungeon');
         } else {
