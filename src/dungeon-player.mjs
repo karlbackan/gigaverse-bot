@@ -392,19 +392,19 @@ export class DungeonPlayer {
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
       const floor = Math.floor((room - 1) / 4) + 1;
       const roomInFloor = ((room - 1) % 4) + 1;
-      // SIMPLIFIED: Use API's turn information directly
-      // Trust the game's turn calculation instead of trying to derive it
-      const rockUsed = Math.max(0, 3 - Math.max(0, player.rock.currentCharges));
-      const paperUsed = Math.max(0, 3 - Math.max(0, player.paper.currentCharges));
-      const scissorUsed = Math.max(0, 3 - Math.max(0, player.scissor.currentCharges));
-      const totalChargesUsed = rockUsed + paperUsed + scissorUsed;
-      let turn = totalChargesUsed + 1; // Simple calculation as fallback
+      // TRUST API COMPLETELY: Use only API's turn information
+      let turn = 1; // Default fallback
       
-      // Check if API provides turn information directly
+      // Get turn from API sources (prioritize run.turn over entity.TURN_CID)
       if (run.turn !== undefined && run.turn > 0) {
         turn = run.turn;
       } else if (entity.TURN_CID !== undefined && entity.TURN_CID > 0) {
         turn = entity.TURN_CID;
+      } else {
+        // If API doesn't provide turn info, log it but continue
+        if (config.debug) {
+          console.log('⚠️ No turn information from API, using fallback turn=1');
+        }
       }
       
       // SIMPLIFIED: Trust API data and track basic room transitions
