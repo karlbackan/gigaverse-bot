@@ -3,6 +3,7 @@ import { config } from './config.mjs';
 import { OptimizedDatabaseStatisticsEngine } from './database-statistics-engine-optimized.mjs';
 import { MLDecisionEngine } from './ml-decision-engine.mjs';
 import { MLStatePersistence } from './ml-state-persistence.mjs';
+import { DefensiveStrategy } from './defensive-strategy.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -395,6 +396,33 @@ export class DecisionEngine {
     // Check if predictions are meaningful (not all zeros after filtering)
     const hasValidPredictions = prediction && 
       (prediction.predictions.rock > 0 || prediction.predictions.paper > 0 || prediction.predictions.scissor > 0);
+    
+    // DEFENSIVE STRATEGY CHECK - Apply even with low confidence
+    if (hasValidPredictions) {
+      const scaledConfidence = prediction.confidence * confidenceMultiplier;
+      const healthRatio = playerHealth / (playerHealth + enemyHealth);
+      const currentEntropy = 1.5; // Default, could be fetched from enemy data
+      
+      if (DefensiveStrategy.shouldUseDefensiveStrategy(healthRatio, scaledConfidence, turn, currentEntropy)) {
+        const defensiveResult = DefensiveStrategy.calculateDefensiveScores(
+          prediction.predictions,
+          healthRatio,
+          scaledConfidence
+        );
+        
+        // Check if defensive move is available
+        if ((!availableWeapons || availableWeapons.includes(defensiveResult.bestMove)) && 
+            (!weaponCharges || weaponCharges[defensiveResult.bestMove] > 0)) {
+          
+          if (config.minimalOutput) {
+            console.log(`DEF:${defensiveResult.bestMove} (${(defensiveResult.bestSurvival * 100).toFixed(0)}% surv)`);
+          } else {
+            console.log(defensiveResult.reasoning);
+          }
+          return defensiveResult.bestMove;
+        }
+      }
+    }
     
     // If we have a prediction with scaled confidence and valid predictions
     if (hasValidPredictions && prediction.confidence * confidenceMultiplier > 0.3) {
