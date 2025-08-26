@@ -160,7 +160,7 @@ export class LearningEvaluationServer {
     }
     
     async getAlgorithmComparison() {
-        const algorithms = ['markov_1', 'markov_2', 'markov_3', 'frequency', 'stats_enhanced'];
+        const algorithms = ['markov_1', 'markov_2', 'markov_3', 'frequency', 'stats', 'thompson'];
         const comparison = [];
         
         for (const algorithm of algorithms) {
@@ -170,10 +170,8 @@ export class LearningEvaluationServer {
                     COUNT(*) as total,
                     AVG(ensemble_confidence) as avg_confidence
                 FROM prediction_details pd
-                JOIN strategy_performance sp ON pd.enemy_id = sp.enemy_id
-                WHERE sp.strategy_name = ?
-                AND pd.${algorithm}_prediction IS NOT NULL
-            `, [algorithm]);
+                WHERE pd.${algorithm}_prediction IS NOT NULL
+            `);
             
             const data = performance[0] || { correct: 0, total: 0, avg_confidence: 0 };
             const accuracy = data.total > 0 ? data.correct / data.total : 0;
