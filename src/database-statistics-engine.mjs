@@ -208,67 +208,94 @@ export class DatabaseStatisticsEngine {
             const enemyData = await this.db.getEnemyStats(this.convertEnemyIdToInt(enemyId), this.currentDungeonType);
             
             if (!enemyData.enemy || enemyData.enemy.total_battles < 3) {
-                // Not enough data, use random prediction
-                const moves = ['rock', 'paper', 'scissor'];
-                const prediction = moves[Math.floor(Math.random() * moves.length)];
+                // Use Thompson sampling for new enemies with stat-based prediction
+                const prediction = this.thompsonSamplingPrediction(enemyId, enemyStats);
                 this.lastPrediction = prediction;
                 return prediction;
             }
             
-            // Use multiple prediction strategies and combine them
-            const predictions = await Promise.all([
+            // Use enhanced multi-strategy approach
+            const strategies = await Promise.all([
+                this.markovChainPrediction(enemyId, 1),  // 1st order
+                this.markovChainPrediction(enemyId, 2),  // 2nd order  
+                this.markovChainPrediction(enemyId, 3),  // 3rd order
                 this.predictByMoveFrequency(enemyId),
                 this.predictByTurnPattern(enemyId, turn),
-                this.predictBySequence(enemyId),
-                this.predictBySessionData(enemyId)
+                this.predictBasedOnWeaponStatsEnhanced(enemyStats)
             ]);
             
-            // Weight and combine predictions
-            const finalPrediction = this.combinePredictions(predictions);
+            // Filter out invalid predictions and calculate entropy
+            const validStrategies = strategies.filter(s => s && s.move);
+            const entropy = this.calculateEnemyEntropy(enemyId);
+            
+            // Use ensemble voting with Thompson sampling weights
+            const finalPrediction = this.ensembleVoteWithThompson(validStrategies, enemyId, entropy);
             this.lastPrediction = finalPrediction;
             
-            console.log(`🎯 Predicted Enemy ${enemyId} T${turn}: ${finalPrediction} (confidence: ${this.getConfidenceLevel(enemyId).toFixed(2)})`);
+            console.log(`🎯 Enhanced Predicted Enemy ${enemyId} T${turn}: ${finalPrediction} (entropy: ${entropy.toFixed(2)})`);
             
             return finalPrediction;
             
         } catch (error) {
             console.error('❌ Prediction failed, using fallback:', error);
             
-            // Fallback to session data or random
-            const sessionPrediction = this.predictBySessionData(enemyId);
-            this.lastPrediction = sessionPrediction;
-            return sessionPrediction;
+            // Fallback to Thompson sampling
+            const fallbackPrediction = this.thompsonSamplingPrediction(enemyId, enemyStats);
+            this.lastPrediction = fallbackPrediction;
+            return fallbackPrediction;
         }
     }
     
     async predictByMoveFrequency(enemyId) {
-        const moves = await this.db.all(`
-            SELECT move, count 
-            FROM enemy_moves 
-            WHERE enemy_id = ? AND dungeon_id = ?
-            ORDER BY count DESC
-        `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
-        
-        if (moves.length === 0) return 'rock';
-        
-        // Return most frequent move
-        return moves[0].move;
+        try {
+            const moves = await this.db.all(`
+                SELECT move, count 
+                FROM enemy_moves 
+                WHERE enemy_id = ? AND dungeon_id = ?
+                ORDER BY count DESC
+            `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
+            
+            if (moves.length === 0) {
+                return { move: 'rock', confidence: 0.1, method: 'frequency' };
+            }
+            
+            const totalMoves = moves.reduce((sum, move) => sum + move.count, 0);
+            const topMove = moves[0];
+            const confidence = totalMoves > 0 ? topMove.count / totalMoves : 0.33;
+            
+            return { move: topMove.move, confidence: confidence, method: 'frequency' };
+            
+        } catch (error) {
+            console.error('❌ Frequency prediction failed:', error);
+            return { move: 'rock', confidence: 0.1, method: 'frequency' };
+        }
     }
     
     async predictByTurnPattern(enemyId, turn) {
-        const turnMoves = await this.db.all(`
-            SELECT move, count 
-            FROM enemy_moves_by_turn 
-            WHERE enemy_id = ? AND dungeon_id = ? AND turn = ?
-            ORDER BY count DESC
-        `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType, turn]);
-        
-        if (turnMoves.length === 0) {
-            // Fallback to overall frequency
-            return this.predictByMoveFrequency(enemyId);
+        try {
+            const turnMoves = await this.db.all(`
+                SELECT move, count 
+                FROM enemy_moves_by_turn 
+                WHERE enemy_id = ? AND dungeon_id = ? AND turn = ?
+                ORDER BY count DESC
+            `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType, turn]);
+            
+            if (turnMoves.length === 0) {
+                // Fallback to overall frequency
+                const fallback = await this.predictByMoveFrequency(enemyId);
+                return { move: fallback.move, confidence: fallback.confidence * 0.5, method: 'turn_pattern' };
+            }
+            
+            const totalMoves = turnMoves.reduce((sum, move) => sum + move.count, 0);
+            const topMove = turnMoves[0];
+            const confidence = totalMoves > 0 ? topMove.count / totalMoves : 0.33;
+            
+            return { move: topMove.move, confidence: confidence, method: 'turn_pattern' };
+            
+        } catch (error) {
+            console.error('❌ Turn pattern prediction failed:', error);
+            return { move: 'rock', confidence: 0.1, method: 'turn_pattern' };
         }
-        
-        return turnMoves[0].move;
     }
     
     async predictBySequence(enemyId) {
@@ -347,6 +374,284 @@ export class DatabaseStatisticsEngine {
         }
         
         return winner;
+    }
+    
+    // ENHANCED PREDICTION METHODS
+    
+    async markovChainPrediction(enemyId, order) {
+        const key = `${enemyId}-${this.currentDungeonType}`;
+        const enemy = this.sessionData.enemies.get(key);
+        
+        if (!enemy || enemy.recentMoves.length < order + 1) {
+            return { move: null, confidence: 0, method: `markov_${order}` };
+        }
+        
+        // Get the pattern of the last 'order' moves
+        const pattern = enemy.recentMoves.slice(-order).join('-');
+        
+        try {
+            // Query database for what usually comes after this pattern
+            const transitions = await this.db.all(`
+                SELECT enemy_move as next_move, COUNT(*) as count
+                FROM battles 
+                WHERE enemy_id = ? AND dungeon_id = ?
+                ORDER BY timestamp 
+            `, [this.convertEnemyIdToInt(enemyId), this.currentDungeonType]);
+            
+            // Build transition map
+            const transitionMap = {};
+            for (let i = order; i < transitions.length; i++) {
+                const prevPattern = transitions.slice(i - order, i).map(t => t.next_move).join('-');
+                const nextMove = transitions[i].next_move;
+                
+                if (!transitionMap[prevPattern]) {
+                    transitionMap[prevPattern] = { rock: 0, paper: 0, scissor: 0 };
+                }
+                transitionMap[prevPattern][nextMove]++;
+            }
+            
+            if (transitionMap[pattern]) {
+                const counts = transitionMap[pattern];
+                const total = counts.rock + counts.paper + counts.scissor;
+                
+                if (total > 0) {
+                    // Find most likely next move
+                    let maxCount = 0;
+                    let bestMove = 'rock';
+                    
+                    for (const [move, count] of Object.entries(counts)) {
+                        if (count > maxCount) {
+                            maxCount = count;
+                            bestMove = move;
+                        }
+                    }
+                    
+                    const confidence = maxCount / total;
+                    return { move: bestMove, confidence: confidence, method: `markov_${order}` };
+                }
+            }
+            
+        } catch (error) {
+            console.error(`❌ Markov ${order}-order prediction failed:`, error);
+        }
+        
+        return { move: null, confidence: 0, method: `markov_${order}` };
+    }
+    
+    thompsonSamplingPrediction(enemyId, enemyStats) {
+        // Thompson sampling for exploration/exploitation
+        const key = `${enemyId}-${this.currentDungeonType}`;
+        const enemy = this.sessionData.enemies.get(key);
+        
+        // Initialize beta distribution parameters (successes, failures)
+        let priors = { rock: [1, 1], paper: [1, 1], scissor: [1, 1] };
+        
+        if (enemy && enemy.recentMoves.length > 0) {
+            // Update based on observed frequencies
+            const counts = { rock: 0, paper: 0, scissor: 0 };
+            enemy.recentMoves.forEach(move => counts[move]++);
+            
+            const total = enemy.recentMoves.length;
+            priors.rock = [counts.rock + 1, total - counts.rock + 1];
+            priors.paper = [counts.paper + 1, total - counts.paper + 1];  
+            priors.scissor = [counts.scissor + 1, total - counts.scissor + 1];
+        }
+        
+        // Sample from beta distributions
+        const samples = {};
+        for (const [move, [alpha, beta]] of Object.entries(priors)) {
+            samples[move] = this.betaSample(alpha, beta);
+        }
+        
+        // Weight by weapon stats if available
+        if (enemyStats && enemyStats.weapons) {
+            const statPredict = this.predictBasedOnWeaponStatsEnhanced(enemyStats);
+            if (statPredict && statPredict.move) {
+                samples[statPredict.move] *= 1.3; // Boost stat-favored moves
+            }
+        }
+        
+        // Choose move with highest sample
+        let bestMove = 'rock';
+        let bestSample = samples.rock;
+        
+        for (const [move, sample] of Object.entries(samples)) {
+            if (sample > bestSample) {
+                bestSample = sample;
+                bestMove = move;
+            }
+        }
+        
+        return bestMove;
+    }
+    
+    betaSample(alpha, beta) {
+        // Simple beta distribution sampling using gamma samples
+        const gamma1 = this.gammaSample(alpha, 1);
+        const gamma2 = this.gammaSample(beta, 1);
+        return gamma1 / (gamma1 + gamma2);
+    }
+    
+    gammaSample(shape, scale) {
+        // Simple gamma distribution sampling (approximate)
+        if (shape < 1) {
+            return this.gammaSample(1 + shape, scale) * Math.pow(Math.random(), 1 / shape);
+        }
+        
+        const d = shape - 1/3;
+        const c = 1 / Math.sqrt(9 * d);
+        
+        while (true) {
+            const x = this.normalSample();
+            const v = (1 + c * x) ** 3;
+            
+            if (v > 0 && Math.log(Math.random()) < 0.5 * x * x + d * (1 - v + Math.log(v))) {
+                return d * v * scale;
+            }
+        }
+    }
+    
+    normalSample() {
+        // Box-Muller transform for normal distribution
+        if (!this._normalSpare || !this._normalSpare.hasSpare) {
+            this._normalSpare = { hasSpare: false, spare: 0 };
+        }
+        
+        if (this._normalSpare.hasSpare) {
+            this._normalSpare.hasSpare = false;
+            return this._normalSpare.spare;
+        }
+        
+        this._normalSpare.hasSpare = true;
+        const u = Math.random();
+        const v = Math.random();
+        const mag = Math.sqrt(-2 * Math.log(u));
+        this._normalSpare.spare = mag * Math.cos(2 * Math.PI * v);
+        
+        return mag * Math.sin(2 * Math.PI * v);
+    }
+    
+    calculateEnemyEntropy(enemyId) {
+        const key = `${enemyId}-${this.currentDungeonType}`;
+        const enemy = this.sessionData.enemies.get(key);
+        
+        if (!enemy || enemy.recentMoves.length < 3) {
+            return 1.5; // High entropy for unknown enemies
+        }
+        
+        // Calculate move probabilities
+        const counts = { rock: 0, paper: 0, scissor: 0 };
+        enemy.recentMoves.forEach(move => counts[move]++);
+        
+        const total = enemy.recentMoves.length;
+        const probs = {
+            rock: counts.rock / total,
+            paper: counts.paper / total,
+            scissor: counts.scissor / total
+        };
+        
+        // Calculate Shannon entropy
+        let entropy = 0;
+        for (const prob of Object.values(probs)) {
+            if (prob > 0) {
+                entropy -= prob * Math.log2(prob);
+            }
+        }
+        
+        return entropy; // 0 = perfectly predictable, ~1.58 = completely random
+    }
+    
+    predictBasedOnWeaponStatsEnhanced(enemyStats) {
+        if (!enemyStats || !enemyStats.weapons) {
+            return { move: null, confidence: 0, method: 'stats_enhanced' };
+        }
+        
+        const weapons = enemyStats.weapons;
+        const totalAttack = weapons.rock.attack + weapons.paper.attack + weapons.scissor.attack;
+        
+        if (totalAttack === 0) {
+            return { move: null, confidence: 0, method: 'stats_enhanced' };
+        }
+        
+        // Enhanced correlation: higher attack = higher usage probability
+        const attackProbs = {
+            rock: weapons.rock.attack / totalAttack,
+            paper: weapons.paper.attack / totalAttack,
+            scissor: weapons.scissor.attack / totalAttack
+        };
+        
+        // Also consider defense balance - enemies might favor well-rounded weapons
+        const totalDefense = weapons.rock.defense + weapons.paper.defense + weapons.scissor.defense;
+        const defenseProbs = totalDefense > 0 ? {
+            rock: weapons.rock.defense / totalDefense,
+            paper: weapons.paper.defense / totalDefense,
+            scissor: weapons.scissor.defense / totalDefense
+        } : { rock: 0.33, paper: 0.33, scissor: 0.34 };
+        
+        // Combined probability (weighted toward attack)
+        const combinedProbs = {
+            rock: 0.7 * attackProbs.rock + 0.3 * defenseProbs.rock,
+            paper: 0.7 * attackProbs.paper + 0.3 * defenseProbs.paper,
+            scissor: 0.7 * attackProbs.scissor + 0.3 * defenseProbs.scissor
+        };
+        
+        // Find highest probability move
+        let bestMove = 'rock';
+        let bestProb = combinedProbs.rock;
+        
+        for (const [move, prob] of Object.entries(combinedProbs)) {
+            if (prob > bestProb) {
+                bestProb = prob;
+                bestMove = move;
+            }
+        }
+        
+        // Calculate confidence based on stat variance
+        const probs = Object.values(combinedProbs);
+        const variance = probs.reduce((sum, p) => sum + Math.pow(p - 1/3, 2), 0) / 3;
+        const confidence = Math.min(0.6, variance * 3); // Higher variance = higher confidence
+        
+        return { move: bestMove, confidence: confidence, method: 'stats_enhanced' };
+    }
+    
+    ensembleVoteWithThompson(strategies, enemyId, entropy) {
+        if (strategies.length === 0) {
+            return 'rock'; // Fallback
+        }
+        
+        // Weight strategies based on confidence and entropy
+        const weights = {
+            markov_3: entropy < 1.2 ? 0.3 : 0.1,  // Higher weight for predictable enemies
+            markov_2: entropy < 1.4 ? 0.25 : 0.15,
+            markov_1: entropy < 1.6 ? 0.2 : 0.2,
+            frequency: 0.15,
+            turn_pattern: 0.1,
+            stats_enhanced: entropy > 1.0 ? 0.2 : 0.1  // Higher for random enemies
+        };
+        
+        // Weighted voting
+        const votes = { rock: 0, paper: 0, scissor: 0 };
+        
+        strategies.forEach(strategy => {
+            if (strategy && strategy.move) {
+                const weight = weights[strategy.method] || 0.1;
+                const confidence = strategy.confidence || 0.5;
+                votes[strategy.move] += weight * confidence;
+            }
+        });
+        
+        // Find winner
+        let bestMove = 'rock';
+        let bestVotes = votes.rock;
+        
+        for (const [move, voteCount] of Object.entries(votes)) {
+            if (voteCount > bestVotes) {
+                bestVotes = voteCount;
+                bestMove = move;
+            }
+        }
+        
+        return bestMove;
     }
     
     predictBasedOnWeaponStats(enemyStats, possibleMoves = null) {
