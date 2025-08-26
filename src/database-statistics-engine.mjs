@@ -173,8 +173,13 @@ export class DatabaseStatisticsEngine {
         const key = `${enemyId}-${this.currentDungeonType}`;
         const enemy = this.sessionData.enemies.get(key);
         
-        if (!enemy || enemy.battles < 5) {
-            return 0.5; // Default confidence for new enemies
+        if (!enemy || enemy.battles === 0) {
+            return 0.1; // Very low confidence for completely new enemies
+        }
+        
+        if (enemy.battles < 5) {
+            // Gradually increase confidence from 10% to 30% for first few battles
+            return 0.1 + (enemy.battles * 0.05); // 10%, 15%, 20%, 25%, 30%
         }
         
         // Calculate confidence based on battle count and consistency
@@ -344,6 +349,87 @@ export class DatabaseStatisticsEngine {
         return winner;
     }
     
+    predictBasedOnWeaponStats(enemyStats, possibleMoves = null) {
+        // Use enemy weapon attack stats to predict behavior
+        const weapons = enemyStats?.weapons;
+        if (!weapons) {
+            // No weapon data available, use random
+            return {
+                predictions: { rock: 0.33, paper: 0.33, scissor: 0.34 },
+                confidence: 0.1,
+                weaponScores: { rock: 0, paper: 0, scissor: 0 },
+                possibleMoves: possibleMoves
+            };
+        }
+        
+        // Calculate total attack power
+        const totalAttack = weapons.rock.attack + weapons.paper.attack + weapons.scissor.attack;
+        
+        if (totalAttack === 0) {
+            // No attack stats available
+            return {
+                predictions: { rock: 0.33, paper: 0.33, scissor: 0.34 },
+                confidence: 0.1,
+                weaponScores: { rock: 0, paper: 0, scissor: 0 },
+                possibleMoves: possibleMoves
+            };
+        }
+        
+        // Probability based on attack strength (higher attack = higher usage probability)
+        let predictions = {
+            rock: weapons.rock.attack / totalAttack,
+            paper: weapons.paper.attack / totalAttack,
+            scissor: weapons.scissor.attack / totalAttack
+        };
+        
+        // Apply some smoothing to prevent 100% predictions
+        const smoothingFactor = 0.15;
+        predictions.rock = predictions.rock * (1 - smoothingFactor) + (1/3) * smoothingFactor;
+        predictions.paper = predictions.paper * (1 - smoothingFactor) + (1/3) * smoothingFactor;
+        predictions.scissor = predictions.scissor * (1 - smoothingFactor) + (1/3) * smoothingFactor;
+        
+        // Filter to possible moves if provided
+        if (possibleMoves && possibleMoves.length < 3) {
+            const filteredPredictions = { rock: 0, paper: 0, scissor: 0 };
+            let totalFiltered = 0;
+            
+            possibleMoves.forEach(move => {
+                filteredPredictions[move] = predictions[move];
+                totalFiltered += predictions[move];
+            });
+            
+            // Normalize
+            if (totalFiltered > 0) {
+                possibleMoves.forEach(move => {
+                    filteredPredictions[move] = filteredPredictions[move] / totalFiltered;
+                });
+            }
+            
+            predictions = filteredPredictions;
+        }
+        
+        // Calculate weapon scores (what beats their strongest weapons)
+        const weaponScores = {
+            rock: predictions.scissor, // Rock beats scissor
+            paper: predictions.rock,   // Paper beats rock  
+            scissor: predictions.paper // Scissor beats paper
+        };
+        
+        // Confidence based on stat variance (more uneven stats = higher confidence)
+        const attacks = [weapons.rock.attack, weapons.paper.attack, weapons.scissor.attack];
+        const maxAttack = Math.max(...attacks);
+        const avgAttack = totalAttack / 3;
+        const variance = attacks.reduce((sum, att) => sum + Math.pow(att - avgAttack, 2), 0) / 3;
+        const confidence = Math.min(0.4, 0.1 + (variance / (maxAttack * maxAttack)) * 0.3);
+        
+        return {
+            predictions: predictions,
+            confidence: confidence,
+            weaponScores: weaponScores,
+            possibleMoves: possibleMoves
+        };
+    }
+    
     setCurrentDungeonType(dungeonType) {
         this.currentDungeonType = dungeonType;
         console.log(`🏛️  Statistics engine set to dungeon type: ${dungeonType}`);
@@ -363,13 +449,8 @@ export class DatabaseStatisticsEngine {
             const enemyData = await this.db.getEnemyStats(this.convertEnemyIdToInt(enemyId), this.currentDungeonType);
             
             if (!enemyData.enemy || enemyData.enemy.total_battles < 3) {
-                // Not enough data, return random prediction with low confidence
-                return {
-                    predictions: { rock: 0.33, paper: 0.33, scissor: 0.34 },
-                    confidence: 0.2,
-                    weaponScores: { rock: 0, paper: 0, scissor: 0 },
-                    possibleMoves: possibleMoves
-                };
+                // Use stat-based predictions for new enemies
+                return this.predictBasedOnWeaponStats(enemyStats, possibleMoves);
             }
             
             // Get move frequencies from database

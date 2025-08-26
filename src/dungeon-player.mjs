@@ -19,9 +19,11 @@ export class DungeonPlayer {
     this.currentDungeonType = config.dungeonType; // Initialize from config
     this.walletAddress = walletAddress; // Store wallet address for this player
     
-    // Simplified state tracking
+    // Per-enemy turn tracking
     this.dungeonState = {
       lastRoom: 0,              // Last room number we were in for logging
+      lastEnemyId: null,        // Last enemy we fought
+      enemyTurnCount: 0,        // Turn count for current enemy
       initialized: false        // Track whether we've initialized for this dungeon
     };
     
@@ -242,6 +244,8 @@ export class DungeonPlayer {
         // Reset dungeon state tracking for new run
         this.dungeonState = {
           lastRoom: 0,
+          lastEnemyId: null,
+          enemyTurnCount: 0,
           initialized: false
         };
         
@@ -392,34 +396,38 @@ export class DungeonPlayer {
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
       const floor = Math.floor((room - 1) / 4) + 1;
       const roomInFloor = ((room - 1) % 4) + 1;
-      // TRUST API COMPLETELY: Use only API's turn information
-      let turn = 1; // Default fallback
+      // CALCULATE TURN: API doesn't provide turn data, so we must calculate it
+      // Use total charges consumed across all weapons since dungeon start
+      const rockUsed = Math.max(0, 3 - Math.max(0, player.rock.currentCharges));
+      const paperUsed = Math.max(0, 3 - Math.max(0, player.paper.currentCharges));
+      const scissorUsed = Math.max(0, 3 - Math.max(0, player.scissor.currentCharges));
+      const totalChargesUsed = rockUsed + paperUsed + scissorUsed;
+      let turn = totalChargesUsed + 1;
       
-      // Get turn from API sources (prioritize run.turn over entity.TURN_CID)
-      if (run.turn !== undefined && run.turn > 0) {
-        turn = run.turn;
-      } else if (entity.TURN_CID !== undefined && entity.TURN_CID > 0) {
-        turn = entity.TURN_CID;
-      } else {
-        // If API doesn't provide turn info, log it but continue
-        if (config.debug) {
-          console.log('⚠️ No turn information from API, using fallback turn=1');
-        }
-      }
+      // PER-ENEMY TURN TRACKING: Each enemy gets turns 1, 2, 3, 4...
+      let enemyTurn;
       
-      // SIMPLIFIED: Trust API data and track basic room transitions
-      
-      // Simple room tracking for logging
-      if (!this.dungeonState.initialized) {
+      if (!this.dungeonState.initialized || enemyId !== this.dungeonState.lastEnemyId) {
+        // New enemy - reset turn count
+        this.dungeonState.lastEnemyId = enemyId;
         this.dungeonState.lastRoom = room;
+        this.dungeonState.enemyTurnCount = 1;
         this.dungeonState.initialized = true;
-        console.log(`🎯 Initialized enemy tracking: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
-      } else if (room > this.dungeonState.lastRoom) {
-        this.dungeonState.lastRoom = room;
-        console.log(`🎯 New room: Enemy ${enemyId}, Room ${room}, Turn ${turn}`);
+        enemyTurn = 1;
+        
+        if (room > 1) {
+          console.log(`🎯 New enemy: Enemy ${enemyId}, Room ${room}, Turn ${enemyTurn}`);
+        } else {
+          console.log(`🎯 Initialized enemy tracking: Enemy ${enemyId}, Room ${room}, Turn ${enemyTurn}`);
+        }
+      } else {
+        // Same enemy - increment turn count
+        this.dungeonState.enemyTurnCount++;
+        enemyTurn = this.dungeonState.enemyTurnCount;
       }
       
-      // IMPORTANT: Use API values directly - no corrections
+      // Use per-enemy turn for statistics (not total dungeon turn)
+      turn = enemyTurn;
       const playerHealth = player.health.current;
       const enemyHealth = enemy.health.current;
       
@@ -541,7 +549,12 @@ export class DungeonPlayer {
         shield: enemy.shield.current,
         maxShield: enemy.shield.currentMax,
         shieldPercent: enemy.shield.currentMax > 0 ? (enemy.shield.current / enemy.shield.currentMax) * 100 : 0,
-        charges: enemyCharges  // NEW: Include charge state
+        charges: enemyCharges,  // Include charge state
+        weapons: {
+          rock: { attack: enemy.rock?.currentATK || 0, defense: enemy.rock?.currentDEF || 0 },
+          paper: { attack: enemy.paper?.currentATK || 0, defense: enemy.paper?.currentDEF || 0 },
+          scissor: { attack: enemy.scissor?.currentATK || 0, defense: enemy.scissor?.currentDEF || 0 }
+        }
       };
       
       const action = await this.decisionEngine.makeDecision(
@@ -801,6 +814,8 @@ export class DungeonPlayer {
           // Initialize dungeon state tracking for existing dungeon
           this.dungeonState = {
             lastRoom: 0,
+            lastEnemyId: null,
+            enemyTurnCount: 0,
             initialized: false
           };
           console.log('🔄 Reset validation state for existing dungeon');
