@@ -1,6 +1,6 @@
 import { initializeFireballApi } from './api.mjs';
 import { config } from './config.mjs';
-import { DatabaseStatisticsEngine } from './database-statistics-engine.mjs';
+import { OptimizedDatabaseStatisticsEngine } from './database-statistics-engine-optimized.mjs';
 import { MLDecisionEngine } from './ml-decision-engine.mjs';
 import { MLStatePersistence } from './ml-state-persistence.mjs';
 
@@ -30,7 +30,7 @@ export class DecisionEngine {
     this.enemyPatterns = new Map();
     this.turnHistory = [];
     this.dungeonHistory = [];
-    this.statisticsEngine = new DatabaseStatisticsEngine();
+    this.statisticsEngine = new OptimizedDatabaseStatisticsEngine();
     this.mlEngine = new MLDecisionEngine();
     this.mlPersistence = new MLStatePersistence();
     this.currentEnemyId = null;
@@ -726,7 +726,7 @@ export class DecisionEngine {
   }
 
   // Record turn result for learning
-  recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats = null, enemyStats = null, weaponStats = null) {
+  async recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats = null, enemyStats = null, weaponStats = null) {
     // Record performance for monitoring and auto-correction
     this.recordPerformance(result, enemyId, turn);
     
@@ -806,7 +806,7 @@ export class DecisionEngine {
     }
 
     // Record to statistics engine
-    this.statisticsEngine.recordBattle({
+    await this.statisticsEngine.recordBattle({
       enemyId,
       turn,
       playerAction,

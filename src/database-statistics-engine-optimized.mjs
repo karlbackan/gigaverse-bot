@@ -484,6 +484,32 @@ export class OptimizedDatabaseStatisticsEngine extends DatabaseStatisticsEngine 
         }
     }
     
+    // OVERRIDE predictNextMove to use optimized predictEnemyMove
+    async predictNextMove(enemyId, turn, playerStats, enemyStats, weaponStats, noobId, possibleMoves = null) {
+        // Use the optimized predictEnemyMove which includes all ML algorithms
+        const result = await this.predictEnemyMove(enemyId, turn, playerStats, enemyStats, weaponStats, noobId);
+        
+        // Convert format to what DecisionEngine expects
+        if (!result || !result.move) {
+            return {
+                predictions: { rock: 0.33, paper: 0.33, scissor: 0.34 },
+                confidence: 0,
+                method: result?.method || 'none'
+            };
+        }
+        
+        // Create prediction distribution based on the single predicted move
+        const predictions = { rock: 0, paper: 0, scissor: 0 };
+        predictions[result.move] = 1.0;
+        
+        return {
+            predictions: predictions,
+            confidence: result.confidence || 0,
+            method: result.method || 'optimized',
+            move: result.move // Keep the original move for reference
+        };
+    }
+    
     // ENHANCED DATA RECORDING WITH OPTIMIZED TABLES AND EVALUATION
     async recordTurn(enemyId, turn, playerAction, enemyAction, result, playerStats, enemyStats, weaponStats, noobId, timestamp, predictionMade = null, predictionCorrect = false, confidenceLevel = null) {
         // Call parent method first

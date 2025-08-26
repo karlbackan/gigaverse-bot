@@ -690,7 +690,7 @@ export class DungeonPlayer {
           console.log(`📊 Recording battle: Enemy ${enemyId} T${turn}: ${action}→${enemyMove} ${result}`);
         }
         
-        this.decisionEngine.recordTurn(
+        await this.decisionEngine.recordTurn(
           enemyId,
           turn,
           action,
@@ -1145,7 +1145,7 @@ export class DungeonPlayer {
         console.log(`📊 Recording battle (error path): Enemy ${enemyId} T${turn}: ${playerAction}→${enemyMove} ${result}`);
         
         // Record the turn for statistics
-        this.decisionEngine.recordTurn(
+        await this.decisionEngine.recordTurn(
           enemyId,
           turn,
           playerAction,
