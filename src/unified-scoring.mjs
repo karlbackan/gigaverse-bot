@@ -10,9 +10,11 @@ export class UnifiedScoring {
      * Calculate unified scores that always value both wins and draws
      * @param {Object} predictions - Enemy move probabilities {rock: 0.5, paper: 0.2, scissor: 0.3}
      * @param {Object} weights - Scoring weights {win: 1.3, draw: 1.0, loss: 0}
+     * @param {Array} availableWeapons - List of weapons we can actually play
+     * @param {Object} weaponCharges - Current charges for each weapon
      * @returns {Object} Weapon scores and best move
      */
-    static calculateUnifiedScores(predictions, weights = null) {
+    static calculateUnifiedScores(predictions, weights = null, availableWeapons = null, weaponCharges = null) {
         // Default weights: Win is worth 30% more than draw
         const scoreWeights = weights || {
             win: 1.3,   // Winning is valuable
@@ -45,13 +47,22 @@ export class UnifiedScoring {
         let bestScore = -Infinity;
         
         for (const [weapon, outcome] of Object.entries(outcomes)) {
+            // Skip weapons that aren't available
+            if (availableWeapons && !availableWeapons.includes(weapon)) {
+                continue;
+            }
+            // Skip weapons with no charges
+            if (weaponCharges && weaponCharges[weapon] <= 0) {
+                continue;
+            }
+            
             // Unified scoring formula
             scores[weapon] = 
                 (outcome.win * scoreWeights.win) +
                 (outcome.draw * scoreWeights.draw) +
                 (outcome.loss * scoreWeights.loss);
             
-            // Track best move
+            // Track best move (only from available weapons)
             if (scores[weapon] > bestScore) {
                 bestScore = scores[weapon];
                 bestMove = weapon;

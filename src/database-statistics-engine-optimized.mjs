@@ -474,7 +474,12 @@ export class OptimizedDatabaseStatisticsEngine extends DatabaseStatisticsEngine 
             console.log(`🎯 OPTIMIZED Prediction: Enemy ${enemyId} T${turn}: ${finalPrediction} (entropy: ${entropy.toFixed(2)})`);
             console.log(`   📊 Individual: M1:${markov1.move || 'N/A'} M2:${markov2.move || 'N/A'} M3:${markov3.move || 'N/A'} F:${frequency.move || 'N/A'} S:${stats.move || 'N/A'}`);
             
-            return finalPrediction;
+            // Return object with move AND confidence (FIX: was returning just string)
+            return { 
+                move: finalPrediction, 
+                confidence: ensembleConfidence,
+                method: 'optimized_ensemble'
+            };
             
         } catch (error) {
             console.error('❌ Optimized prediction failed, using fallback:', error);

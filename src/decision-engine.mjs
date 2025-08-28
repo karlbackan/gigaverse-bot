@@ -278,6 +278,13 @@ export class DecisionEngine {
     // Check recent performance for this enemy
     const recentPerformance = this.getRecentPerformance(enemyId);
     const isLosingStreak = recentPerformance.winRate < this.params.lossStreakThreshold;
+    
+    // DEBUG: Log available weapons when prediction is made
+    if (!config.minimalOutput && enemyPossibleMoves.length < 3) {
+      const availableList = availableWeapons || ['rock', 'paper', 'scissor'];
+      const chargedWeapons = availableList.filter(w => !weaponCharges || weaponCharges[w] > 0);
+      console.log(`🎮 Available weapons: ${chargedWeapons.join(', ')} (charges: R:${weaponCharges?.rock||'?'} P:${weaponCharges?.paper||'?'} S:${weaponCharges?.scissor||'?'})`);
+    }
     const isWinningStreak = recentPerformance.winRate > this.params.winStreakThreshold;
     
     // CRITICAL: Check for immediate consecutive losses (being actively countered)
@@ -416,12 +423,16 @@ export class DecisionEngine {
         weights = UnifiedScoring.getAdaptiveWeights(healthRatio, turn, scaledConfidence);
       }
       
-      // Calculate unified scores for all weapons
-      const scoringResult = UnifiedScoring.calculateUnifiedScores(prediction.predictions, weights);
+      // Calculate unified scores for AVAILABLE weapons only
+      const scoringResult = UnifiedScoring.calculateUnifiedScores(
+        prediction.predictions, 
+        weights,
+        availableWeapons,
+        weaponCharges
+      );
       
-      // Check if best move is available
-      if ((!availableWeapons || availableWeapons.includes(scoringResult.bestMove)) && 
-          (!weaponCharges || weaponCharges[scoringResult.bestMove] > 0)) {
+      // Best move is now guaranteed to be available
+      if (scoringResult.bestMove) {
         
         if (config.minimalOutput) {
           console.log(`U:${scoringResult.bestMove} EV:${scoringResult.expectedValue.toFixed(2)}`);
