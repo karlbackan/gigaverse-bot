@@ -3,6 +3,8 @@
  * Always considers both winning and surviving with configurable weights
  */
 
+import { ThreatCalculator } from './threat-calculator.mjs';
+
 export class UnifiedScoring {
     /**
      * Calculate unified scores that always value both wins and draws
@@ -113,6 +115,75 @@ export class UnifiedScoring {
             draw: drawWeight,
             loss: lossWeight
         };
+    }
+    
+    /**
+     * Get threat-based weights using actual damage calculations
+     * @param {Object} playerStats - Full player stats including health, shield, weapons
+     * @param {Object} enemyStats - Full enemy stats including weapons and charges
+     * @param {Object} predictions - ML predictions
+     * @returns {Object} Threat-based weights
+     */
+    static getThreatBasedWeights(playerStats, enemyStats, predictions) {
+        // Calculate threats
+        const threatAssessment = ThreatCalculator.assessThreats(playerStats, enemyStats);
+        
+        // Calculate threat ratio
+        const threatRatio = threatAssessment.maxThreat / playerStats.health;
+        
+        // Base weights
+        let weights = {
+            win: 1.3,
+            draw: 1.0,
+            loss: 0
+        };
+        
+        // CRITICAL: Enemy can one-shot us
+        if (threatAssessment.hasLethalThreat) {
+            weights = {
+                win: 1.5,  // Still prefer winning
+                draw: 1.4, // Draws almost as good (survival!)
+                loss: -10  // Death must be avoided
+            };
+            console.log('⚠️ LETHAL THREAT - Maximum survival mode!');
+        }
+        // HIGH: Enemy can do >50% health
+        else if (threatRatio > 0.5) {
+            weights = {
+                win: 1.4,
+                draw: 1.2,  // Draws valuable for armor regen
+                loss: -2
+            };
+            console.log(`⚡ High threat (${Math.round(threatRatio * 100)}% health)`);
+        }
+        // MEDIUM: Enemy can do 25-50% health
+        else if (threatRatio > 0.25) {
+            weights = {
+                win: 1.35,
+                draw: 0.95,
+                loss: -0.5
+            };
+        }
+        // LOW: Enemy can do <25% health
+        else {
+            weights = {
+                win: 1.5,   // Aggressive when safe
+                draw: 0.6,  // Draws less valuable
+                loss: 0
+            };
+            if (threatRatio < 0.1) {
+                console.log('💪 Low threat - Going aggressive!');
+            }
+        }
+        
+        // Shield adjustment - draws help regen armor
+        const shieldPercent = playerStats.shield / (playerStats.maxShield || 1);
+        if (shieldPercent < 0.3 && threatRatio > 0.2) {
+            weights.draw *= 1.2;
+            console.log('🛡️ Low shield - Valuing draws for armor regen');
+        }
+        
+        return weights;
     }
     
     /**

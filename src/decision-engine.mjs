@@ -403,7 +403,18 @@ export class DecisionEngine {
       const healthRatio = playerHealth / (playerHealth + enemyHealth);
       
       // Get adaptive weights based on game state
-      const weights = UnifiedScoring.getAdaptiveWeights(healthRatio, turn, scaledConfidence);
+      let weights;
+      if (processedEnemyStats?.weapons && processedPlayerStats) {
+        // Use threat-based weights when we have enemy weapon stats
+        weights = UnifiedScoring.getThreatBasedWeights(
+          processedPlayerStats,
+          processedEnemyStats,
+          prediction.predictions
+        );
+      } else {
+        // Fallback to simple health-based weights
+        weights = UnifiedScoring.getAdaptiveWeights(healthRatio, turn, scaledConfidence);
+      }
       
       // Calculate unified scores for all weapons
       const scoringResult = UnifiedScoring.calculateUnifiedScores(prediction.predictions, weights);
