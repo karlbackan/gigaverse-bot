@@ -7,7 +7,10 @@
  * 3. Online learning - adapt as we play
  * 4. Conservative confidence thresholds
  * 5. Validate patterns before trusting them
+ * 6. Adaptive Markov order - use Markov-3 when enough data available
  */
+
+import { AdaptiveMarkovDetector } from './adaptive-markov-detector.mjs';
 
 export class RobustPatternDetector {
     constructor() {
@@ -22,6 +25,9 @@ export class RobustPatternDetector {
         // Online learning parameters
         this.learningRate = 0.1;  // How fast we adapt
         this.decayRate = 0.95;  // How fast old data loses weight
+        
+        // Adaptive Markov chain detector
+        this.markovDetector = new AdaptiveMarkovDetector();
     }
     
     /**
@@ -96,10 +102,12 @@ export class RobustPatternDetector {
             hypotheses.set('reactive', reactive);
         }
         
-        // Hypothesis 3: Sequential (follows patterns)
-        const sequential = this.testSequentialHypothesis(observations);
-        if (sequential.significant) {
-            hypotheses.set('sequential', sequential);
+        // Hypothesis 3: Markov chains (adaptive order based on data)
+        const markovPattern = this.markovDetector.detectPattern(
+            observations.map(o => ({ enemyMove: o.enemyMove, ourMove: o.ourMove }))
+        );
+        if (markovPattern) {
+            hypotheses.set('markov', markovPattern);
         }
         
         // Hypothesis 4: Result-based (changes after win/loss)
@@ -395,17 +403,16 @@ export class RobustPatternDetector {
                     };
                 }
             
-            case 'sequential':
-                // Predict next in sequence
-                const [prev, _] = pattern.sequence.split('-');
-                if (lastBattle.enemyMove === prev) {
-                    const [_, next] = pattern.sequence.split('-');
-                    const counter = { rock: 'paper', paper: 'scissor', scissor: 'rock' };
+            case 'markov':
+                // Use Markov chain prediction
+                const recentBattles = battles.slice(-pattern.order);
+                const prediction = this.markovDetector.getPrediction(pattern, recentBattles);
+                if (prediction) {
                     return {
-                        pattern: 'sequential',
-                        confidence: pattern.confidence * 0.8,  // Lower confidence for sequences
-                        recommendation: counter[next],
-                        description: `Follows ${pattern.sequence} pattern - predicting ${next}`
+                        pattern: 'markov',
+                        confidence: prediction.confidence,
+                        recommendation: prediction.move,
+                        description: prediction.reason
                     };
                 }
                 break;
