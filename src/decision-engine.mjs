@@ -6,7 +6,7 @@ import { MLStatePersistence } from './ml-state-persistence.mjs';
 import { UnifiedScoring } from './unified-scoring.mjs';
 import { DefensiveMLStrategy } from './defensive-ml-strategy.mjs';
 import { AdaptiveEnemyTracker } from './adaptive-enemy-tracker.mjs';
-import { EnemyPatternDetector } from './enemy-pattern-detector.mjs';
+import { RobustPatternDetector } from './robust-pattern-detector.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -80,8 +80,8 @@ export class DecisionEngine {
     // Track battle history for adaptive enemy tracking
     this.battleHistory = new Map(); // Store battle history by enemy for adaptation analysis
     
-    // Enhanced pattern detection system
-    this.patternDetector = new EnemyPatternDetector();
+    // Robust pattern detection system (statistically validated, not overfitted)
+    this.patternDetector = new RobustPatternDetector();
     
     // Track last prediction made for recording battle results
     this.lastPrediction = null;
