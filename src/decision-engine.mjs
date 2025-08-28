@@ -4,6 +4,8 @@ import { OptimizedDatabaseStatisticsEngine } from './database-statistics-engine-
 import { MLDecisionEngine } from './ml-decision-engine.mjs';
 import { MLStatePersistence } from './ml-state-persistence.mjs';
 import { UnifiedScoring } from './unified-scoring.mjs';
+import { DefensiveMLStrategy } from './defensive-ml-strategy.mjs';
+import { AdaptiveEnemyTracker } from './adaptive-enemy-tracker.mjs';
 
 // Game actions enum replacement
 const GameAction = {
@@ -270,6 +272,38 @@ export class DecisionEngine {
       enemyPossibleMoves  // Pass possible moves to filter predictions
     );
     
+    // ADAPTIVE TRACKING: Analyze if enemy is adapting/changing strategy
+    const battleHistory = this.battleHistory.get(enemyId) || [];
+    if (battleHistory.length >= 10) {
+      const recentMoves = battleHistory.slice(-20).map(b => ({
+        move: b.enemyMove,
+        turn: b.turn,
+        result: b.result,
+        ourMove: b.ourMove
+      }));
+      const historicalMoves = battleHistory.slice(0, -20).map(b => ({
+        move: b.enemyMove,
+        turn: b.turn,
+        result: b.result,
+        ourMove: b.ourMove
+      }));
+      
+      const adaptationAnalysis = AdaptiveEnemyTracker.analyzeAdaptation(recentMoves, historicalMoves);
+      
+      // If enemy is adapting quickly, use trend prediction instead of historical ML
+      if (adaptationAnalysis.adaptationSpeed > 0.5 && adaptationAnalysis.confidence > 0.6) {
+        const trendPrediction = AdaptiveEnemyTracker.getAdaptiveCounter(adaptationAnalysis);
+        
+        // Override ML prediction with trend-based prediction
+        prediction.predictions = trendPrediction;
+        prediction.method = `adaptive_${adaptationAnalysis.adaptationType}`;
+        prediction.confidence = adaptationAnalysis.confidence;
+        
+        console.log(`🔄 Enemy adapting ${adaptationAnalysis.adaptationType} (speed: ${(adaptationAnalysis.adaptationSpeed*100).toFixed(0)}%) - using trend prediction`);
+        console.log(`📈 Momentum: ${adaptationAnalysis.evolving.direction}`);
+      }
+    }
+    
     // Store prediction for later recording in battle results
     this.lastPrediction = prediction;
     this.lastPredictionEnemy = enemyId;
@@ -423,13 +457,28 @@ export class DecisionEngine {
         weights = UnifiedScoring.getAdaptiveWeights(healthRatio, turn, scaledConfidence);
       }
       
-      // Calculate unified scores for AVAILABLE weapons only
-      const scoringResult = UnifiedScoring.calculateUnifiedScores(
+      // DEFENSIVE STRATEGY: When ML confidence is low, play defensively
+      let scoringResult;
+      const defensiveCheck = DefensiveMLStrategy.calculateDefensiveMove(
         prediction.predictions, 
         weights,
         availableWeapons,
-        weaponCharges
+        scaledConfidence
       );
+      
+      if (defensiveCheck) {
+        // Use defensive play when confidence is too low
+        scoringResult = defensiveCheck;
+        console.log(`🛡️ ${defensiveCheck.reasoning}`);
+      } else {
+        // Normal unified scoring when confidence is acceptable
+        scoringResult = UnifiedScoring.calculateUnifiedScores(
+          prediction.predictions, 
+          weights,
+          availableWeapons,
+          weaponCharges
+        );
+      }
       
       // Best move is now guaranteed to be available
       if (scoringResult.bestMove) {
