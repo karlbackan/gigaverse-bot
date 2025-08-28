@@ -47,6 +47,12 @@ export class OptimizedDatabaseStatisticsEngine extends DatabaseStatisticsEngine 
             if (sequences.length > 0) {
                 const topSequence = sequences[0];
                 const totalCount = sequences.reduce((sum, seq) => sum + seq.count, 0);
+                
+                // MINIMUM SAMPLES: Require at least 3 occurrences of pattern
+                if (totalCount < 3) {
+                    return { move: null, confidence: 0, method: `markov_${order}` };
+                }
+                
                 const confidence = topSequence.count / totalCount;
                 
                 // Update strategy performance
@@ -270,7 +276,28 @@ export class OptimizedDatabaseStatisticsEngine extends DatabaseStatisticsEngine 
                 }
             });
             
-            // Find winner
+            // BIAS CORRECTION: Normalize to prevent overprediction (was 42.9% paper vs 33.3% actual)
+            const totalVotes = votes.rock + votes.paper + votes.scissor;
+            if (totalVotes > 0) {
+                // Apply softmax-like normalization to reduce extreme biases
+                const normalized = {};
+                const maxVote = Math.max(votes.rock, votes.paper, votes.scissor);
+                
+                // Reduce the spread between votes to prevent domination
+                Object.keys(votes).forEach(move => {
+                    const normalizedScore = votes[move] / maxVote;
+                    // Apply smoothing to prevent extreme predictions
+                    normalized[move] = 0.2 + (normalizedScore * 0.6); // Range: 0.2 to 0.8
+                });
+                
+                // Re-normalize to sum to 1
+                const normSum = normalized.rock + normalized.paper + normalized.scissor;
+                Object.keys(normalized).forEach(move => {
+                    votes[move] = normalized[move] / normSum;
+                });
+            }
+            
+            // Find winner from normalized votes
             let bestMove = 'rock';
             let bestVotes = votes.rock;
             
@@ -418,22 +445,32 @@ export class OptimizedDatabaseStatisticsEngine extends DatabaseStatisticsEngine 
             // Generate battle ID for tracking
             const battleId = `${enemyId}-${turn}-${Date.now()}`;
             
-            if (!enemyData.enemy || enemyData.enemy.total_battles < 3) {
-                // Use optimized Thompson sampling for new enemies
-                const prediction = await this.thompsonSamplingOptimized(enemyId, enemyStats);
+            // MINIMUM SAMPLE REQUIREMENT: Need 10+ samples for meaningful predictions
+            const MIN_SAMPLES_FOR_PREDICTION = 10;
+            
+            if (!enemyData.enemy || enemyData.enemy.total_battles < MIN_SAMPLES_FOR_PREDICTION) {
+                // For new enemies, use uniform distribution (not enough data)
+                const choices = ['rock', 'paper', 'scissor'];
+                const prediction = choices[Math.floor(Math.random() * 3)];
                 
                 // Record prediction for evaluation (limited data for new enemies)
                 await this.predictionEvaluator.recordAlgorithmPredictions(battleId, enemyId, this.currentDungeonType, turn, {
-                    thompson: prediction,
+                    uniform: { move: prediction, confidence: 0.33 },
                     ensemble: prediction,
-                    ensembleConfidence: 0.5,
-                    entropy: 1.5,
-                    classification: 'new'
+                    ensembleConfidence: 0.33,
+                    entropy: 1.585, // Maximum entropy for uniform distribution
+                    classification: 'insufficient_data'
                 });
                 
                 this.lastPrediction = prediction;
                 this.lastBattleId = battleId;
-                return prediction;
+                const battles = enemyData.enemy?.total_battles || 0;
+                console.log(`📊 Insufficient data (${battles}/${MIN_SAMPLES_FOR_PREDICTION} battles) - using uniform: ${prediction}`);
+                return { 
+                    move: prediction, 
+                    confidence: 0.33, 
+                    method: 'uniform_insufficient_data' 
+                };
             }
             
             // CAPTURE ALL INDIVIDUAL ALGORITHM PREDICTIONS FOR EVALUATION
@@ -442,26 +479,26 @@ export class OptimizedDatabaseStatisticsEngine extends DatabaseStatisticsEngine 
             const entropy = await this.calculateEnemyEntropyOptimized(enemyId);
             const classification = await this.getEnemyClassification(enemyId);
             
-            // Get all individual predictions
+            // Get all individual predictions (REMOVED THOMPSON - performing at 32.2%)
             const markov1 = await this.markovChainPredictionOptimized(enemyId, 1);
             const markov2 = await this.markovChainPredictionOptimized(enemyId, 2);
             const markov3 = await this.markovChainPredictionOptimized(enemyId, 3);
             const frequency = await this.predictByMoveFrequency(enemyId);
             const stats = await this.predictBasedOnWeaponStatsOptimized(enemyStats);
-            const thompson = await this.thompsonSamplingOptimized(enemyId, enemyStats);
+            // REMOVED: Thompson sampling was performing worse than random (32.2% vs 33.3%)
             
             // Use optimized ensemble voting
             const finalPrediction = await this.ensembleVoteOptimized(enemyId, entropy);
             const ensembleConfidence = await this.calculateEnsembleConfidence(markov1, markov2, markov3, frequency, stats);
             
-            // Record all predictions for evaluation
+            // Record all predictions for evaluation (thompson removed)
             await this.predictionEvaluator.recordAlgorithmPredictions(battleId, enemyId, this.currentDungeonType, turn, {
                 markov1: markov1,
                 markov2: markov2,
                 markov3: markov3,
                 frequency: frequency,
                 stats: stats,
-                thompson: thompson,
+                // thompson removed - was performing at 32.2%
                 ensemble: finalPrediction,
                 ensembleConfidence: ensembleConfidence,
                 entropy: entropy,
