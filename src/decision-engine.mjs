@@ -76,6 +76,9 @@ export class DecisionEngine {
     this.enemyLossStreaks = new Map(); // Track consecutive losses by enemy
     this.enemyLastMoves = new Map();   // Track what we played recently
     
+    // Track battle history for adaptive enemy tracking
+    this.battleHistory = new Map(); // Store battle history by enemy for adaptation analysis
+    
     // Track last prediction made for recording battle results
     this.lastPrediction = null;
     this.lastPredictionEnemy = null;
@@ -842,6 +845,24 @@ export class DecisionEngine {
     
     // Update recent performance tracking
     this.updateRecentPerformance(enemyId, result);
+    
+    // Update battle history for adaptive enemy tracking
+    if (!this.battleHistory.has(enemyId)) {
+      this.battleHistory.set(enemyId, []);
+    }
+    this.battleHistory.get(enemyId).push({
+      turn,
+      enemyMove: enemyAction,
+      ourMove: playerAction,
+      result,
+      timestamp: Date.now()
+    });
+    
+    // Keep only last 100 battles per enemy for memory efficiency
+    const history = this.battleHistory.get(enemyId);
+    if (history.length > 100) {
+      history.shift();
+    }
     
     // Update loss streak tracking for anti-counter strategy
     this.updateLossStreak(enemyId, result, playerAction);
