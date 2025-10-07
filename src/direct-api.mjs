@@ -1,8 +1,19 @@
 import axios from 'axios';
+import https from 'https';
 import { config } from './config.mjs';
 
 // Track the action token from previous responses
 let currentActionToken = null;
+
+// Create HTTPS agent with Keep-Alive enabled
+// This reuses connections instead of creating new sockets for each request
+// Server may track state per connection, so reusing prevents "Error handling action"
+const httpsAgent = new https.Agent({
+  keepAlive: true,
+  keepAliveMsecs: 30000, // Keep connection alive for 30 seconds
+  maxSockets: 10,
+  maxFreeSockets: 2
+});
 
 /*
 COMMON API ERROR PATTERNS:
@@ -37,7 +48,8 @@ const api = axios.create({
   baseURL: 'https://gigaverse.io/api',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  httpsAgent: httpsAgent  // Use persistent connections
 });
 
 // Add request interceptor to use current JWT token

@@ -1,12 +1,22 @@
 import { config } from './config.mjs';
 import axios from 'axios';
+import https from 'https';
+
+// Create HTTPS agent with Keep-Alive for persistent connections
+const httpsAgent = new https.Agent({
+  keepAlive: true,
+  keepAliveMsecs: 30000,
+  maxSockets: 10,
+  maxFreeSockets: 2
+});
 
 // Create axios instance for gear API
 const api = axios.create({
   baseURL: 'https://gigaverse.io/api',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  httpsAgent: httpsAgent
 });
 
 // Add request interceptor to use current JWT token
