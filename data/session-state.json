@@ -1,0 +1,30 @@
+{
+  "0x7E42Ab34A82CbdA332B4Ab1a26D9F4C4fdAA9a81": {
+    "dungeonType": 1,
+    "enemyId": 13,
+    "turn": 6,
+    "room": 13,
+    "timestamp": 1759697246667
+  },
+  "0x9eA5626fCEdac54de64A87243743f0CE7AaC5816": {
+    "dungeonType": 1,
+    "enemyId": -1,
+    "turn": 4,
+    "room": 9,
+    "timestamp": 1759789941732
+  },
+  "0xAa2FCFc89E9Cc49FdcAF56E2a03EB58154066963": {
+    "dungeonType": 1,
+    "enemyId": -1,
+    "turn": 4,
+    "room": 5,
+    "timestamp": 1759792304667
+  },
+  "0x2153433D4c13f72b5b10af5dF5fC93866Eea046b": {
+    "dungeonType": 3,
+    "enemyId": 24,
+    "turn": 5,
+    "room": 2,
+    "timestamp": 1759792334675
+  }
+}

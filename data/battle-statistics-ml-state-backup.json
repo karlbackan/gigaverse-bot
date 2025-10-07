@@ -51,7 +51,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375572154
+      "lastSeen": 1759834908257
     },
     "2": {
       "moves": [],
@@ -61,7 +61,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375585160
+      "lastSeen": 1759834911334
     },
     "3": {
       "moves": [],
@@ -71,7 +71,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375588643
+      "lastSeen": 1759834917577
     },
     "4": {
       "moves": [],
@@ -81,7 +81,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375601854
+      "lastSeen": 1759834923918
     },
     "5": {
       "moves": [],
@@ -91,7 +91,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375641172
+      "lastSeen": 1759834927096
     },
     "6": {
       "moves": [],
@@ -101,7 +101,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375651007
+      "lastSeen": 1759835015058
     },
     "7": {
       "moves": [],
@@ -111,7 +111,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375660838
+      "lastSeen": 1759835021209
     },
     "8": {
       "moves": [],
@@ -121,7 +121,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375677327
+      "lastSeen": 1759834661673
     },
     "9": {
       "moves": [],
@@ -131,7 +131,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375683776
+      "lastSeen": 1759835043095
     },
     "10": {
       "moves": [],
@@ -141,7 +141,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375690628
+      "lastSeen": 1759835056218
     },
     "11": {
       "moves": [],
@@ -151,7 +151,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374728374
+      "lastSeen": 1759835065555
     },
     "12": {
       "moves": [],
@@ -161,7 +161,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374735022
+      "lastSeen": 1759835084592
     },
     "13": {
       "moves": [],
@@ -171,7 +171,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374750892
+      "lastSeen": 1759834839028
     },
     "14": {
       "moves": [],
@@ -181,7 +181,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374760722
+      "lastSeen": 1759834865341
     },
     "15": {
       "moves": [],
@@ -191,7 +191,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374770357
+      "lastSeen": 1759834884083
     },
     "23": {
       "moves": [],
@@ -201,7 +201,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374789714
+      "lastSeen": 1759836494370
     },
     "24": {
       "moves": [],
@@ -211,7 +211,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374796268
+      "lastSeen": 1759836535200
     },
     "25": {
       "moves": [],
@@ -221,7 +221,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756374841080
+      "lastSeen": 1759836553655
     },
     "26": {
       "moves": [],
@@ -241,7 +241,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756375287679
+      "lastSeen": 1759836583848
     },
     "28": {
       "moves": [],
@@ -251,7 +251,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1756372347173
+      "lastSeen": 1759836761107
     },
     "29": {
       "moves": [],
@@ -262,6 +262,16 @@
       "ties": 0,
       "adaptationRate": 0.5,
       "lastSeen": 1756232730946
+    },
+    "-1": {
+      "moves": [],
+      "results": [],
+      "totalBattles": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 0,
+      "adaptationRate": 0.5,
+      "lastSeen": 1759835480925
     }
   },
   "neuralNetWeights": {
@@ -1199,6 +1209,6 @@
     ]
   },
   "battleHistory": [],
-  "saveTimestamp": 1756375697290,
+  "saveTimestamp": 1759836961094,
   "version": "1.0.0"
 }

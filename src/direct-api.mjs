@@ -78,10 +78,17 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       payload.actionToken = currentActionToken;
     }
     
-    console.log('Direct API sending:', JSON.stringify(payload));
-    
+    const accountShort = config.walletAddress?.slice(0, 6) + '...' + config.walletAddress?.slice(-4);
+    console.log(`Direct API sending [${accountShort}]:`, JSON.stringify(payload));
+
+    const startTime = Date.now();
     const response = await api.post('/game/dungeon/action', payload);
-    
+    const responseTime = Date.now() - startTime;
+
+    if (responseTime > 3000) {
+      console.log(`  ⚠️ Slow response: ${responseTime}ms (token may have expired)`);
+    }
+
     // Extract and save the action token for next request
     if (response.data?.actionToken) {
       currentActionToken = response.data.actionToken.toString();
@@ -119,9 +126,10 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     // Save action token even from error responses
     // For "Error handling action", save the new token if provided, otherwise reset
     if (error.response?.data?.message === 'Error handling action') {
+      const accountShort = config.walletAddress?.slice(0, 6) + '...' + config.walletAddress?.slice(-4);
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();
-        console.log(`  Saved new action token from "Error handling action": ${currentActionToken}`);
+        console.log(`  [${accountShort}] Saved new action token from "Error handling action": ${currentActionToken}`);
       } else {
         console.log('  Resetting action token due to "Error handling action" error with no new token');
         currentActionToken = null;

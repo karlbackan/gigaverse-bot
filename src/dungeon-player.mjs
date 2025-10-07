@@ -18,6 +18,7 @@ export class DungeonPlayer {
     this.consecutiveErrors = 0;
     this.currentDungeonType = config.dungeonType; // Initialize from config
     this.walletAddress = walletAddress; // Store wallet address for this player
+    this.currentGearIds = []; // Store gear IDs used at dungeon start
     
     // Per-enemy turn tracking
     this.dungeonState = {
@@ -70,8 +71,17 @@ export class DungeonPlayer {
             const detectedType = parseInt(entity.ID_CID);
             this.currentDungeonType = detectedType;
             this.decisionEngine.setDungeonType(this.currentDungeonType);
-            
-            const dungeonName = detectedType === 1 ? 'Dungetron 5000' : 
+
+            // Fetch gear IDs if continuing Underhaul
+            if (detectedType === 3) {
+              const { getEquippedGearIds } = await import('./direct-api-gear.mjs');
+              this.currentGearIds = await getEquippedGearIds();
+              console.log(`Loaded ${this.currentGearIds.length} equipped gear items for continuing Underhaul`);
+            } else {
+              this.currentGearIds = [];
+            }
+
+            const dungeonName = detectedType === 1 ? 'Dungetron 5000' :
                               detectedType === 2 ? 'Gigus Dungeon' :
                               detectedType === 3 ? 'Dungetron Underhaul' :
                               detectedType === 4 ? 'Dungetron Void' : `Unknown (${detectedType})`;
@@ -204,6 +214,10 @@ export class DungeonPlayer {
   // Start a new dungeon run
   async startDungeon() {
     try {
+      // Reset action token for new dungeon to prevent token from previous account
+      const { resetActionToken } = await import('./direct-api.mjs');
+      resetActionToken();
+
       const dungeonName = this.currentDungeonType === 1 ? 'Dungetron 5000' : 'Dungetron Underhaul';
       const modeText = config.isJuiced ? ' (Juiced Mode)' : ' (Regular Mode)';
       if (!config.minimalOutput) {
@@ -222,7 +236,10 @@ export class DungeonPlayer {
       if (this.currentDungeonType === 3) {
         console.log('Fetching equipped gear for Underhaul...');
         gearInstanceIds = await getEquippedGearIds();
+        this.currentGearIds = gearInstanceIds; // Store for use in all actions
         console.log(`Found ${gearInstanceIds.length} equipped gear items: ${gearInstanceIds.join(', ')}`);
+      } else {
+        this.currentGearIds = []; // Clear for non-Underhaul dungeons
       }
 
       // Prepare dungeon start data
@@ -582,9 +599,9 @@ export class DungeonPlayer {
           itemId: 0,
           index: 0,
           isJuiced: false,
-          gearInstanceIds: []
+          gearInstanceIds: this.currentGearIds // Use gear IDs from dungeon start
         };
-        
+
         // Use unified API with both parameters for maximum compatibility
         response = await sendDirectAction(action, this.currentDungeonType, actionData);
       } catch (error) {
@@ -606,9 +623,9 @@ export class DungeonPlayer {
                 itemId: 0,
                 index: 0,
                 isJuiced: false,
-                gearInstanceIds: []
+                gearInstanceIds: this.currentGearIds // Use same gear IDs
               };
-              
+
               // Use unified API with both parameters for retry
               response = await sendDirectAction(action, this.currentDungeonType, retryActionData);
             } else {

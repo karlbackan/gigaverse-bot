@@ -1,0 +1,223 @@
+{
+  "timestamp": "2025-09-01T01:09:12.532Z",
+  "tests": [
+    {
+      "name": "Token Generation",
+      "results": [
+        {
+          "account": 1,
+          "action": "state_check",
+          "gotToken": false
+        },
+        {
+          "account": 1,
+          "dungeonType": 1,
+          "action": "rock",
+          "success": false,
+          "error": "Error handling action",
+          "token": "1756688953970"
+        },
+        {
+          "account": 1,
+          "dungeonType": 3,
+          "action": "rock",
+          "success": false,
+          "error": "Error handling action",
+          "token": "1756688953805"
+        },
+        {
+          "account": 2,
+          "action": "state_check",
+          "gotToken": false
+        },
+        {
+          "account": 2,
+          "dungeonType": 1,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 2,
+          "dungeonType": 3,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 3,
+          "action": "state_check",
+          "gotToken": false
+        },
+        {
+          "account": 3,
+          "dungeonType": 1,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 3,
+          "dungeonType": 3,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 4,
+          "action": "state_check",
+          "gotToken": false
+        },
+        {
+          "account": 4,
+          "dungeonType": 1,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 4,
+          "dungeonType": 3,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 5,
+          "action": "state_check",
+          "gotToken": false
+        },
+        {
+          "account": 5,
+          "dungeonType": 1,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        },
+        {
+          "account": 5,
+          "dungeonType": 3,
+          "action": "rock",
+          "success": false,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688953805",
+          "token": null
+        }
+      ]
+    },
+    {
+      "name": "Token Persistence",
+      "results": {
+        "tokens": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "uniqueTokens": [
+          null
+        ],
+        "isStable": true
+      }
+    },
+    {
+      "name": "Cross-Account Contamination",
+      "results": [
+        {
+          "contamination": false
+        }
+      ]
+    },
+    {
+      "name": "Dungeon Type Requirements",
+      "results": {
+        "1": {
+          "requiresToken": true,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688960115"
+        },
+        "2": {
+          "requiresToken": true,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688960115"
+        },
+        "3": {
+          "requiresToken": true,
+          "error": "Error tracking action: Error: Invalid action token undefined != 1756688960115"
+        }
+      }
+    },
+    {
+      "name": "Error Token Patterns",
+      "results": [
+        {
+          "providedToken": "undefined",
+          "expectedToken": "1756688960115"
+        },
+        {
+          "providedToken": "undefined",
+          "expectedToken": "1756688960115"
+        },
+        {
+          "providedToken": "undefined",
+          "expectedToken": "1756688960115"
+        },
+        {
+          "providedToken": "undefined",
+          "expectedToken": "1756688960115"
+        },
+        {
+          "providedToken": "undefined",
+          "expectedToken": "1756688960115"
+        }
+      ]
+    },
+    {
+      "name": "Race Conditions",
+      "results": [
+        {
+          "type": "sequential_rapid",
+          "errors": 5,
+          "errorRate": 1
+        },
+        {
+          "type": "sequential_delayed",
+          "errors": 5,
+          "errorRate": 1
+        },
+        {
+          "type": "parallel",
+          "errors": 3,
+          "errorRate": 1
+        }
+      ]
+    },
+    {
+      "name": "Recovery Methods",
+      "results": [
+        {
+          "method": "simple_reset",
+          "works": false
+        },
+        {
+          "method": "double_reset",
+          "works": false
+        },
+        {
+          "method": "state_first",
+          "works": false
+        }
+      ]
+    }
+  ],
+  "patterns": {
+    "Error handling action": 2,
+    "Error tracking action: Error: Invalid action token undefined != 1756688953805": 8
+  },
+  "conclusions": []
+}
