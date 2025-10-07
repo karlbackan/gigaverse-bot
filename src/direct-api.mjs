@@ -93,10 +93,16 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     if (response.data?.actionToken) {
       currentActionToken = response.data.actionToken.toString();
       console.log(`  Saved action token: ${currentActionToken}`);
+
+      // RACE CONDITION FIX: Wait 2 seconds for serverless state propagation
+      // Vercel edge functions need time to sync state across distributed nodes
+      // Without this delay, next action may hit different edge node with stale state
+      console.log(`  Waiting 2s for state propagation...`);
+      await new Promise(resolve => setTimeout(resolve, 2000));
     } else {
       console.log('  No action token in response');
     }
-    
+
     return {
       success: true,
       data: response.data.data,
@@ -153,13 +159,17 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       
       try {
         const retryResponse = await api.post('/game/dungeon/action', retryPayload);
-        
+
         // Extract and save the new token
         if (retryResponse.data?.actionToken) {
           currentActionToken = retryResponse.data.actionToken.toString();
           console.log(`  New action token: ${currentActionToken}`);
+
+          // RACE CONDITION FIX: Wait 2 seconds for serverless state propagation
+          console.log(`  Waiting 2s for state propagation...`);
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        
+
         return {
           success: true,
           data: retryResponse.data.data,
@@ -262,17 +272,21 @@ export async function sendDirectLootAction(action, dungeonType) {
     }
     
     console.log('Direct API loot sending:', JSON.stringify(payload));
-    
+
     const response = await api.post('/game/dungeon/action', payload);
-    
+
     // Extract and save the action token for next request
     if (response.data?.actionToken) {
       currentActionToken = response.data.actionToken.toString();
       console.log(`  Saved action token: ${currentActionToken}`);
+
+      // RACE CONDITION FIX: Wait 2 seconds for serverless state propagation
+      console.log(`  Waiting 2s for state propagation...`);
+      await new Promise(resolve => setTimeout(resolve, 2000));
     } else {
       console.log('  No action token in response');
     }
-    
+
     return {
       success: true,
       data: response.data.data,
@@ -306,13 +320,17 @@ export async function sendDirectLootAction(action, dungeonType) {
       
       try {
         const retryResponse = await api.post('/game/dungeon/action', retryPayload);
-        
+
         // Extract and save the new token
         if (retryResponse.data?.actionToken) {
           currentActionToken = retryResponse.data.actionToken.toString();
           console.log(`  New action token: ${currentActionToken}`);
+
+          // RACE CONDITION FIX: Wait 2 seconds for serverless state propagation
+          console.log(`  Waiting 2s for state propagation...`);
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        
+
         return {
           success: true,
           data: retryResponse.data.data,
