@@ -313,30 +313,32 @@ export class DecisionEngine {
     
     // PATTERN DETECTION: Use enhanced pattern detector for enemy classification
     const enemyProfile = this.patternDetector.analyzeEnemy(enemyId, battleHistory);
-    
+
     // Check for exploitable patterns (fixed, counter, copier)
-    if (enemyProfile.type !== 'unknown' && enemyProfile.confidence > 0.7) {
-      console.log(`🎯 Enemy pattern detected: ${enemyProfile.type} - ${enemyProfile.description}`);
-      
-      // Get optimal counter move
-      const lastBattle = battleHistory.length > 0 ? battleHistory[battleHistory.length - 1] : null;
-      const optimalMove = this.patternDetector.getOptimalMove(
-        enemyId,
-        lastBattle?.ourMove,
-        lastBattle?.enemyMove,
-        lastBattle?.result,
-        availableWeapons || ['rock', 'paper', 'scissor']
-      );
-      
-      // If we have a high-confidence exploit, use it
-      if (enemyProfile.type === 'fixed' && enemyProfile.confidence === 1.0) {
-        console.log(`💯 GUARANTEED WIN! Enemy only plays ${enemyProfile.dominantMove || 'one move'}!`);
-        if (availableWeapons.includes(optimalMove)) {
+    if (enemyProfile.pattern !== 'unknown' && enemyProfile.confidence > 0.7) {
+      console.log(`🎯 Enemy pattern detected: ${enemyProfile.pattern} - ${enemyProfile.description}`);
+
+      // Use the optimal counter move from the pattern analysis
+      const optimalMove = enemyProfile.recommendation;
+
+      // Verify recommendation is a valid move (not 'use_ml_prediction' or 'play_defensively')
+      const validMoves = ['rock', 'paper', 'scissor'];
+      if (!validMoves.includes(optimalMove)) {
+        // Pattern detected but no concrete move recommendation, continue to other strategies
+        if (!config.minimalOutput) {
+          console.log(`  Pattern recommendation: ${optimalMove} (not a concrete move)`);
+        }
+      } else {
+        // If we have a high-confidence exploit with a valid move, use it
+        if (enemyProfile.pattern === 'bias' && enemyProfile.confidence === 1.0) {
+          console.log(`💯 GUARANTEED WIN! Enemy only plays one move!`);
+          if (availableWeapons.includes(optimalMove)) {
+            return optimalMove;
+          }
+        } else if (enemyProfile.confidence > 0.8 && availableWeapons.includes(optimalMove)) {
+          console.log(`🎯 High confidence exploit: Playing ${optimalMove}`);
           return optimalMove;
         }
-      } else if (enemyProfile.confidence > 0.8 && availableWeapons.includes(optimalMove)) {
-        console.log(`🎯 High confidence exploit: Playing ${optimalMove}`);
-        return optimalMove;
       }
     }
     
