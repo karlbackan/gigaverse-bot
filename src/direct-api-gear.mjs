@@ -41,17 +41,35 @@ export async function getDirectGearInstances(address = config.walletAddress) {
   }
 }
 
-// Get equipped gear instance IDs
+// Get equipped gear instance IDs (only functional gear with durability > 0)
 export async function getEquippedGearIds(address = config.walletAddress) {
   try {
     const gearResponse = await getDirectGearInstances(address);
     const gearEntities = gearResponse?.entities || [];
-    
+
     // Filter for equipped gear (EQUIPPED_TO_SLOT_CID > -1)
     const equippedGear = gearEntities.filter(gear => gear.EQUIPPED_TO_SLOT_CID > -1);
-    
-    // Return array of docIds (gear instance IDs)
-    return equippedGear.map(gear => gear.docId);
+
+    // CRITICAL: Also filter out broken gear (0 durability)
+    // API rejects dungeon start with broken gear ("Error handling action")
+    const functionalGear = equippedGear.filter(gear => {
+      const durability = gear.DURABILITY_CID;
+
+      // Skip gear with 0 durability (broken)
+      if (durability === 0) {
+        console.log(`⚠️  Skipping broken gear: Slot ${gear.EQUIPPED_TO_SLOT_CID} has 0 durability`);
+        return false;
+      }
+
+      return true;
+    });
+
+    if (functionalGear.length < equippedGear.length) {
+      console.log(`⚠️  ${equippedGear.length - functionalGear.length} equipped items are broken and will be excluded from dungeon`);
+    }
+
+    // Return array of docIds (gear instance IDs) for functional gear only
+    return functionalGear.map(gear => gear.docId);
   } catch (error) {
     console.error('Failed to get equipped gear IDs:', error.message);
     return []; // Return empty array on error

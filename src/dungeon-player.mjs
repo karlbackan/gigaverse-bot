@@ -234,10 +234,15 @@ export class DungeonPlayer {
       // Get equipped gear IDs if starting Underhaul
       let gearInstanceIds = [];
       if (this.currentDungeonType === 3) {
+        // CRITICAL: Repair broken gear BEFORE starting dungeon
+        // API rejects dungeon start with 0 durability gear
+        console.log('Checking and repairing gear before Underhaul...');
+        await this.checkAndRepairGear();
+
         console.log('Fetching equipped gear for Underhaul...');
         gearInstanceIds = await getEquippedGearIds();
         this.currentGearIds = gearInstanceIds; // Store for use in all actions
-        console.log(`Found ${gearInstanceIds.length} equipped gear items: ${gearInstanceIds.join(', ')}`);
+        console.log(`Found ${gearInstanceIds.length} functional gear items: ${gearInstanceIds.join(', ')}`);
       } else {
         this.currentGearIds = []; // Clear for non-Underhaul dungeons
       }
