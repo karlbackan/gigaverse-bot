@@ -595,6 +595,12 @@ export class DungeonPlayer {
         console.log(`Playing: ${action}`);
       }
 
+      // CRITICAL: Re-fetch functional gear IDs before each turn
+      // Gear can break (0 durability) during the dungeon, causing "Error handling action"
+      if (this.currentDungeonType === 3) {
+        this.currentGearIds = await getEquippedGearIds();
+      }
+
       // Send action using direct API (bypassing SDK issues)
       let response;
       try {
@@ -604,7 +610,7 @@ export class DungeonPlayer {
           itemId: 0,
           index: 0,
           isJuiced: false,
-          gearInstanceIds: this.currentGearIds // Use gear IDs from dungeon start
+          gearInstanceIds: this.currentGearIds // Now always has functional gear only
         };
 
         // Use unified API with both parameters for maximum compatibility
@@ -623,12 +629,18 @@ export class DungeonPlayer {
             const freshState = await getDirectDungeonState();
             if (freshState?.data?.run) {
               console.log('Retrying with fresh state...');
+
+              // Re-fetch functional gear IDs before retry (gear may have broken)
+              if (this.currentDungeonType === 3) {
+                this.currentGearIds = await getEquippedGearIds();
+              }
+
               const retryActionData = {
                 consumables: [],
                 itemId: 0,
                 index: 0,
                 isJuiced: false,
-                gearInstanceIds: this.currentGearIds // Use same gear IDs
+                gearInstanceIds: this.currentGearIds // Always use fresh functional gear IDs
               };
 
               // Use unified API with both parameters for retry
