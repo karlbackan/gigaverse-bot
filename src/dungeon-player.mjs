@@ -854,7 +854,7 @@ export class DungeonPlayer {
         if (!result) {
           console.log('Error during turn - stopping');
           continuePlay = false;
-          finalStatus = 'wait';
+          finalStatus = 'account_error'; // Signal to skip to next account
         } else if (result === 'completed') {
           if (!config.minimalOutput) {
             console.log('Dungeon completed!');
@@ -870,7 +870,7 @@ export class DungeonPlayer {
         } else if (result === 'corrupted') {
           console.log('Game state corrupted - abandoning dungeon');
           continuePlay = false;
-          finalStatus = 'wait'; // Wait and hope next dungeon works
+          finalStatus = 'account_error'; // Skip to next account
         } else if (result === 'next_room') {
           console.log('Moving to next room - continuing immediately...');
           // Add a small delay before continuing to next room

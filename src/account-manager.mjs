@@ -238,6 +238,10 @@ export class AccountManager {
           // Not enough energy to start new game
           hasEnergy = false;
           break;
+        } else if (status === 'account_error') {
+          // Account encountered errors - skip to next account
+          console.log('\n⚠️  Account encountered errors - moving to next account\n');
+          break;
         } else if (status === 'completed') {
           // Dungeon complete, check if we can run another
           console.log('\n🔄 Checking for next run...\n');
