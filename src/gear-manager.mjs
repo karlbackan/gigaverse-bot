@@ -7,9 +7,21 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: 'https://gigaverse.io/api',
   headers: {
-    'Authorization': `Bearer ${config.jwtToken}`,
     'Content-Type': 'application/json'
   }
+});
+
+// CRITICAL: Add request interceptor to use CURRENT JWT token
+// Without this, the token is captured at module load time (Account 1's token)
+// and never updates when switching accounts
+api.interceptors.request.use((requestConfig) => {
+  // Use current token from environment or fallback to config
+  const currentToken = process.env.JWT_TOKEN || config.jwtToken;
+  requestConfig.headers.Authorization = `Bearer ${currentToken}`;
+
+  return requestConfig;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 export class GearManager {
