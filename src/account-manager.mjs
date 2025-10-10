@@ -214,9 +214,14 @@ export class AccountManager {
   async runAccountUntilComplete(account) {
     process.env.JWT_TOKEN = account.token;
     config.jwtToken = account.token;
-    
-    // Reset action token when switching accounts
+
+    // CRITICAL: Reset BOTH action token AND HTTPS connections when switching accounts
+    // This prevents connection reuse that causes "Error handling action" errors
     resetActionToken();
+
+    // Also reset gear API connections
+    const { resetGearConnections } = await import('./direct-api-gear.mjs');
+    resetGearConnections();
 
     // Extract wallet address from token
     const parts = account.token.split('.');

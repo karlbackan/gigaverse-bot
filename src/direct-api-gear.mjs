@@ -3,7 +3,7 @@ import axios from 'axios';
 import https from 'https';
 
 // Create HTTPS agent with Keep-Alive for persistent connections
-const httpsAgent = new https.Agent({
+let httpsAgent = new https.Agent({
   keepAlive: true,
   keepAliveMsecs: 30000,
   maxSockets: 10,
@@ -24,11 +24,29 @@ api.interceptors.request.use((requestConfig) => {
   // Use current token from environment or fallback to config
   const currentToken = process.env.JWT_TOKEN || config.jwtToken;
   requestConfig.headers.Authorization = `Bearer ${currentToken}`;
-  
+
   return requestConfig;
 }, (error) => {
   return Promise.reject(error);
 });
+
+// Reset gear API connections when switching accounts
+export function resetGearConnections() {
+  if (httpsAgent) {
+    httpsAgent.destroy();
+  }
+
+  // Create fresh HTTPS agent for new account
+  httpsAgent = new https.Agent({
+    keepAlive: true,
+    keepAliveMsecs: 30000,
+    maxSockets: 10,
+    maxFreeSockets: 2
+  });
+
+  // Update axios instance to use new agent
+  api.defaults.httpsAgent = httpsAgent;
+}
 
 // Get player's gear instances
 export async function getDirectGearInstances(address = config.walletAddress) {

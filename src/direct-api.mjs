@@ -8,7 +8,7 @@ let currentActionToken = null;
 // Create HTTPS agent with Keep-Alive enabled
 // This reuses connections instead of creating new sockets for each request
 // Server may track state per connection, so reusing prevents "Error handling action"
-const httpsAgent = new https.Agent({
+let httpsAgent = new https.Agent({
   keepAlive: true,
   keepAliveMsecs: 30000, // Keep connection alive for 30 seconds
   maxSockets: 10,
@@ -63,10 +63,29 @@ api.interceptors.request.use((requestConfig) => {
   return Promise.reject(error);
 });
 
-// Function to explicitly reset token (for new sessions)
+// Function to explicitly reset token and connections (for new sessions/accounts)
 export function resetActionToken() {
   currentActionToken = null;
-  console.log('Action token reset for new session');
+
+  // CRITICAL: Destroy all Keep-Alive connections when switching accounts
+  // Without this, the next account reuses connections from previous account's session
+  // This causes "Error handling action" because server thinks it's the old account
+  if (httpsAgent) {
+    httpsAgent.destroy();
+  }
+
+  // Create fresh HTTPS agent for new account
+  httpsAgent = new https.Agent({
+    keepAlive: true,
+    keepAliveMsecs: 30000,
+    maxSockets: 10,
+    maxFreeSockets: 2
+  });
+
+  // Update axios instance to use new agent
+  api.defaults.httpsAgent = httpsAgent;
+
+  console.log('✅ Action token and HTTPS connections reset for new session');
 }
 
 // Direct API wrapper that bypasses SDK
