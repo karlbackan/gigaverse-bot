@@ -797,22 +797,8 @@ export class DungeonPlayer {
       
       // If we've had too many errors in a row, abandon this dungeon
       if (this.consecutiveErrors >= 3) {
-        console.error('\n🚨 Too many consecutive errors (3+). Attempting to retreat from dungeon...\n');
-
-        // Try to retreat from dungeon to clear server-side state
-        try {
-          const state = await getDirectDungeonState();
-          if (state?.data?.run) {
-            const dungeonType = parseInt(state.data.entity.ID_CID) || this.currentDungeonType;
-            console.log(`Sending retreat action for dungeon type ${dungeonType}...`);
-            await sendDirectAction('retreat', dungeonType, {});
-            console.log('✅ Successfully retreated from stuck dungeon\n');
-          }
-        } catch (retreatError) {
-          console.log(`⚠️  Could not retreat: ${retreatError.message}`);
-          console.log('Moving to next account anyway...\n');
-        }
-
+        console.error('\n🚨 Too many consecutive errors (3+). Abandoning corrupted dungeon.\n');
+        console.error('⚠️  NOTE: API does not provide a way to abandon dungeons - must wait for timeout or complete manually\n');
         this.consecutiveErrors = 0;
         this.previousCharges = null;
         return 'corrupted';
