@@ -161,12 +161,48 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     }
     
     // Save action token even from error responses
-    // For "Error handling action", save the new token if provided, otherwise reset
+    // For "Error handling action", save the new token and RETRY with it
     if (error.response?.data?.message === 'Error handling action') {
       const accountShort = config.walletAddress?.slice(0, 6) + '...' + config.walletAddress?.slice(-4);
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();
-        console.log(`  [${accountShort}] Saved new action token from "Error handling action": ${currentActionToken}`);
+        console.log(`  [${accountShort}] Got new action token from "Error handling action": ${currentActionToken}`);
+        console.log(`  Retrying with new token...`);
+
+        // RETRY with the new token from the error response
+        const retryPayload = {
+          action,
+          dungeonType: dungeonType,
+          dungeonId: dungeonType,
+          data,
+          actionToken: currentActionToken
+        };
+
+        try {
+          // Wait for state propagation before retry
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const retryResponse = await api.post('/game/dungeon/action', retryPayload);
+
+          // Extract and save the action token from successful retry
+          if (retryResponse.data?.actionToken) {
+            currentActionToken = retryResponse.data.actionToken.toString();
+            console.log(`  ✅ Retry succeeded! New action token: ${currentActionToken}`);
+
+            // Wait for state propagation after successful retry
+            console.log(`  Waiting 2s for state propagation...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+
+          return {
+            success: true,
+            data: retryResponse.data.data,
+            message: retryResponse.data.message
+          };
+        } catch (retryError) {
+          console.error(`  ❌ Retry with new token failed: ${retryError.response?.data?.message || retryError.message}`);
+          throw retryError;
+        }
       } else {
         console.log('  Resetting action token due to "Error handling action" error with no new token');
         currentActionToken = null;
@@ -175,7 +211,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       currentActionToken = error.response.data.actionToken.toString();
       console.log(`  Saved action token from error: ${currentActionToken}`);
     }
-    
+
     // If token error and we had a token, try once without it
     if (error.response?.data?.message?.includes('Invalid action token') && currentActionToken) {
       console.log('Token error - retrying without token...');
@@ -337,7 +373,53 @@ export async function sendDirectLootAction(action, dungeonType) {
     } else {
       console.error(`⚠️  Loot Error: ${message || 'Unknown loot error'}`);
     }
-    
+
+    // For "Error handling action", save the new token and RETRY with it
+    if (error.response?.data?.message === 'Error handling action') {
+      if (error.response?.data?.actionToken) {
+        currentActionToken = error.response.data.actionToken.toString();
+        console.log(`  Got new action token from loot "Error handling action": ${currentActionToken}`);
+        console.log(`  Retrying loot with new token...`);
+
+        // RETRY loot with the new token from the error response
+        const retryPayload = {
+          action,
+          dungeonType: dungeonType,
+          dungeonId: dungeonType,
+          actionToken: currentActionToken
+        };
+
+        try {
+          // Wait for state propagation before retry
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const retryResponse = await api.post('/game/dungeon/action', retryPayload);
+
+          // Extract and save the action token from successful retry
+          if (retryResponse.data?.actionToken) {
+            currentActionToken = retryResponse.data.actionToken.toString();
+            console.log(`  ✅ Loot retry succeeded! New action token: ${currentActionToken}`);
+
+            // Wait for state propagation after successful retry
+            console.log(`  Waiting 2s for state propagation...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+
+          return {
+            success: true,
+            data: retryResponse.data.data,
+            message: retryResponse.data.message
+          };
+        } catch (retryError) {
+          console.error(`  ❌ Loot retry with new token failed: ${retryError.response?.data?.message || retryError.message}`);
+          throw retryError;
+        }
+      } else {
+        console.log('  Resetting action token due to loot "Error handling action" error with no new token');
+        currentActionToken = null;
+      }
+    }
+
     // If token error and we had a token, try once without it
     if (error.response?.data?.message?.includes('Invalid action token') && currentActionToken) {
       console.log('Token error - retrying loot without token...');
