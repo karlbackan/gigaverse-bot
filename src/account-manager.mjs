@@ -228,6 +228,11 @@ export class AccountManager {
     const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
     const walletAddress = payload.address || payload.user?.caseSensitiveAddress;
 
+    // CRITICAL: Update config.walletAddress for this account
+    // Many API functions use config.walletAddress as default parameter
+    // Without this, they might fetch data from the previous account!
+    config.walletAddress = walletAddress;
+
     const player = new DungeonPlayer(walletAddress);
     let hasEnergy = true;
 
