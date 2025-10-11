@@ -174,6 +174,12 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     // For "Error handling action", save the new token and RETRY with it
     if (error.response?.data?.message === 'Error handling action') {
       const accountShort = config.walletAddress?.slice(0, 6) + '...' + config.walletAddress?.slice(-4);
+
+      // Log FULL error response for debugging
+      console.log('\n📋 FULL ERROR RESPONSE:');
+      console.log(JSON.stringify(error.response?.data, null, 2));
+      console.log('');
+
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();
         console.log(`  [${accountShort}] Got new action token from "Error handling action": ${currentActionToken}`);
@@ -388,6 +394,11 @@ export async function sendDirectLootAction(action, dungeonType) {
 
     // For "Error handling action", save the new token and RETRY with it
     if (error.response?.data?.message === 'Error handling action') {
+      // Log FULL error response for debugging
+      console.log('\n📋 FULL LOOT ERROR RESPONSE:');
+      console.log(JSON.stringify(error.response?.data, null, 2));
+      console.log('');
+
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();
         console.log(`  Got new action token from loot "Error handling action": ${currentActionToken}`);
