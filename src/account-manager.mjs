@@ -10,6 +10,7 @@ export class AccountManager {
   constructor() {
     this.accounts = this.loadAccounts();
     this.validator = new JWTValidator();
+    this.energyMode = 40; // Default to 40 energy (can be 40 or 120)
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -73,14 +74,16 @@ export class AccountManager {
     }
 
     console.log(`📊 ${this.accounts.length} accounts configured\n`);
+    console.log(`⚡ Energy Mode: ${this.energyMode} energy ${this.energyMode === 120 ? '(Juiced)' : '(Regular)'}\n`);
     console.log('OPTIONS:');
     console.log('  1. Check all accounts status');
     console.log('  2. Run single account');
     console.log('  3. Run all valid accounts');
     console.log('  4. Continuous mode (cycle through accounts)');
-    console.log('  5. Exit\n');
+    console.log('  5. Change energy mode (40/120)');
+    console.log('  6. Exit\n');
 
-    const choice = await this.getUserInput('Select option (1-5): ');
+    const choice = await this.getUserInput('Select option (1-6): ');
     return choice;
   }
 
@@ -215,6 +218,10 @@ export class AccountManager {
     process.env.JWT_TOKEN = account.token;
     config.jwtToken = account.token;
 
+    // Set energy mode based on menu selection
+    config.isJuiced = this.energyMode === 120;
+    console.log(`⚡ Using ${this.energyMode} energy mode ${this.energyMode === 120 ? '(Juiced)' : '(Regular)'}`);
+
     // CRITICAL: Reset BOTH action token AND HTTPS connections when switching accounts
     // This prevents connection reuse that causes "Error handling action" errors
     resetActionToken();
@@ -277,6 +284,37 @@ export class AccountManager {
     }
   }
 
+  // Change energy mode
+  async changeEnergyMode() {
+    console.clear();
+    console.log('=== CHANGE ENERGY MODE ===\n');
+    console.log(`Current mode: ${this.energyMode} energy ${this.energyMode === 120 ? '(Juiced)' : '(Regular)'}\n`);
+    console.log('Available modes:');
+    console.log('  1. 40 energy (Regular)');
+    console.log('  2. 120 energy (Juiced)');
+    console.log('  3. Cancel\n');
+
+    const choice = await this.getUserInput('Select mode (1-3): ');
+
+    switch (choice) {
+      case '1':
+        this.energyMode = 40;
+        console.log('\n✅ Energy mode set to 40 (Regular)');
+        break;
+      case '2':
+        this.energyMode = 120;
+        console.log('\n✅ Energy mode set to 120 (Juiced)');
+        break;
+      case '3':
+        console.log('\n❌ Cancelled');
+        break;
+      default:
+        console.log('\n❌ Invalid option');
+    }
+
+    await this.getUserInput('\nPress Enter to continue...');
+  }
+
   // Continuous mode - cycle through accounts
   async continuousMode() {
     console.clear();
@@ -333,27 +371,31 @@ export class AccountManager {
         case '1':
           await this.checkAllAccounts();
           break;
-        
+
         case '2':
           const account = await this.selectAccount();
           if (account) {
             await this.runSingleAccount(account);
           }
           break;
-        
+
         case '3':
           await this.runAllAccounts();
           break;
-        
+
         case '4':
           await this.continuousMode();
           break;
-        
+
         case '5':
+          await this.changeEnergyMode();
+          break;
+
+        case '6':
           running = false;
           console.log('\n👋 Goodbye!\n');
           break;
-        
+
         default:
           console.log('\n❌ Invalid option!');
           await sleep(1000);
