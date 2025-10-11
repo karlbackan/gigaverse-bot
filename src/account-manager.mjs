@@ -177,8 +177,10 @@ export class AccountManager {
       return;
     }
 
-    console.log(`\n🎮 Running ${validAccounts.length} valid accounts...\n`);
-    
+    // Sort by energy (highest first) for optimal energy usage
+    validAccounts.sort((a, b) => b.energy - a.energy);
+    console.log(`\n🎮 Running ${validAccounts.length} valid accounts (sorted by energy)...\n`);
+
     // Show which accounts will be skipped
     const invalidAccounts = results.filter(r => !r.valid);
     if (invalidAccounts.length > 0) {
@@ -188,7 +190,14 @@ export class AccountManager {
       });
       console.log('');
     }
-    
+
+    // Show order of execution
+    console.log('📋 Execution order:');
+    validAccounts.forEach((acc, idx) => {
+      console.log(`   ${idx + 1}. ${acc.accountName}: ${acc.energy} energy`);
+    });
+    console.log('');
+
     await sleep(2000);
 
     // Run each valid account
@@ -339,6 +348,10 @@ export class AccountManager {
         await sleep(300000); // 5 minutes
         continue;
       }
+
+      // Sort by energy (highest first) for optimal energy usage
+      validAccounts.sort((a, b) => b.energy - a.energy);
+      console.log(`\n🔄 Cycle starting with ${validAccounts.length} accounts (sorted by energy)\n`);
 
       // Run each account with energy
       for (const result of validAccounts) {
