@@ -617,7 +617,15 @@ export class DungeonPlayer {
       } catch (error) {
         // CRITICAL: Check if this is a stuck dungeon from previous session
         if (error.isStuckDungeon) {
-          console.log('🔄 Stuck dungeon detected - canceling and starting fresh...');
+          console.log('🔄 Stuck dungeon detected - attempting to cancel...');
+
+          // CRITICAL: Use the token from the error response to cancel
+          // Cancel needs the token that the server generated in the error
+          const { setActionToken } = await import('./direct-api.mjs');
+          if (error.actionToken) {
+            console.log(`  Using token ${error.actionToken} for cancel_run`);
+            setActionToken(error.actionToken);
+          }
 
           try {
             await sendDirectAction('cancel_run', this.currentDungeonType, {
@@ -627,13 +635,15 @@ export class DungeonPlayer {
               isJuiced: false,
               gearInstanceIds: []
             });
-            console.log('✅ Cancelled stuck dungeon');
+            console.log('✅ Successfully cancelled stuck dungeon - will start fresh');
+            return 'restart_fresh';
           } catch (cancelError) {
-            console.log(`⚠️  Could not cancel: ${cancelError.message}`);
+            console.log(`❌ Could not cancel stuck dungeon: ${cancelError.message}`);
+            console.log('⚠️  This dungeon is permanently stuck - skipping to next account');
+            // Don't return restart_fresh - that causes infinite loop
+            // Return account_error so account manager skips to next account
+            return 'account_error';
           }
-
-          // Return special status to restart with fresh dungeon
-          return 'restart_fresh';
         }
 
         console.error('First attempt failed:', error.message);

@@ -188,6 +188,8 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
         const stuckError = new Error('STUCK_DUNGEON');
         stuckError.isStuckDungeon = true;
         stuckError.originalError = error;
+        // CRITICAL: Pass the token from error so cancel_run can use it
+        stuckError.actionToken = error.response?.data?.actionToken?.toString();
         throw stuckError;
       }
 
