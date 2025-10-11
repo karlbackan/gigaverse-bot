@@ -64,33 +64,7 @@ export class DungeonPlayer {
       try {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
-          // CRITICAL: Cancel any existing dungeons before starting new ones
-          // Continuing old dungeons from previous sessions often fails with token errors
-          // It's safer to cancel and start fresh
-          console.log('⚠️  Found existing dungeon from previous session - canceling it...');
-
-          try {
-            const entity = dungeonState.data.entity;
-            const dungeonType = entity?.ID_CID ? parseInt(entity.ID_CID) : this.currentDungeonType;
-
-            const { sendDirectAction } = await import('./direct-api.mjs');
-            await sendDirectAction('cancel_run', dungeonType, {
-              consumables: [],
-              itemId: 0,
-              index: 0,
-              isJuiced: false,
-              gearInstanceIds: []
-            });
-
-            console.log('✅ Cancelled old dungeon - will start fresh');
-            return true; // Return true so we start a new dungeon
-          } catch (cancelError) {
-            console.log(`⚠️  Could not cancel old dungeon: ${cancelError.message}`);
-            console.log('Will try to continue anyway...');
-          }
-
-          // If cancel failed, try to continue
-          // Note: actionToken is NOT in the state response, it comes from action responses
+          // Continue existing dungeon - don't cancel!
           // When continuing existing dungeon, we send empty actionToken on first action
           // and the server will return a new one (just like the browser does)
 
