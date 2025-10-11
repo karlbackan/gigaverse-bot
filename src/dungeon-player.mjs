@@ -31,11 +31,11 @@ export class DungeonPlayer {
     // Known dungeon layouts for validation
     this.dungeonLayouts = {
       3: { // Underhaul
-        1: 21, // Room 1 = Enemy 21
-        2: 22, // Room 2 = Enemy 22  
-        3: 23, // Room 3 = Enemy 23
-        4: 24  // Room 4 = Enemy 24
-        // Pattern continues: Room N = Enemy (20 + N)
+        1: 23, // Room 1 = Enemy 23
+        2: 24, // Room 2 = Enemy 24
+        3: 25, // Room 3 = Enemy 25
+        4: 26  // Room 4 = Enemy 26
+        // Pattern continues: Room N = Enemy (22 + N)
       }
       // TODO: Add other dungeon types when we know their layouts
     };
@@ -279,7 +279,7 @@ export class DungeonPlayer {
           console.log('Dungeon started successfully!');
           // Use enemy-derived room for consistency (API room can be session-relative)
           const enemyId = response.data.entity.ENEMY_CID;
-          const room = this.currentDungeonType === 3 && enemyId >= 21 ? enemyId - 20 : response.data.entity.ROOM_NUM_CID;
+          const room = this.currentDungeonType === 3 && enemyId >= 23 ? enemyId - 22 : response.data.entity.ROOM_NUM_CID;
           const floor = Math.floor((room - 1) / 4) + 1;
           const roomInFloor = ((room - 1) % 4) + 1;
           console.log(`Floor ${floor}, Room ${roomInFloor}/4 (Total: ${room}/16)`);
@@ -411,12 +411,12 @@ export class DungeonPlayer {
       const apiRoom = entity.ROOM_NUM_CID;
       
       // Use enemy-derived room for dungeon logic (absolute room position)
-      // VERIFIED: API room is session-relative (2nd room played this session), 
-      // but enemy IDs give absolute dungeon position (Enemy 24 = Room 4)
-      // Database confirms sequential progression: Enemy 23→24→25 = Rooms 3→4→5
+      // VERIFIED: API room is accurate for Underhaul
+      // Enemy IDs give absolute dungeon position (Enemy 23 = Room 1, Enemy 24 = Room 2)
+      // Pattern: Room N = Enemy (22 + N), so Enemy = Room + 22, or Room = Enemy - 22
       let room = apiRoom;
-      if (this.currentDungeonType === 3 && enemyId >= 21) {
-        room = enemyId - 20; // Enemy 21=Room 1, 22=Room 2, 23=Room 3, etc.
+      if (this.currentDungeonType === 3 && enemyId >= 23) {
+        room = enemyId - 22; // Enemy 23=Room 1, 24=Room 2, 25=Room 3, etc.
       }
       // Room structure may vary by dungeon type
       const totalRooms = this.currentDungeonType === 1 ? 16 : 16; // Both have 16 rooms (4 floors × 4 rooms)
