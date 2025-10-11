@@ -216,6 +216,12 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
           };
         } catch (retryError) {
           console.error(`  ❌ Retry with new token failed: ${retryError.response?.data?.message || retryError.message}`);
+          // Log FULL retry error response
+          if (retryError.response?.data) {
+            console.log('\n📋 FULL RETRY ERROR RESPONSE:');
+            console.log(JSON.stringify(retryError.response.data, null, 2));
+            console.log('');
+          }
           throw retryError;
         }
       } else {
