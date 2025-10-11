@@ -97,17 +97,14 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     }
     
     // Build payload with optional action token
+    // CRITICAL FIX (2025-10-11): Browser sends dungeonId=0 for all actions EXCEPT start_run
+    // start_run uses dungeonId=dungeonType, but ALL combat/loot actions use dungeonId=0
     const payload = {
       action,
-      dungeonType: dungeonType,  // Send both parameters for compatibility
-      dungeonId: dungeonType,    // Some implementations may use dungeonId
+      actionToken: currentActionToken || "",  // Always include, use empty string if no token
+      dungeonId: action === 'start_run' ? dungeonType : 0,  // 0 for all actions except start_run
       data
     };
-    
-    // Include action token if we have one from previous response
-    if (currentActionToken) {
-      payload.actionToken = currentActionToken;
-    }
     
     const accountShort = config.walletAddress?.slice(0, 6) + '...' + config.walletAddress?.slice(-4);
     console.log(`Direct API sending [${accountShort}]:`, JSON.stringify(payload));
@@ -172,10 +169,9 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
         // RETRY with the new token from the error response
         const retryPayload = {
           action,
-          dungeonType: dungeonType,
-          dungeonId: dungeonType,
-          data,
-          actionToken: currentActionToken
+          actionToken: currentActionToken,
+          dungeonId: action === 'start_run' ? dungeonType : 0,  // 0 for all actions except start_run
+          data
         };
 
         try {
@@ -219,8 +215,8 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       
       const retryPayload = {
         action,
-        dungeonType: dungeonType,  // Send both parameters for compatibility
-        dungeonId: dungeonType,    // Some implementations may use dungeonId
+        actionToken: "",  // Empty string for fresh start
+        dungeonId: action === 'start_run' ? dungeonType : 0,  // 0 for all actions except start_run
         data
       };
       
@@ -327,16 +323,19 @@ export async function sendDirectLootAction(action, dungeonType) {
     }
     
     // Build payload for loot action
+    // CRITICAL FIX (2025-10-11): Loot actions also use dungeonId=0, not dungeonType
     const payload = {
       action,
-      dungeonType: dungeonType,  // Send both parameters for compatibility
-      dungeonId: dungeonType     // Some implementations may use dungeonId
+      actionToken: currentActionToken || "",  // Always include, use empty string if no token
+      dungeonId: 0,  // Loot actions always use 0, never dungeonType
+      data: {
+        consumables: [],
+        itemId: 0,
+        index: 0,
+        isJuiced: false,
+        gearInstanceIds: []
+      }
     };
-    
-    // Include action token if we have one from previous response
-    if (currentActionToken) {
-      payload.actionToken = currentActionToken;
-    }
     
     console.log('Direct API loot sending:', JSON.stringify(payload));
 
@@ -384,9 +383,15 @@ export async function sendDirectLootAction(action, dungeonType) {
         // RETRY loot with the new token from the error response
         const retryPayload = {
           action,
-          dungeonType: dungeonType,
-          dungeonId: dungeonType,
-          actionToken: currentActionToken
+          actionToken: currentActionToken,
+          dungeonId: 0,  // Loot actions always use 0
+          data: {
+            consumables: [],
+            itemId: 0,
+            index: 0,
+            isJuiced: false,
+            gearInstanceIds: []
+          }
         };
 
         try {
@@ -427,8 +432,15 @@ export async function sendDirectLootAction(action, dungeonType) {
       
       const retryPayload = {
         action,
-        dungeonType: dungeonType,  // Send both parameters for compatibility
-        dungeonId: dungeonType     // Some implementations may use dungeonId
+        actionToken: "",  // Empty string for fresh start
+        dungeonId: 0,  // Loot actions always use 0
+        data: {
+          consumables: [],
+          itemId: 0,
+          index: 0,
+          isJuiced: false,
+          gearInstanceIds: []
+        }
       };
       
       try {
