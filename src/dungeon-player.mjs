@@ -64,9 +64,15 @@ export class DungeonPlayer {
       try {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
+          // CRITICAL: Load the action token from existing dungeon state
+          if (dungeonState.actionToken) {
+            const { setActionToken } = await import('./direct-api.mjs');
+            setActionToken(dungeonState.actionToken);
+          }
+
           // Detect which dungeon type we're in using entity.ID_CID
           const entity = dungeonState.data.entity;
-          
+
           if (entity?.ID_CID) {
             const detectedType = parseInt(entity.ID_CID);
             this.currentDungeonType = detectedType;
@@ -85,7 +91,7 @@ export class DungeonPlayer {
                               detectedType === 2 ? 'Gigus Dungeon' :
                               detectedType === 3 ? 'Dungetron Underhaul' :
                               detectedType === 4 ? 'Dungetron Void' : `Unknown (${detectedType})`;
-            
+
             if (!config.minimalOutput) {
               console.log(`✅ Detected active ${dungeonName} dungeon - will continue playing`);
               console.log(`   Room ${entity.ROOM_NUM_CID}, Enemy ${entity.ENEMY_CID}`);
@@ -98,7 +104,7 @@ export class DungeonPlayer {
           } else {
             console.log(`Warning: Could not detect dungeon type from active run. Using default: ${this.currentDungeonType}`);
           }
-          
+
           return 'continue_existing';
         }
       } catch (error) {

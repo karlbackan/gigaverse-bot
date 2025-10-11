@@ -63,6 +63,14 @@ api.interceptors.request.use((requestConfig) => {
   return Promise.reject(error);
 });
 
+// Function to explicitly set the action token (for continuing existing dungeons)
+export function setActionToken(token) {
+  currentActionToken = token ? token.toString() : null;
+  if (currentActionToken) {
+    console.log(`🔄 Loaded existing action token: ${currentActionToken}`);
+  }
+}
+
 // Function to explicitly reset token and connections (for new sessions/accounts)
 export function resetActionToken() {
   currentActionToken = null;
