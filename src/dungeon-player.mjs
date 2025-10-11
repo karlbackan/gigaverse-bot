@@ -148,9 +148,20 @@ export class DungeonPlayer {
         if (underhaulInfo) {
           const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
           const underhaulMaxRuns = 9; // Underhaul always has 9 attempts
-          
+          const slotsRemaining = underhaulMaxRuns - underhaulRunsToday;
+
           if (underhaulRunsToday < underhaulMaxRuns) {
             console.log(`Dungetron Underhaul runs today: ${underhaulRunsToday}/${underhaulMaxRuns}`);
+
+            // CRITICAL: Check if we have enough slots for juiced mode
+            // Juiced mode needs 3 slots, regular mode needs 1 slot
+            if (config.isJuiced && slotsRemaining < 3) {
+              console.log(`⚠️  Not enough slots for juiced mode (need 3, have ${slotsRemaining})`);
+              console.log(`🔄 Falling back to regular mode (40 energy)`);
+              config.isJuiced = false;
+              config.energyThreshold = 40;
+            }
+
             this.currentDungeonType = 3; // Use Underhaul
             this.decisionEngine.setDungeonType(this.currentDungeonType);
             return true;
