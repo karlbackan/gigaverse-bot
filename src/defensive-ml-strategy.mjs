@@ -24,47 +24,56 @@ export class DefensiveMLStrategy {
     }
     
     /**
-     * Play defensively by choosing move that minimizes maximum loss
+     * Play defensively with randomization when confidence is very low
+     * CRITICAL FIX: Previous implementation calculated same score for all moves,
+     * causing bot to pick first weapon repeatedly. Now uses weighted randomization.
      */
     static playDefensiveUniform(availableWeapons, weights) {
-        // Calculate worst-case for each move
-        const worstCase = {};
-        
+        // When confidence is very low, we can't trust predictions at all
+        // Use weighted random based on uniform distribution (1/3 probability each)
+
+        // Calculate expected value assuming uniform enemy distribution (1/3, 1/3, 1/3)
+        const uniformPrediction = { rock: 1/3, paper: 1/3, scissor: 1/3 };
+
+        const scores = {};
         for (const ourMove of availableWeapons) {
-            let worstOutcome = 0;
-            
-            // Calculate worst possible outcome for this move
-            const outcomes = {
-                rock: { win: 'scissor', draw: 'rock', loss: 'paper' },
-                paper: { win: 'rock', draw: 'paper', loss: 'scissor' },
-                scissor: { win: 'paper', draw: 'scissor', loss: 'rock' }
-            };
-            
-            // Worst case is always losing
-            worstOutcome = weights.loss;
-            
-            // But consider average case too (uniform distribution)
-            const avgOutcome = (weights.win + weights.draw + weights.loss) / 3;
-            
-            // Blend worst and average (pessimistic but not paranoid)
-            worstCase[ourMove] = 0.3 * worstOutcome + 0.7 * avgOutcome;
+            // Calculate expected value for each move under uniform assumption
+            if (ourMove === 'rock') {
+                scores[ourMove] = uniformPrediction.scissor * weights.win +
+                                 uniformPrediction.rock * weights.draw +
+                                 uniformPrediction.paper * weights.loss;
+            } else if (ourMove === 'paper') {
+                scores[ourMove] = uniformPrediction.rock * weights.win +
+                                 uniformPrediction.paper * weights.draw +
+                                 uniformPrediction.scissor * weights.loss;
+            } else { // scissor
+                scores[ourMove] = uniformPrediction.paper * weights.win +
+                                 uniformPrediction.scissor * weights.draw +
+                                 uniformPrediction.rock * weights.loss;
+            }
         }
-        
-        // Choose move with best worst-case
-        let bestMove = availableWeapons[0];
-        let bestWorstCase = worstCase[bestMove];
-        
+
+        // All scores are equal under uniform distribution, so add small random variation
+        // to prevent always picking the same move
         for (const move of availableWeapons) {
-            if (worstCase[move] > bestWorstCase) {
-                bestWorstCase = worstCase[move];
+            scores[move] += Math.random() * 0.1; // Add 0-10% random noise
+        }
+
+        // Choose move with best score
+        let bestMove = availableWeapons[0];
+        let bestScore = scores[bestMove];
+
+        for (const move of availableWeapons) {
+            if (scores[move] > bestScore) {
+                bestScore = scores[move];
                 bestMove = move;
             }
         }
-        
+
         return {
             bestMove: bestMove,
-            reasoning: `Defensive play (low confidence) - minimizing maximum loss`,
-            expectedValue: bestWorstCase
+            reasoning: `Defensive play (low confidence) - randomized selection`,
+            expectedValue: bestScore
         };
     }
     
