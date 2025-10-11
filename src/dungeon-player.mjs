@@ -509,16 +509,17 @@ export class DungeonPlayer {
 
       // Make decision using our engine - but ensure we only pick weapons with charges
       const availableWeapons = [];
-      // In Underhaul: negative charges = recharging (can't use), 0+ = can use
+      // CRITICAL: Both Underhaul and Dungetron 5000 require positive charges (> 0)
+      // API rejects moves with 0 charges - weapons must have at least 1 charge to use
       const isUnderhaul = this.currentDungeonType === 3;
       if (isUnderhaul) {
-        if (player.rock.currentCharges >= 0) availableWeapons.push('rock');
-        if (player.paper.currentCharges >= 0) availableWeapons.push('paper'); 
-        if (player.scissor.currentCharges >= 0) availableWeapons.push('scissor');
+        if (player.rock.currentCharges > 0) availableWeapons.push('rock');
+        if (player.paper.currentCharges > 0) availableWeapons.push('paper');
+        if (player.scissor.currentCharges > 0) availableWeapons.push('scissor');
       } else {
         // Dungetron 5000: only positive charges can be used
         if (player.rock.currentCharges > 0) availableWeapons.push('rock');
-        if (player.paper.currentCharges > 0) availableWeapons.push('paper'); 
+        if (player.paper.currentCharges > 0) availableWeapons.push('paper');
         if (player.scissor.currentCharges > 0) availableWeapons.push('scissor');
       }
       
