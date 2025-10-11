@@ -37,6 +37,60 @@
 - Send analytics events
 - Visual dashboard with auto-refresh
 
+## 🔐 **Authenticated Endpoint Discoveries**
+
+### **Dungeon Abandonment (NEW - 2025-10-11)**
+```javascript
+✅ POST /api/game/dungeon/action
+Action: "cancel_run"
+Purpose: Abandon/forfeit active dungeon
+Status: TESTED AND WORKING
+```
+
+**Discovery Method:** Browser network inspection (Brave DevTools)
+
+**Request Format:**
+```json
+{
+  "action": "cancel_run",
+  "dungeonType": 3,
+  "dungeonId": 3,
+  "actionToken": "",
+  "data": {
+    "consumables": [],
+    "itemId": 0,
+    "index": 0,
+    "isJuiced": false,
+    "gearInstanceIds": []
+  }
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "message": "Dungeon run cancelled",
+  "data": {
+    "run": null,
+    "entity": null
+  },
+  "actionToken": 1760190107226
+}
+```
+
+**Use Case:**
+- Automatically abandon stuck dungeons after 3+ consecutive errors
+- Clear server-side corruption when action tokens become invalid
+- Prevent accounts from being locked in corrupted dungeon states
+
+**Implementation:**
+- Added to bot in `src/dungeon-player.mjs:799-827`
+- Triggered when `consecutiveErrors >= 3`
+- Allows accounts to restart fresh instead of permanent lockout
+
+---
+
 ## 🔍 **Additional Discoveries (Need Auth)**
 
 ### **GraphQL Endpoints (5)**

@@ -14,6 +14,7 @@ An automated dungeon crawler bot for Gigaverse.io that plays the Dungetron 5000 
 
 - **Auto-Switch Strategy**: Prioritizes Underhaul (9 runs/day) → automatically switches to Dungetron 5000 when full
 - **Active Dungeon Detection**: Automatically detects and continues existing dungeons with proper type identification
+- **Stuck Dungeon Recovery**: Automatically cancels dungeons after 3+ consecutive errors using `cancel_run` action
 - **Dual Statistics Tracking**: Separate enemy pattern analysis for Underhaul vs Dungetron 5000
 - **Advanced Pattern Recognition**: Tracks enemy move sequences and predicts with high accuracy
 - **Smart Decision Making**: Uses multi-factor analysis including move patterns, turn behavior, and stat correlations
@@ -22,7 +23,7 @@ An automated dungeon crawler bot for Gigaverse.io that plays the Dungetron 5000 
 - **Charge Management**: Handles weapon charge regeneration mechanics
 - **Loot Optimization**: Selects best upgrades based on weighted scoring
 - **Energy Management**: Automatically starts dungeons when energy is available
-- **Error Recovery**: Resilient error handling with automatic retry
+- **Error Recovery**: Resilient error handling with automatic retry and dungeon abandonment
 - **Performance Tracking**: Real-time win rate and prediction confidence
 
 ## Installation
@@ -176,9 +177,21 @@ The bot uses direct API calls with maximum compatibility:
 - **Complete Underhaul Support**: Confirmed working with dungeonType/dungeonId: 3
 
 ### API Endpoints Used:
-- `POST /api/game/dungeon/action` - All dungeon types (dungeonType/dungeonId: 1=Dungetron5000, 3=Underhaul)
+- `POST /api/game/dungeon/action` - All dungeon types and actions
+  - Combat: `rock`, `paper`, `scissor`
+  - Loot: `loot_one`, `loot_two`, `loot_three`, `loot_four`
+  - Management: `start_run`, `cancel_run` (abandon stuck dungeons)
+  - dungeonType/dungeonId: 1=Dungetron5000, 3=Underhaul
 - `GET /api/game/dungeon/state` - Current dungeon state (all types)
 - `GET /api/gear/instances/{address}` - Equipment data for Underhaul
+
+### Error Recovery:
+The bot automatically handles stuck dungeons:
+- Tracks consecutive errors during gameplay
+- After **3 consecutive errors**, sends `cancel_run` action to abandon the dungeon
+- Clears server-side corruption and prevents account lockout
+- Moves to next account with clean state
+- Discovered via browser network inspection (2025-10-11)
 
 ## Development
 
