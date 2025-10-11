@@ -63,6 +63,11 @@ api.interceptors.request.use((requestConfig) => {
   return Promise.reject(error);
 });
 
+// Function to get current action token (for checking if we have one)
+export function getCurrentActionToken() {
+  return currentActionToken;
+}
+
 // Function to explicitly set the action token (for continuing existing dungeons)
 export function setActionToken(token) {
   currentActionToken = token ? token.toString() : null;

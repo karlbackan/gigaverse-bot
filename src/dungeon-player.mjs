@@ -65,9 +65,14 @@ export class DungeonPlayer {
         const dungeonState = await getDirectDungeonState();
         if (dungeonState?.data?.run) {
           // CRITICAL: Load the action token from existing dungeon state
-          if (dungeonState.actionToken) {
-            const { setActionToken } = await import('./direct-api.mjs');
+          // BUT ONLY if we don't already have one (prevents overwriting current token with stale one)
+          const { getCurrentActionToken, setActionToken } = await import('./direct-api.mjs');
+          const currentToken = getCurrentActionToken();
+
+          if (dungeonState.actionToken && !currentToken) {
             setActionToken(dungeonState.actionToken);
+          } else if (currentToken) {
+            console.log(`🔄 Using existing action token from previous turn: ${currentToken}`);
           }
 
           // Detect which dungeon type we're in using entity.ID_CID
