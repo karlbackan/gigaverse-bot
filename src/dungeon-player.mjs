@@ -797,8 +797,30 @@ export class DungeonPlayer {
       
       // If we've had too many errors in a row, abandon this dungeon
       if (this.consecutiveErrors >= 3) {
-        console.error('\n🚨 Too many consecutive errors (3+). Abandoning corrupted dungeon.\n');
-        console.error('⚠️  NOTE: API does not provide a way to abandon dungeons - must wait for timeout or complete manually\n');
+        console.error('\n🚨 Too many consecutive errors (3+). Attempting to cancel dungeon...\n');
+
+        // Try to cancel the dungeon using "cancel_run" action
+        try {
+          const state = await getDirectDungeonState();
+          if (state?.data?.run) {
+            const dungeonType = parseInt(state.data.entity.ID_CID) || this.currentDungeonType;
+            console.log(`Sending "cancel_run" action for dungeon type ${dungeonType}...`);
+
+            await sendDirectAction('cancel_run', dungeonType, {
+              consumables: [],
+              itemId: 0,
+              index: 0,
+              isJuiced: false,
+              gearInstanceIds: []
+            });
+
+            console.log('✅ Successfully cancelled stuck dungeon\n');
+          }
+        } catch (cancelError) {
+          console.log(`⚠️  Could not cancel dungeon: ${cancelError.message}`);
+          console.log('Moving to next account anyway...\n');
+        }
+
         this.consecutiveErrors = 0;
         this.previousCharges = null;
         return 'corrupted';
