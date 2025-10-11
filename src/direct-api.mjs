@@ -171,7 +171,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     }
     
     // Save action token even from error responses
-    // For "Error handling action", save the new token and RETRY with it
+    // For "Error handling action", check if this is a stuck dungeon
     if (error.response?.data?.message === 'Error handling action') {
       const accountShort = config.walletAddress?.slice(0, 6) + '...' + config.walletAddress?.slice(-4);
 
@@ -179,6 +179,17 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       console.log('\n📋 FULL ERROR RESPONSE:');
       console.log(JSON.stringify(error.response?.data, null, 2));
       console.log('');
+
+      // CRITICAL: If this is the first action of a continuing dungeon (empty token),
+      // and it fails, the dungeon is stuck and cannot be recovered.
+      // Browser also fails on these - they need to be canceled.
+      if (!currentActionToken || currentActionToken === "") {
+        console.log('  ⚠️  First action of continuing dungeon failed - dungeon is stuck!');
+        const stuckError = new Error('STUCK_DUNGEON');
+        stuckError.isStuckDungeon = true;
+        stuckError.originalError = error;
+        throw stuckError;
+      }
 
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();

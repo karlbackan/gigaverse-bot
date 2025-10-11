@@ -615,8 +615,29 @@ export class DungeonPlayer {
         // Use unified API with both parameters for maximum compatibility
         response = await sendDirectAction(action, this.currentDungeonType, actionData);
       } catch (error) {
+        // CRITICAL: Check if this is a stuck dungeon from previous session
+        if (error.isStuckDungeon) {
+          console.log('🔄 Stuck dungeon detected - canceling and starting fresh...');
+
+          try {
+            await sendDirectAction('cancel_run', this.currentDungeonType, {
+              consumables: [],
+              itemId: 0,
+              index: 0,
+              isJuiced: false,
+              gearInstanceIds: []
+            });
+            console.log('✅ Cancelled stuck dungeon');
+          } catch (cancelError) {
+            console.log(`⚠️  Could not cancel: ${cancelError.message}`);
+          }
+
+          // Return special status to restart with fresh dungeon
+          return 'restart_fresh';
+        }
+
         console.error('First attempt failed:', error.message);
-        
+
         // If we had negative charges, the game state might be corrupted
         // Try to get fresh state and retry once
         if (hasNegativeCharges) {
@@ -914,6 +935,11 @@ export class DungeonPlayer {
         } else if (result === 'loot_phase') {
           console.log('More loot to select - continuing...');
           // Continue immediately for more loot
+        } else if (result === 'restart_fresh') {
+          // Stuck dungeon was canceled - start fresh
+          console.log('🔄 Stuck dungeon abandoned - will start fresh dungeon');
+          continuePlay = false;
+          finalStatus = 'completed'; // Will trigger retry with fresh dungeon
         } else if (result === 'continue') {
           // Need to continue playing next cycle
           continuePlay = false;
