@@ -122,10 +122,19 @@ export class DungeonPlayer {
       
       // Check if we have enough energy to start a NEW dungeon
       if (energy < config.energyThreshold) {
-        if (!config.minimalOutput) {
-          console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
+        // CRITICAL: If in 120 energy mode but not enough energy, try falling back to 40 energy
+        if (config.isJuiced && energy >= 40) {
+          console.log(`⚠️  Not enough energy for juiced mode: ${energy}/120`);
+          console.log(`🔄 Falling back to regular mode (40 energy)`);
+          config.isJuiced = false;
+          config.energyThreshold = 40;
+          // Continue to check daily limits with regular mode
+        } else {
+          if (!config.minimalOutput) {
+            console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
+          }
+          return false;
         }
-        return false;
       }
       
       // Check daily runs limit
