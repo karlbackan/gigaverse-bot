@@ -183,7 +183,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();
         console.log(`  [${accountShort}] Got new action token from "Error handling action": ${currentActionToken}`);
-        console.log(`  Retrying with new token...`);
+        console.log(`  Retrying IMMEDIATELY with new token...`);
 
         // RETRY with the new token from the error response
         const retryPayload = {
@@ -194,8 +194,8 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
         };
 
         try {
-          // Wait for state propagation before retry
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // CRITICAL: Do NOT wait before retry! The server generates new tokens rapidly.
+          // If we wait, the token becomes stale and retry fails with "Invalid action token".
 
           const retryResponse = await api.post('/game/dungeon/action', retryPayload);
 
@@ -402,7 +402,7 @@ export async function sendDirectLootAction(action, dungeonType) {
       if (error.response?.data?.actionToken) {
         currentActionToken = error.response.data.actionToken.toString();
         console.log(`  Got new action token from loot "Error handling action": ${currentActionToken}`);
-        console.log(`  Retrying loot with new token...`);
+        console.log(`  Retrying loot IMMEDIATELY with new token...`);
 
         // RETRY loot with the new token from the error response
         const retryPayload = {
@@ -419,8 +419,7 @@ export async function sendDirectLootAction(action, dungeonType) {
         };
 
         try {
-          // Wait for state propagation before retry
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // CRITICAL: Do NOT wait before retry! Tokens expire rapidly.
 
           const retryResponse = await api.post('/game/dungeon/action', retryPayload);
 
