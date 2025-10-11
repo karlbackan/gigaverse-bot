@@ -261,6 +261,9 @@ export class AccountManager {
 
     // Set energy mode based on menu selection
     config.isJuiced = this.energyMode === 120;
+    // CRITICAL: Update energy threshold to match selected mode
+    // This prevents bot from trying juiced runs when it doesn't have enough energy
+    config.energyThreshold = this.energyMode;
     console.log(`⚡ Using ${this.energyMode} energy mode ${this.energyMode === 120 ? '(Juiced)' : '(Regular)'}`);
 
     // CRITICAL: Reset BOTH action token AND HTTPS connections when switching accounts
