@@ -5,16 +5,48 @@ import { getDirectEnergy, getDirectDungeonState, resetActionToken } from './dire
 import { sleep } from './utils.mjs';
 import readline from 'readline';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 export class AccountManager {
   constructor() {
+    this.configPath = path.join(process.cwd(), '.gigaverse-runtime.json');
     this.accounts = this.loadAccounts();
     this.validator = new JWTValidator();
-    this.energyMode = 40; // Default to 40 energy (can be 40 or 120)
+    this.energyMode = this.loadEnergyMode(); // Load saved energy mode or default to 40
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
+  }
+
+  // Load energy mode from config file
+  loadEnergyMode() {
+    try {
+      if (fs.existsSync(this.configPath)) {
+        const data = fs.readFileSync(this.configPath, 'utf8');
+        const config = JSON.parse(data);
+        const mode = config.energyMode || 40;
+        console.log(`Loaded saved energy mode: ${mode} energy`);
+        return mode;
+      }
+    } catch (error) {
+      console.log('Could not load saved energy mode, using default (40)');
+    }
+    return 40; // Default to 40 energy
+  }
+
+  // Save energy mode to config file
+  saveEnergyMode() {
+    try {
+      const config = {
+        energyMode: this.energyMode,
+        lastUpdated: new Date().toISOString()
+      };
+      fs.writeFileSync(this.configPath, JSON.stringify(config, null, 2));
+    } catch (error) {
+      console.log('Warning: Could not save energy mode:', error.message);
+    }
   }
 
   // Load accounts from config
@@ -308,11 +340,13 @@ export class AccountManager {
     switch (choice) {
       case '1':
         this.energyMode = 40;
-        console.log('\n✅ Energy mode set to 40 (Regular)');
+        this.saveEnergyMode();
+        console.log('\n✅ Energy mode set to 40 (Regular) and saved');
         break;
       case '2':
         this.energyMode = 120;
-        console.log('\n✅ Energy mode set to 120 (Juiced)');
+        this.saveEnergyMode();
+        console.log('\n✅ Energy mode set to 120 (Juiced) and saved');
         break;
       case '3':
         console.log('\n❌ Cancelled');

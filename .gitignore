@@ -26,6 +26,7 @@ pids
 *.pid
 *.seed
 *.pid.lock
+.gigaverse-runtime.json
 
 # Coverage
 coverage/
