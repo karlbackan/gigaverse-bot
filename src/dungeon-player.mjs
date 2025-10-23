@@ -122,19 +122,10 @@ export class DungeonPlayer {
       
       // Check if we have enough energy to start a NEW dungeon
       if (energy < config.energyThreshold) {
-        // CRITICAL: If in 120 energy mode but not enough energy, try falling back to 40 energy
-        if (config.isJuiced && energy >= 40) {
-          console.log(`⚠️  Not enough energy for juiced mode: ${energy}/120`);
-          console.log(`🔄 Falling back to regular mode (40 energy)`);
-          config.isJuiced = false;
-          config.energyThreshold = 40;
-          // Continue to check daily limits with regular mode
-        } else {
-          if (!config.minimalOutput) {
-            console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
-          }
-          return false;
+        if (!config.minimalOutput) {
+          console.log(`Not enough energy to start new dungeon: ${energy}/${config.energyThreshold}`);
         }
+        return false;
       }
       
       // Check daily runs limit
@@ -151,26 +142,20 @@ export class DungeonPlayer {
         const todayData = todayResponse.data;
         
         // Check Underhaul first (ID 3) - PRIMARY GAME MODE
-        const underhaulProgress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "3");
-        const underhaulInfo = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 3);
+        // Try multiple ID formats: number 3, string "3", or "Dungeon#3"
+        const underhaulProgress = todayData?.dayProgressEntities?.find(e =>
+          e.ID_CID === 3 || e.ID_CID === "3" || e.ID_CID === "Dungeon#3"
+        );
+        const underhaulInfo = todayData?.dungeonDataEntities?.find(d =>
+          d.ID_CID === 3 || d.ID_CID === "3" || d.ID_CID === "Dungeon#3"
+        );
         
         if (underhaulInfo) {
           const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
           const underhaulMaxRuns = 9; // Underhaul always has 9 attempts
-          const slotsRemaining = underhaulMaxRuns - underhaulRunsToday;
-
+          
           if (underhaulRunsToday < underhaulMaxRuns) {
             console.log(`Dungetron Underhaul runs today: ${underhaulRunsToday}/${underhaulMaxRuns}`);
-
-            // CRITICAL: Check if we have enough slots for juiced mode
-            // Juiced mode needs 3 slots, regular mode needs 1 slot
-            if (config.isJuiced && slotsRemaining < 3) {
-              console.log(`⚠️  Not enough slots for juiced mode (need 3, have ${slotsRemaining})`);
-              console.log(`🔄 Falling back to regular mode (40 energy)`);
-              config.isJuiced = false;
-              config.energyThreshold = 40;
-            }
-
             this.currentDungeonType = 3; // Use Underhaul
             this.decisionEngine.setDungeonType(this.currentDungeonType);
             return true;
@@ -185,9 +170,13 @@ export class DungeonPlayer {
           console.log(`🔍 Attempting to switch to Dungetron 5000...`);
           
           // Check Dungetron 5000 if Underhaul is full (ID 1)
-          // Try both string and number formats for compatibility
-          const dungetron5000Progress = todayData?.dayProgressEntities?.find(e => e.ID_CID === "1" || e.ID_CID === 1);
-          const dungetron5000Info = todayData?.dungeonDataEntities?.find(d => d.ID_CID === 1 || d.ID_CID === "1");
+          // Try multiple ID formats: number 1, string "1", or "Dungeon#1"
+          const dungetron5000Progress = todayData?.dayProgressEntities?.find(e =>
+            e.ID_CID === 1 || e.ID_CID === "1" || e.ID_CID === "Dungeon#1"
+          );
+          const dungetron5000Info = todayData?.dungeonDataEntities?.find(d =>
+            d.ID_CID === 1 || d.ID_CID === "1" || d.ID_CID === "Dungeon#1"
+          );
           
           console.log(`🔍 Dungetron 5000 progress data:`, dungetron5000Progress ? 'Found' : 'Not found (assuming 0 runs)');
           console.log(`🔍 Dungetron 5000 info data:`, dungetron5000Info ? 'Found' : 'Not found');
@@ -357,17 +346,80 @@ export class DungeonPlayer {
       }
     } catch (error) {
       console.error('Error starting dungeon:', error);
-      
-      // Check if this is an Underhaul unlock error
-      if (error.response?.status === 400 && 
-          error.response?.data?.message === 'Error handling action' &&
-          this.currentDungeonType === 3) {
-        console.log('\n⚠️  API rejected Underhaul start');
-        console.log('❗ Dungetron Underhaul may not be unlocked on this account!');
-        console.log('   You need to reach checkpoint 2 in Dungetron 5000 first.');
-        
+
+      // CRITICAL: Check if this is a stuck dungeon from previous session
+      if (error.isStuckDungeon) {
+        console.log('🔄 Stuck dungeon detected during start - attempting to cancel...');
+
+        // CRITICAL: Use the token from the error response to cancel
+        // Cancel needs the token that the server generated in the error
+        const { setActionToken } = await import('./direct-api.mjs');
+        if (error.actionToken) {
+          console.log(`  Using token ${error.actionToken} for cancel_run`);
+          setActionToken(error.actionToken);
+        }
+
+        try {
+          await sendDirectAction('cancel_run', this.currentDungeonType, {
+            consumables: [],
+            itemId: 0,
+            index: 0,
+            isJuiced: false,
+            gearInstanceIds: []
+          });
+          console.log('✅ Successfully cancelled stuck dungeon - will start fresh');
+          // Return special status so playDungeon can restart
+          return 'restart_fresh';
+        } catch (cancelError) {
+          console.log(`❌ Could not cancel stuck dungeon: ${cancelError.message}`);
+
+          // If we were trying Underhaul and couldn't cancel, try Dungetron 5000 as fallback
+          if (this.currentDungeonType === 3) {
+            console.log('⚠️  Underhaul is stuck - trying Dungetron 5000 fallback...');
+
+            // First check if already in a dungeon before fallback
+            try {
+              const dungeonState = await getDirectDungeonState();
+              if (dungeonState?.data?.run) {
+                const entity = dungeonState.data.entity;
+                const detectedType = parseInt(entity.ID_CID);
+                console.log(`✅ Found active ${detectedType === 1 ? 'Dungetron 5000' : detectedType === 3 ? 'Dungetron Underhaul' : `Type ${detectedType}`} dungeon - continuing`);
+                this.currentDungeonType = detectedType;
+                this.decisionEngine.setDungeonType(this.currentDungeonType);
+                this.currentDungeon = dungeonState.data.run;
+                return 'continue_existing';
+              }
+            } catch (stateError) {
+              console.log('   Could not check dungeon state, proceeding with fallback');
+            }
+
+            console.log('   No existing dungeon - falling back to Dungetron 5000');
+            this.currentDungeonType = 1;
+            this.decisionEngine.setDungeonType(this.currentDungeonType);
+            console.log('🏛️  Statistics engine set to dungeon type: 1');
+            // Retry with dungeon type 1
+            return await this.startDungeon();
+          }
+
+          console.log('⚠️  This dungeon is permanently stuck - skipping to next account');
+          // Return false so playDungeon returns account_error
+          return false;
+        }
+      }
+
+      // Check if this is an Underhaul error (400 status) - could be unlock, daily limit, or other issue
+      if (error.response?.status === 400 && this.currentDungeonType === 3) {
+        console.log('\n⚠️  API rejected Underhaul start (400 error)');
+
+        // Determine likely cause
+        if (error.response?.data?.message === 'Error handling action') {
+          console.log('❗ Possible reasons: Daily limit reached, not unlocked, or state issue');
+        } else {
+          console.log(`❗ Error: ${error.response?.data?.message || 'Unknown'}`);
+        }
+
         console.log('\n   🔄 Underhaul blocked by API - checking for existing dungeon...');
-        
+
         // First check if already in a dungeon before fallback
         try {
           const dungeonState = await getDirectDungeonState();
@@ -383,7 +435,7 @@ export class DungeonPlayer {
         } catch (stateError) {
           console.log('   Could not check dungeon state, proceeding with fallback');
         }
-        
+
         console.log('   No existing dungeon - falling back to Dungetron 5000');
         this.currentDungeonType = 1;
         this.decisionEngine.setDungeonType(this.currentDungeonType);
@@ -904,8 +956,13 @@ export class DungeonPlayer {
       // If we're continuing an existing dungeon, skip starting a new one
       if (canPlayResult !== 'continue_existing') {
         // Start a new dungeon
-        if (!(await this.startDungeon())) {
-          return 'wait';
+        const startResult = await this.startDungeon();
+        if (startResult === 'restart_fresh') {
+          // Stuck dungeon was cancelled, return to account manager to restart
+          return 'completed';
+        } else if (!startResult) {
+          // startDungeon() returned false - permanently stuck, skip to next account
+          return 'account_error';
         }
       } else {
         console.log('Continuing existing dungeon...');
