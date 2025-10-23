@@ -113,9 +113,11 @@ export class AccountManager {
     console.log('  3. Run all valid accounts');
     console.log('  4. Continuous mode (cycle through accounts)');
     console.log('  5. Change energy mode (40/120)');
-    console.log('  6. Exit\n');
+    console.log('  6. Check broken gear/charms (0 durability)');
+    console.log('  7. Run gear maintenance (repair/restore/salvage)');
+    console.log('  8. Exit\n');
 
-    const choice = await this.getUserInput('Select option (1-6): ');
+    const choice = await this.getUserInput('Select option (1-8): ');
     return choice;
   }
 
@@ -361,6 +363,193 @@ export class AccountManager {
     await this.getUserInput('\nPress Enter to continue...');
   }
 
+  // Check broken gear/charms across all accounts
+  async checkBrokenGearCharms() {
+    console.clear();
+    console.log('=== BROKEN GEAR & CHARMS (0 DURABILITY) ===\n');
+    console.log('Scanning all accounts...\n');
+
+    const { GearManager } = await import('./gear-manager.mjs');
+    const { getDirectGearInstances } = await import('./direct-api-gear.mjs');
+
+    let totalBrokenItems = 0;
+
+    // Check each account
+    for (const account of this.accounts) {
+      try {
+        // Extract wallet address from token
+        const parts = account.token.split('.');
+        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+        const walletAddress = payload.address || payload.user?.caseSensitiveAddress;
+
+        // Set up config for this account
+        process.env.JWT_TOKEN = account.token;
+        config.jwtToken = account.token;
+        config.walletAddress = walletAddress;
+
+        // Get gear instances for this account
+        const gearResponse = await getDirectGearInstances(walletAddress);
+        const allItems = gearResponse?.entities || [];
+
+        // Filter for equipped items with 0 durability
+        const brokenItems = allItems.filter(item => {
+          const slot = item.EQUIPPED_TO_SLOT_CID;
+          const durability = item.DURABILITY_CID || 0;
+          const isEquipped = slot !== null && slot > -1;
+          return isEquipped && durability === 0;
+        });
+
+        if (brokenItems.length > 0) {
+          console.log(`\n📦 ${account.name} (${walletAddress})`);
+          console.log('─'.repeat(70));
+
+          const gearManager = new GearManager(walletAddress);
+          await gearManager.initializeItemClassification();
+
+          brokenItems.forEach(item => {
+            const itemId = item.GAME_ITEM_ID_CID;
+            const slot = item.EQUIPPED_TO_SLOT_CID;
+            const slotIndex = item.EQUIPPED_TO_INDEX_CID;
+            const rarity = item.RARITY_CID || 0;
+            const durability = item.DURABILITY_CID || 0;
+            const repairCount = item.REPAIR_COUNT_CID || 0;
+            const isCharm = gearManager.isCharm(item);
+            const itemType = isCharm ? 'Charm' : 'Gear';
+            const maxRepairs = isCharm ? 2 : 5;
+            const maxDurability = gearManager.getMaxDurability(rarity, isCharm);
+
+            const rarityNames = ['Common', 'Uncommon', 'Rare', 'Epic'];
+            const rarityName = rarityNames[rarity] || 'Unknown';
+            const emoji = isCharm ? '💎' : '⚙️';
+
+            console.log(`  ${emoji} ${itemType} #${itemId} (${rarityName})`);
+            console.log(`     Slot: ${slot}${slotIndex !== null ? ` [Index ${slotIndex}]` : ''}`);
+            console.log(`     Durability: ${durability}/${maxDurability} ⚠️  BROKEN`);
+            console.log(`     Repairs: ${repairCount}/${maxRepairs}`);
+
+            if (repairCount >= maxRepairs) {
+              if (isCharm) {
+                console.log(`     → ♻️  Ready to SALVAGE (at max repairs)`);
+              } else {
+                console.log(`     → 🔄 Ready to RESTORE (at max repairs)`);
+              }
+            } else {
+              console.log(`     → 🔧 Can be REPAIRED`);
+            }
+            console.log('');
+          });
+
+          totalBrokenItems += brokenItems.length;
+        }
+
+      } catch (error) {
+        console.log(`\n❌ ${account.name}: Error checking gear - ${error.message}`);
+      }
+    }
+
+    if (totalBrokenItems === 0) {
+      console.log('\n✅ No broken gear or charms found across all accounts!');
+    } else {
+      console.log(`\n📊 Total broken items: ${totalBrokenItems}`);
+    }
+
+    await this.getUserInput('\nPress Enter to return to menu...');
+  }
+
+  // Run gear maintenance on all accounts
+  async runGearMaintenance() {
+    console.clear();
+    console.log('=== GEAR MAINTENANCE (REPAIR/RESTORE/SALVAGE) ===\n');
+    console.log('This will check all accounts and perform maintenance on broken gear/charms.\n');
+
+    const confirm = await this.getUserInput('Proceed with gear maintenance? (y/n): ');
+    if (confirm.toLowerCase() !== 'y') {
+      console.log('\n❌ Cancelled');
+      await this.getUserInput('\nPress Enter to return to menu...');
+      return;
+    }
+
+    console.log('\n🔧 Starting gear maintenance...\n');
+
+    const { GearManager } = await import('./gear-manager.mjs');
+    const { resetGearConnections } = await import('./direct-api-gear.mjs');
+
+    let totalProcessed = 0;
+
+    // Process each account
+    for (const account of this.accounts) {
+      try {
+        console.log(`\n${'='.repeat(70)}`);
+        console.log(`📦 Processing: ${account.name}`);
+        console.log('='.repeat(70));
+
+        // Extract wallet address from token
+        const parts = account.token.split('.');
+        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+        const walletAddress = payload.address || payload.user?.caseSensitiveAddress;
+
+        // Set up config for this account
+        process.env.JWT_TOKEN = account.token;
+        config.jwtToken = account.token;
+        config.walletAddress = walletAddress;
+
+        // Reset connections for this account
+        resetGearConnections();
+
+        console.log(`Wallet: ${walletAddress}\n`);
+
+        // Create gear manager and check status
+        const gearManager = new GearManager(walletAddress);
+        await gearManager.initializeItemClassification();
+
+        console.log('🔍 Checking gear status...\n');
+        const needsRepair = await gearManager.checkGearStatus();
+
+        if (needsRepair.length === 0) {
+          console.log('✅ No broken items found - all gear is functional!\n');
+          continue;
+        }
+
+        console.log(`Found ${needsRepair.length} broken item(s) that need attention:\n`);
+
+        // Display what will be done
+        needsRepair.forEach(item => {
+          const emoji = item.type === 'charm' ? '💎' : '⚙️';
+          const action = item.shouldRestore ? 'RESTORE' : (item.shouldSalvage ? 'SALVAGE & REPLACE' : 'REPAIR');
+          console.log(`  ${emoji} ${item.type.toUpperCase()} #${item.itemId} (Slot ${item.slot}) - Repairs: ${item.repairCount}/${item.type === 'charm' ? 2 : 5}`);
+          console.log(`     → Will ${action}`);
+        });
+
+        console.log('\n🔧 Performing maintenance...\n');
+
+        // Perform repairs - repairAllGear doesn't return a result object
+        await gearManager.repairAllGear(needsRepair);
+
+        // If we get here without throwing, it succeeded
+        console.log(`\n✅ ${account.name}: Maintenance completed successfully!`);
+        console.log(`   - Items processed: ${needsRepair.length}`);
+        totalProcessed += needsRepair.length;
+
+        // Wait between accounts
+        if (this.accounts.indexOf(account) < this.accounts.length - 1) {
+          console.log('\n⏳ Waiting 3 seconds before next account...\n');
+          await sleep(3000);
+        }
+
+      } catch (error) {
+        console.log(`\n❌ ${account.name}: Error during maintenance - ${error.message}\n`);
+      }
+    }
+
+    console.log('\n' + '='.repeat(70));
+    console.log('📊 MAINTENANCE SUMMARY');
+    console.log('='.repeat(70));
+    console.log(`Total items processed: ${totalProcessed}`);
+    console.log('✅ Gear maintenance complete!\n');
+
+    await this.getUserInput('\nPress Enter to return to menu...');
+  }
+
   // Continuous mode - cycle through accounts
   async continuousMode() {
     console.clear();
@@ -442,6 +631,14 @@ export class AccountManager {
           break;
 
         case '6':
+          await this.checkBrokenGearCharms();
+          break;
+
+        case '7':
+          await this.runGearMaintenance();
+          break;
+
+        case '8':
           running = false;
           console.log('\n👋 Goodbye!\n');
           break;

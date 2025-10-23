@@ -147,7 +147,24 @@ export class GearManager {
   // Charms have max durability < 30, gear has max durability >= 40
   isCharm(item) {
     const itemId = item.GAME_ITEM_ID_CID;
+    const slot = item.EQUIPPED_TO_SLOT_CID;
 
+    // CRITICAL: For equipped items, slot is definitive
+    // Slot 6 = ALWAYS charms, Slots 0-5 = ALWAYS gear
+    if (slot !== null && slot !== -1) {
+      const isCharmBySlot = slot === 6;
+
+      // Update known IDs based on slot
+      if (isCharmBySlot) {
+        this.knownCharmIds.add(itemId);
+      } else {
+        this.knownGearIds.add(itemId);
+      }
+
+      return isCharmBySlot;
+    }
+
+    // For unequipped items, use known IDs and durability heuristics
     // Check against known charm IDs (dynamically discovered)
     if (this.knownCharmIds.has(itemId)) {
       return true;
@@ -158,7 +175,7 @@ export class GearManager {
       return false;
     }
 
-    // For unknown items, use durability heuristic
+    // For unknown unequipped items, use durability heuristic
     // Charms have max durability < 30, gear has >= 40
     const rarity = item.RARITY_CID;
     const charmMaxDur = 20 + (rarity * 2); // 20, 22, 24, 26 for rarities 0-3
