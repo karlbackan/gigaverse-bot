@@ -51,7 +51,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946174312
+      "lastSeen": 1760704314894
     },
     "2": {
       "moves": [],
@@ -61,7 +61,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946181403
+      "lastSeen": 1760704322085
     },
     "3": {
       "moves": [],
@@ -71,7 +71,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946188466
+      "lastSeen": 1760704329268
     },
     "4": {
       "moves": [],
@@ -81,7 +81,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946195533
+      "lastSeen": 1760704341456
     },
     "5": {
       "moves": [],
@@ -91,7 +91,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946207403
+      "lastSeen": 1760704363913
     },
     "6": {
       "moves": [],
@@ -101,7 +101,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946219697
+      "lastSeen": 1760704385691
     },
     "7": {
       "moves": [],
@@ -111,7 +111,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946231993
+      "lastSeen": 1760704397561
     },
     "8": {
       "moves": [],
@@ -121,7 +121,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946252366
+      "lastSeen": 1760704409542
     },
     "9": {
       "moves": [],
@@ -131,7 +131,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946264247
+      "lastSeen": 1760704452051
     },
     "10": {
       "moves": [],
@@ -141,7 +141,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946475511
+      "lastSeen": 1760704474438
     },
     "11": {
       "moves": [],
@@ -151,7 +151,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946497416
+      "lastSeen": 1760704501607
     },
     "12": {
       "moves": [],
@@ -161,7 +161,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946559875
+      "lastSeen": 1760704524234
     },
     "13": {
       "moves": [],
@@ -171,7 +171,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946587220
+      "lastSeen": 1760704552504
     },
     "14": {
       "moves": [],
@@ -181,7 +181,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946614089
+      "lastSeen": 1760704574518
     },
     "15": {
       "moves": [],
@@ -191,7 +191,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759946641592
+      "lastSeen": 1760704631049
     },
     "20": {
       "moves": [],
@@ -221,7 +221,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1760015699395
+      "lastSeen": 1763829774120
     },
     "24": {
       "moves": [],
@@ -231,7 +231,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1760015711237
+      "lastSeen": 1763829786468
     },
     "25": {
       "moves": [],
@@ -241,7 +241,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1760015934859
+      "lastSeen": 1763829819652
     },
     "26": {
       "moves": [],
@@ -251,7 +251,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1760016032138
+      "lastSeen": 1763829852984
     },
     "27": {
       "moves": [],
@@ -261,7 +261,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1760015793719
+      "lastSeen": 1763830225098
     },
     "28": {
       "moves": [],
@@ -271,7 +271,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759945124230
+      "lastSeen": 1763830273675
     },
     "29": {
       "moves": [],
@@ -281,7 +281,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759882882383
+      "lastSeen": 1763829915545
     },
     "30": {
       "moves": [],
@@ -291,7 +291,37 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1759945191282
+      "lastSeen": 1763829954096
+    },
+    "31": {
+      "moves": [],
+      "results": [],
+      "totalBattles": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 0,
+      "adaptationRate": 0.5,
+      "lastSeen": 1762919895041
+    },
+    "32": {
+      "moves": [],
+      "results": [],
+      "totalBattles": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 0,
+      "adaptationRate": 0.5,
+      "lastSeen": 1763163885640
+    },
+    "33": {
+      "moves": [],
+      "results": [],
+      "totalBattles": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 0,
+      "adaptationRate": 0.5,
+      "lastSeen": 1763672256401
     },
     "-1": {
       "moves": [],
@@ -301,7 +331,7 @@
       "losses": 0,
       "ties": 0,
       "adaptationRate": 0.5,
-      "lastSeen": 1760015781838
+      "lastSeen": 1763829887783
     }
   },
   "neuralNetWeights": {
@@ -1239,6 +1269,6 @@
     ]
   },
   "battleHistory": [],
-  "saveTimestamp": 1760016294950,
+  "saveTimestamp": 1763830545800,
   "version": "1.0.0"
 }

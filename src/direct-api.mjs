@@ -110,12 +110,12 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
     }
     
     // Build payload with optional action token
-    // CRITICAL FIX (2025-10-11): Browser sends dungeonId=0 for all actions EXCEPT start_run
-    // start_run uses dungeonId=dungeonType, but ALL combat/loot actions use dungeonId=0
+    // CRITICAL FIX (2025-10-11): Browser sends dungeonId=0 for all actions EXCEPT start_run and cancel_run
+    // start_run and cancel_run use dungeonId=dungeonType, but ALL combat/loot actions use dungeonId=0
     const payload = {
       action,
       actionToken: currentActionToken || "",  // Always include, use empty string if no token
-      dungeonId: action === 'start_run' ? dungeonType : 0,  // 0 for all actions except start_run
+      dungeonId: (action === 'start_run' || action === 'cancel_run') ? dungeonType : 0,  // start_run and cancel_run need dungeonType
       data
     };
     
@@ -202,7 +202,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
         const retryPayload = {
           action,
           actionToken: currentActionToken,
-          dungeonId: action === 'start_run' ? dungeonType : 0,  // 0 for all actions except start_run
+          dungeonId: (action === 'start_run' || action === 'cancel_run') ? dungeonType : 0,  // start_run and cancel_run need dungeonType
           data
         };
 
@@ -254,7 +254,7 @@ export async function sendDirectAction(action, dungeonType, data = {}) {
       const retryPayload = {
         action,
         actionToken: "",  // Empty string for fresh start
-        dungeonId: action === 'start_run' ? dungeonType : 0,  // 0 for all actions except start_run
+        dungeonId: (action === 'start_run' || action === 'cancel_run') ? dungeonType : 0,  // start_run and cancel_run need dungeonType
         data
       };
       
