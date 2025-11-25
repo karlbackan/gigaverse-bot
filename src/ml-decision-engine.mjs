@@ -4,55 +4,68 @@
  */
 
 import { config } from './config.mjs';
+import { IocainePowder } from './iocaine-powder.mjs';
+import { ContextTreeWeighting } from './context-tree-weighting.mjs';
+import { BayesianOpponentModel } from './bayesian-opponent-model.mjs';
+import { WeightedEnsemble } from './weighted-ensemble.mjs';
+import { SimpleRNN } from './simple-rnn.mjs';
 
 export class MLDecisionEngine {
   constructor() {
     // Strategy types for multi-armed bandit
     this.strategies = {
       STATISTICAL: 'statistical',
-      ANTI_PATTERN: 'anti_pattern', 
+      ANTI_PATTERN: 'anti_pattern',
       RANDOM: 'random',
       Q_LEARNING: 'q_learning',
       NEURAL: 'neural',
-      META_GAME: 'meta_game'
+      META_GAME: 'meta_game',
+      IOCAINE: 'iocaine',  // Iocaine Powder meta-strategy (1999 RoShamBo champion)
+      CTW: 'ctw',  // Context Tree Weighting - compression-based prediction
+      BAYESIAN: 'bayesian',  // Bayesian opponent modeling with type inference
+      ENSEMBLE: 'ensemble',  // Weighted ensemble combining CTW, Bayesian, Iocaine, Neural
+      CHARGE_BASED: 'charge_based'  // Exploits +5.4% correlation between enemy charges and move choice
     };
     
-    // Multi-Armed Bandit for strategy selection
+    // Multi-Armed Bandit for strategy selection (Thompson Sampling)
     this.bandit = {
-      arms: new Map(), // strategy -> {plays, rewards, value, confidence}
-      epsilon: 0.1,    // exploration rate
-      decayRate: 0.995 // epsilon decay
+      arms: new Map(), // strategy -> {plays, wins, losses, value, confidence}
+      decayRate: 0.995 // decay rate for old observations
     };
-    
-    // Initialize bandit arms
+
+    // Initialize bandit arms for Thompson Sampling (Beta distribution parameters)
     Object.values(this.strategies).forEach(strategy => {
       this.bandit.arms.set(strategy, {
         plays: 0,
-        rewards: 0,
-        value: 0.5, // neutral starting value
+        wins: 0,      // successes (alpha - 1 in Beta distribution)
+        losses: 0,    // failures (beta - 1 in Beta distribution)
+        value: 0.5,   // running average for display
         confidence: 0
       });
     });
     
-    // Q-Learning components
+    // Q-Learning components (Double DQN)
     this.qLearning = {
-      states: new Map(),     // gameState -> Map(action -> qValue)
-      alpha: 0.1,           // learning rate
-      gamma: 0.9,           // discount factor
-      epsilon: 0.1,         // exploration rate
+      states: new Map(),           // Online Q-values: gameState -> Map(action -> qValue)
+      targetStates: new Map(),     // Target Q-values (copy of online, updated less frequently)
+      alpha: 0.1,                  // learning rate
+      gamma: 0.9,                  // discount factor
+      epsilon: 0.1,                // exploration rate
       lastState: null,
       lastAction: null,
-      lastReward: null
+      lastReward: null,
+      updateCounter: 0,            // Track updates for target network sync
+      targetUpdateFreq: 10         // Sync target network every N updates
     };
     
     // Simple Neural Network (2-layer feedforward)
     this.neuralNet = {
-      inputSize: 15,        // feature vector size
+      inputSize: 22,        // feature vector size (15 original + 7 charge features)
       hiddenSize: 20,       // hidden layer neurons
       outputSize: 3,        // rock, paper, scissor probabilities
       
       // Weights (initialized randomly)
-      weightsIH: this.initializeMatrix(15, 20),  // input to hidden
+      weightsIH: this.initializeMatrix(22, 20),  // input to hidden
       weightsHO: this.initializeMatrix(20, 3),   // hidden to output
       biasH: new Array(20).fill(0).map(() => Math.random() * 0.1),
       biasO: new Array(3).fill(0).map(() => Math.random() * 0.1),
@@ -62,7 +75,7 @@ export class MLDecisionEngine {
       momentum: 0.9,
       
       // Momentum terms
-      momentumIH: this.initializeMatrix(15, 20),
+      momentumIH: this.initializeMatrix(22, 20),
       momentumHO: this.initializeMatrix(20, 3),
       momentumBH: new Array(20).fill(0),
       momentumBO: new Array(3).fill(0)
@@ -84,8 +97,23 @@ export class MLDecisionEngine {
     // Battle history for learning
     this.battleHistory = [];
     this.maxHistorySize = 1000;
-    
-    console.log('🤖 ML Decision Engine initialized with hybrid approaches');
+
+    // Iocaine Powder meta-strategy (1999 RoShamBo Programming Competition winner)
+    this.iocaine = new IocainePowder();
+
+    // Context Tree Weighting instances (per opponent)
+    this.ctwModels = new Map();  // enemyId -> ContextTreeWeighting instance
+
+    // Simple RNN instances (per opponent) for sequence prediction
+    this.rnnModels = new Map();  // enemyId -> SimpleRNN instance
+
+    // Bayesian opponent modeling
+    this.bayesian = new BayesianOpponentModel();
+
+    // Weighted ensemble for combining strategy predictions
+    this.ensemble = new WeightedEnsemble(20);  // 20 round window
+
+    console.log('🤖 ML Decision Engine initialized with Thompson Sampling + hybrid approaches + Iocaine Powder + CTW + Bayesian + Ensemble + RNN');
   }
   
   // Initialize weight matrix with small random values
@@ -116,9 +144,9 @@ export class MLDecisionEngine {
         break;
         
       case this.strategies.NEURAL:
-        const neuralOutput = this.neuralNetworkDecision(features);
-        decision = this.selectFromProbabilities(neuralOutput.probabilities, availableWeapons);
-        confidence = neuralOutput.confidence;
+        const rnnResult = this.rnnDecision(enemyId, availableWeapons);
+        decision = rnnResult.move;
+        confidence = rnnResult.confidence;
         break;
         
       case this.strategies.ANTI_PATTERN:
@@ -135,7 +163,37 @@ export class MLDecisionEngine {
         decision = this.randomDecision(availableWeapons);
         confidence = 0.3;
         break;
-        
+
+      case this.strategies.IOCAINE:
+        const iocaineResult = this.iocaineDecision(enemyId, availableWeapons);
+        decision = iocaineResult.move;
+        confidence = iocaineResult.confidence;
+        break;
+
+      case this.strategies.CTW:
+        const ctwResult = this.ctwDecision(enemyId, availableWeapons);
+        decision = ctwResult.move;
+        confidence = ctwResult.confidence;
+        break;
+
+      case this.strategies.BAYESIAN:
+        const bayesianResult = this.bayesianDecision(enemyId, availableWeapons);
+        decision = bayesianResult.move;
+        confidence = bayesianResult.confidence;
+        break;
+
+      case this.strategies.ENSEMBLE:
+        const ensembleResult = this.ensembleDecision(enemyId, features, availableWeapons);
+        decision = ensembleResult.move;
+        confidence = ensembleResult.confidence;
+        break;
+
+      case this.strategies.CHARGE_BASED:
+        const chargeResult = this.chargeBasedDecision(enemyStats, availableWeapons);
+        decision = chargeResult.move;
+        confidence = chargeResult.confidence;
+        break;
+
       default:
         // Fallback to statistical (handled by main decision engine)
         return null;
@@ -158,42 +216,89 @@ export class MLDecisionEngine {
     };
   }
   
-  // Multi-Armed Bandit strategy selection using UCB1
+  // Thompson Sampling strategy selection using Beta distribution
   selectStrategy(enemyId) {
     const totalPlays = Array.from(this.bandit.arms.values()).reduce((sum, arm) => sum + arm.plays, 0);
-    
+
+    // Ensure each strategy is tried at least once
     if (totalPlays < Object.keys(this.strategies).length) {
-      // Explore each strategy at least once
       for (const [strategy, arm] of this.bandit.arms.entries()) {
-        if (arm.plays === 0) return strategy;
+        if (arm.plays === 0) {
+          console.log(`🎰 [Thompson] Initial exploration: ${strategy}`);
+          return strategy;
+        }
       }
     }
-    
-    // UCB1 selection
+
+    // Thompson Sampling: sample from Beta distribution for each arm
     let bestStrategy = null;
-    let bestScore = -Infinity;
-    
+    let bestSample = -Infinity;
+    const samples = {};
+
     for (const [strategy, arm] of this.bandit.arms.entries()) {
-      if (arm.plays === 0) continue;
-      
-      // UCB1 formula: value + confidence_interval
-      const exploitation = arm.value;
-      const exploration = Math.sqrt((2 * Math.log(totalPlays)) / arm.plays);
-      const ucbScore = exploitation + exploration;
-      
-      if (ucbScore > bestScore) {
-        bestScore = ucbScore;
+      // Beta(wins + 1, losses + 1) - adding 1 for uniform prior
+      const alpha = arm.wins + 1;
+      const beta = arm.losses + 1;
+      const sample = this.sampleBeta(alpha, beta);
+      samples[strategy] = sample;
+
+      if (sample > bestSample) {
+        bestSample = sample;
         bestStrategy = strategy;
       }
     }
-    
-    // Epsilon-greedy fallback
-    if (Math.random() < this.bandit.epsilon) {
-      const strategies = Object.values(this.strategies);
-      bestStrategy = strategies[Math.floor(Math.random() * strategies.length)];
-    }
-    
+
+    console.log(`🎰 [Thompson] Samples: ${Object.entries(samples).map(([s, v]) => `${s}:${v.toFixed(3)}`).join(' ')}`);
+    console.log(`🎰 [Thompson] Selected: ${bestStrategy} (sample=${bestSample.toFixed(3)})`);
+
     return bestStrategy || this.strategies.RANDOM;
+  }
+
+  // Sample from Beta(alpha, beta) distribution using gamma distribution method
+  sampleBeta(alpha, beta) {
+    const x = this.sampleGamma(alpha);
+    const y = this.sampleGamma(beta);
+    return x / (x + y);
+  }
+
+  // Sample from Gamma(shape, 1) distribution using Marsaglia and Tsang's method
+  sampleGamma(shape) {
+    // Handle shape < 1 case
+    if (shape < 1) {
+      return this.sampleGamma(shape + 1) * Math.pow(Math.random(), 1 / shape);
+    }
+
+    // Marsaglia and Tsang's method for shape >= 1
+    const d = shape - 1 / 3;
+    const c = 1 / Math.sqrt(9 * d);
+
+    while (true) {
+      let x, v;
+      do {
+        x = this.normalRandom();
+        v = 1 + c * x;
+      } while (v <= 0);
+
+      v = v * v * v;
+      const u = Math.random();
+
+      // Quick acceptance
+      if (u < 1 - 0.0331 * (x * x) * (x * x)) {
+        return d * v;
+      }
+
+      // Slower acceptance
+      if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) {
+        return d * v;
+      }
+    }
+  }
+
+  // Generate standard normal random variable using Box-Muller transform
+  normalRandom() {
+    const u1 = Math.random();
+    const u2 = Math.random();
+    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
   }
   
   // Q-Learning decision
@@ -327,24 +432,290 @@ export class MLDecisionEngine {
     const available = availableWeapons || ['rock', 'paper', 'scissor'];
     return available[Math.floor(Math.random() * available.length)];
   }
-  
+
+  // Iocaine Powder meta-strategy decision
+  iocaineDecision(enemyId, availableWeapons) {
+    const result = this.iocaine.getMove(enemyId, availableWeapons);
+    console.log(`🧪 [Iocaine] Strategy: ${result.strategy}, Move: ${result.move}, Confidence: ${result.confidence.toFixed(2)}`);
+    return result;
+  }
+
+  // Context Tree Weighting decision
+  ctwDecision(enemyId, availableWeapons) {
+    // Ensure CTW model exists for this opponent
+    this.ensureCTWModel(enemyId);
+
+    const ctw = this.ctwModels.get(enemyId);
+    const result = ctw.getBestMove(availableWeapons);
+
+    console.log(`🌳 [CTW] Prediction: R=${(result.prediction.rock * 100).toFixed(0)}% P=${(result.prediction.paper * 100).toFixed(0)}% S=${(result.prediction.scissor * 100).toFixed(0)}%`);
+    console.log(`🌳 [CTW] Move: ${result.move}, Confidence: ${result.confidence.toFixed(2)}, ${result.reasoning}`);
+
+    return result;
+  }
+
+  // Simple RNN decision (replaces old feedforward neural network)
+  rnnDecision(enemyId, availableWeapons) {
+    // Ensure RNN model exists for this opponent
+    this.ensureRNNModel(enemyId);
+
+    const rnn = this.rnnModels.get(enemyId);
+    const result = rnn.getBestMove(availableWeapons);
+
+    console.log(`🔬 [RNN] Prediction: R=${(result.prediction.rock * 100).toFixed(0)}% P=${(result.prediction.paper * 100).toFixed(0)}% S=${(result.prediction.scissor * 100).toFixed(0)}%`);
+    console.log(`🔬 [RNN] Move: ${result.move}, Confidence: ${result.confidence.toFixed(2)}, ${result.reasoning}`);
+
+    return result;
+  }
+
+  /**
+   * Charge-based prediction strategy
+   * Exploits the +5.4% correlation between enemy's highest charges and their move choice.
+   * Data shows: When enemy has most charges in X, they play X ~38-39% (vs 33% random)
+   */
+  chargeBasedDecision(enemyStats, availableWeapons) {
+    const charges = enemyStats?.charges || { rock: 3, paper: 3, scissor: 3 };
+    const rock = charges.rock ?? 3;
+    const paper = charges.paper ?? 3;
+    const scissor = charges.scissor ?? 3;
+
+    // Calculate probabilities based on charge correlation (+5.4% lift)
+    const total = rock + paper + scissor;
+    const baseline = 0.333;
+    const chargeLift = 0.054;  // From data analysis
+
+    // Adjust probabilities based on which weapon has most charges
+    const probs = {
+      rock: baseline,
+      paper: baseline,
+      scissor: baseline
+    };
+
+    // Enemy prefers their highest-charge weapon
+    if (rock > paper && rock > scissor) {
+      probs.rock = baseline + chargeLift;
+      probs.paper = baseline - chargeLift / 2;
+      probs.scissor = baseline - chargeLift / 2;
+    } else if (paper > rock && paper > scissor) {
+      probs.paper = baseline + chargeLift;
+      probs.rock = baseline - chargeLift / 2;
+      probs.scissor = baseline - chargeLift / 2;
+    } else if (scissor > rock && scissor > paper) {
+      probs.scissor = baseline + chargeLift;
+      probs.rock = baseline - chargeLift / 2;
+      probs.paper = baseline - chargeLift / 2;
+    }
+
+    // Counter their most likely move
+    const counterMap = { rock: 'paper', paper: 'scissor', scissor: 'rock' };
+    let bestMove = 'rock';
+    let bestScore = -1;
+
+    for (const ourMove of availableWeapons) {
+      let score = 0;
+      for (const theirMove of ['rock', 'paper', 'scissor']) {
+        if (counterMap[theirMove] === ourMove) {
+          score += probs[theirMove];  // We win
+        } else if (counterMap[ourMove] === theirMove) {
+          score -= probs[theirMove];  // We lose
+        }
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = ourMove;
+      }
+    }
+
+    // Determine which weapon they're most likely to use
+    const mostLikelyEnemyMove = Object.entries(probs).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+
+    console.log(`🔋 [Charges] Enemy R=${rock} P=${paper} S=${scissor} → Likely: ${mostLikelyEnemyMove} (${(probs[mostLikelyEnemyMove] * 100).toFixed(0)}%)`);
+
+    return {
+      move: bestMove,
+      confidence: Math.max(...Object.values(probs)) - baseline,
+      prediction: mostLikelyEnemyMove,
+      probabilities: probs
+    };
+  }
+
+  // Ensure CTW model exists for an opponent
+  ensureCTWModel(enemyId) {
+    if (!this.ctwModels.has(enemyId)) {
+      this.ctwModels.set(enemyId, new ContextTreeWeighting(6));  // depth 6 = optimal 50.9% expected
+      console.log(`🌳 [CTW] Created new model for opponent ${enemyId}`);
+    }
+  }
+
+  // Ensure RNN model exists for an opponent
+  ensureRNNModel(enemyId) {
+    if (!this.rnnModels.has(enemyId)) {
+      this.rnnModels.set(enemyId, new SimpleRNN(16));  // 16 hidden units
+      console.log(`🔬 [RNN] Created new model for opponent ${enemyId}`);
+    }
+  }
+
+  // Update CTW model with observed enemy move
+  updateCTW(enemyId, enemyAction) {
+    this.ensureCTWModel(enemyId);
+    const ctw = this.ctwModels.get(enemyId);
+    ctw.update(enemyAction);
+  }
+
+  // Update RNN model with observed moves
+  updateRNN(enemyId, playerAction, enemyAction) {
+    this.ensureRNNModel(enemyId);
+    const rnn = this.rnnModels.get(enemyId);
+    rnn.update(playerAction, enemyAction);
+  }
+
+  // Bayesian opponent modeling decision
+  bayesianDecision(enemyId, availableWeapons) {
+    // Get our last move for opponent type inference
+    const model = this.opponentModels.get(enemyId);
+    const ourLastMove = model && model.moves.length > 0
+      ? this.lastDecisionContext?.decision
+      : null;
+
+    const result = this.bayesian.getBestMove(enemyId, ourLastMove, availableWeapons);
+
+    console.log(`🔬 [Bayesian] Type: ${result.dominantType}, Pred: R=${(result.prediction.rock * 100).toFixed(0)}% P=${(result.prediction.paper * 100).toFixed(0)}% S=${(result.prediction.scissor * 100).toFixed(0)}%`);
+    console.log(`🔬 [Bayesian] Move: ${result.move}, Confidence: ${result.confidence.toFixed(2)}, ${result.reasoning}`);
+
+    return result;
+  }
+
+  // Weighted ensemble decision - combines predictions from multiple strategies
+  ensembleDecision(enemyId, features, availableWeapons) {
+    const predictions = new Map();
+
+    // Get CTW prediction
+    this.ensureCTWModel(enemyId);
+    const ctw = this.ctwModels.get(enemyId);
+    const ctwPred = ctw.predict();
+    if (ctwPred) {
+      predictions.set('ctw', ctwPred);
+      this.ensemble.recordPrediction('ctw', ctw.getBestMove(availableWeapons).move);
+    }
+
+    // Get Bayesian prediction
+    const model = this.opponentModels.get(enemyId);
+    const ourLastMove = model && model.moves.length > 0
+      ? this.lastDecisionContext?.decision
+      : null;
+    const bayesianResult = this.bayesian.getBestMove(enemyId, ourLastMove, availableWeapons);
+    predictions.set('bayesian', bayesianResult.prediction);
+    this.ensemble.recordPrediction('bayesian', bayesianResult.move);
+
+    // Get Iocaine prediction
+    const iocaineResult = this.iocaine.getMove(enemyId, availableWeapons);
+    // Iocaine returns a move, convert to distribution (high prob on predicted enemy move)
+    const iocainePred = { rock: 0.2, paper: 0.2, scissor: 0.2 };
+    const counter = { rock: 'paper', paper: 'scissor', scissor: 'rock' };
+    const counterTo = { paper: 'rock', scissor: 'paper', rock: 'scissor' };
+    // If iocaine says play X, it expects opponent to play what X beats
+    const expectedEnemy = counterTo[iocaineResult.move];
+    if (expectedEnemy) {
+      iocainePred[expectedEnemy] = 0.6;
+    }
+    predictions.set('iocaine', iocainePred);
+    this.ensemble.recordPrediction('iocaine', iocaineResult.move);
+
+    // Get RNN prediction (replaces old feedforward neural network)
+    this.ensureRNNModel(enemyId);
+    const rnn = this.rnnModels.get(enemyId);
+    const rnnPred = rnn.predict();
+    predictions.set('rnn', rnnPred);
+    const rnnResult = rnn.getBestMove(availableWeapons);
+    this.ensemble.recordPrediction('rnn', rnnResult.move);
+
+    // Combine predictions using weighted ensemble
+    const result = this.ensemble.getBestMove(predictions, availableWeapons);
+
+    console.log(`[Ensemble] Combined: R=${(result.combinedPrediction.rock * 100).toFixed(0)}% P=${(result.combinedPrediction.paper * 100).toFixed(0)}% S=${(result.combinedPrediction.scissor * 100).toFixed(0)}%`);
+    console.log(`[Ensemble] Move: ${result.move}, Confidence: ${result.confidence.toFixed(2)}, ${result.reasoning}`);
+
+    return result;
+  }
+
+  // Record predictions from all strategies for ensemble learning
+  // Called during learnFromOutcome so ensemble can learn even when not selected
+  recordAllStrategyPredictions(enemyId, features) {
+    const availableWeapons = ['rock', 'paper', 'scissor'];
+
+    try {
+      // Record CTW prediction
+      this.ensureCTWModel(enemyId);
+      const ctw = this.ctwModels.get(enemyId);
+      const ctwResult = ctw.getBestMove(availableWeapons);
+      if (ctwResult && ctwResult.move) {
+        this.ensemble.recordPrediction('ctw', ctwResult.move);
+      }
+
+      // Record Bayesian prediction
+      const model = this.opponentModels.get(enemyId);
+      const ourLastMove = model && model.moves.length > 0
+        ? this.lastDecisionContext?.decision
+        : null;
+      const bayesianResult = this.bayesian.getBestMove(enemyId, ourLastMove, availableWeapons);
+      if (bayesianResult && bayesianResult.move) {
+        this.ensemble.recordPrediction('bayesian', bayesianResult.move);
+      }
+
+      // Record Iocaine prediction
+      const iocaineResult = this.iocaine.getMove(enemyId, availableWeapons);
+      if (iocaineResult && iocaineResult.move) {
+        this.ensemble.recordPrediction('iocaine', iocaineResult.move);
+      }
+
+      // Record RNN prediction (replaces old feedforward neural network)
+      this.ensureRNNModel(enemyId);
+      const rnn = this.rnnModels.get(enemyId);
+      const rnnResult = rnn.getBestMove(availableWeapons);
+      if (rnnResult && rnnResult.move) {
+        this.ensemble.recordPrediction('rnn', rnnResult.move);
+      }
+    } catch (error) {
+      console.log(`[Ensemble] Error recording predictions: ${error.message}`);
+    }
+  }
+
   // Learn from battle outcome
   learnFromOutcome(enemyId, playerAction, enemyAction, result, strategy, features, turn) {
     // Update multi-armed bandit
     this.updateBandit(strategy, result);
-    
+
     // Update Q-Learning
     this.updateQLearning(features, playerAction, result);
-    
+
     // Update Neural Network
     this.updateNeuralNetwork(features, enemyAction, result);
-    
+
     // Update opponent model
     this.updateOpponentModel(enemyId, enemyAction, result, turn);
-    
+
     // Update meta-learning
     this.updateMetaLearning(enemyId, strategy, result);
-    
+
+    // Update Iocaine Powder (always update for learning, regardless of which strategy was used)
+    this.iocaine.update(enemyId, playerAction, enemyAction);
+
+    // Update Context Tree Weighting (always update for learning)
+    this.updateCTW(enemyId, enemyAction);
+
+    // Update Simple RNN (always update for learning)
+    this.updateRNN(enemyId, playerAction, enemyAction);
+
+    // Update Bayesian opponent model (always update for learning)
+    this.bayesian.update(enemyId, playerAction, enemyAction);
+
+    // Record predictions from all strategies for ensemble learning
+    // (even if ensemble was not the selected strategy)
+    this.recordAllStrategyPredictions(enemyId, features);
+
+    // Update weighted ensemble (always update for learning)
+    this.ensemble.updateWeights(enemyAction);
+
     // Store in battle history
     this.battleHistory.push({
       enemyId, playerAction, enemyAction, result, strategy, features, turn,
@@ -356,45 +727,98 @@ export class MLDecisionEngine {
       this.battleHistory.shift();
     }
     
-    // Decay exploration rates
-    this.bandit.epsilon *= this.bandit.decayRate;
+    // Decay Q-learning exploration rate (Thompson Sampling doesn't use epsilon)
     this.qLearning.epsilon *= 0.999;
   }
   
-  // Update multi-armed bandit with result
+  // Update multi-armed bandit with result (Thompson Sampling)
   updateBandit(strategy, result) {
     const arm = this.bandit.arms.get(strategy);
     if (!arm) return;
-    
+
     arm.plays++;
-    const reward = result === 'win' ? 1 : result === 'tie' ? 0.1 : 0;
-    arm.rewards += reward;
-    arm.value = arm.rewards / arm.plays;
-    arm.confidence = Math.sqrt(arm.plays / 10); // increase confidence with more plays
+
+    if (result === 'win') {
+      arm.wins++;
+    } else if (result === 'loss') {
+      arm.losses++;
+    } else if (result === 'tie') {
+      // Ties count as partial success (0.3 wins)
+      arm.wins += 0.3;
+    }
+
+    // Update running average for display purposes
+    arm.value = arm.wins / Math.max(1, arm.plays);
+    arm.confidence = Math.sqrt(arm.plays / 10);
+
+    console.log(`🎰 [Thompson] Updated ${strategy}: wins=${arm.wins.toFixed(1)}, losses=${arm.losses}, plays=${arm.plays}, value=${arm.value.toFixed(3)}`);
   }
   
-  // Update Q-Learning with TD learning
+  // Update Q-Learning with Double DQN
+  // Uses online network to SELECT action, target network to EVALUATE
+  // This reduces overestimation bias in standard Q-learning
   updateQLearning(features, action, result) {
     const stateKey = this.featuresToStateKey(features);
-    
+
     if (this.qLearning.lastState && this.qLearning.lastAction) {
       const reward = result === 'win' ? 1 : result === 'tie' ? 0 : -0.5;
-      
+
       const lastStateValues = this.qLearning.states.get(this.qLearning.lastState);
-      const currentStateValues = this.qLearning.states.get(stateKey) || new Map();
-      
+
+      // Ensure current state exists in both online and target tables
+      if (!this.qLearning.states.has(stateKey)) {
+        const actionValues = new Map();
+        ['rock', 'paper', 'scissor'].forEach(a => actionValues.set(a, Math.random() * 0.1));
+        this.qLearning.states.set(stateKey, actionValues);
+      }
+      if (!this.qLearning.targetStates.has(stateKey)) {
+        this.qLearning.targetStates.set(stateKey, new Map(this.qLearning.states.get(stateKey)));
+      }
+
       if (lastStateValues) {
+        // DOUBLE DQN: Use online network to SELECT action, target network to EVALUATE
+        const onlineValues = this.qLearning.states.get(stateKey);
+        const targetValues = this.qLearning.targetStates.get(stateKey) || onlineValues;
+
+        // Select best action using ONLINE network
+        let bestAction = 'rock';
+        let bestOnlineValue = -Infinity;
+        for (const [a, v] of onlineValues) {
+          if (v > bestOnlineValue) {
+            bestOnlineValue = v;
+            bestAction = a;
+          }
+        }
+
+        // Evaluate that action using TARGET network (reduces overestimation)
+        const nextQ = targetValues.get(bestAction) || 0;
+
+        // TD update on online network
         const currentQ = lastStateValues.get(this.qLearning.lastAction) || 0;
-        const maxNextQ = Math.max(...Array.from(currentStateValues.values()));
-        const newQ = currentQ + this.qLearning.alpha * (reward + this.qLearning.gamma * maxNextQ - currentQ);
-        
+        const newQ = currentQ + this.qLearning.alpha * (reward + this.qLearning.gamma * nextQ - currentQ);
         lastStateValues.set(this.qLearning.lastAction, newQ);
       }
     }
-    
+
+    // Periodically sync target network to online network
+    this.qLearning.updateCounter++;
+    if (this.qLearning.updateCounter % this.qLearning.targetUpdateFreq === 0) {
+      this.syncTargetNetwork();
+    }
+
     this.qLearning.lastState = stateKey;
     this.qLearning.lastAction = action;
     this.qLearning.lastReward = result;
+  }
+
+  // Sync target network by copying online Q-values
+  // Called periodically to stabilize learning
+  syncTargetNetwork() {
+    this.qLearning.targetStates = new Map();
+    for (const [state, actions] of this.qLearning.states) {
+      this.qLearning.targetStates.set(state, new Map(actions));
+    }
+    console.log(`[DQN] Target network synced (${this.qLearning.states.size} states)`);
   }
   
   // Update neural network with backpropagation
@@ -474,8 +898,16 @@ export class MLDecisionEngine {
   
   extractFeatures(enemyId, turn, playerHealth, enemyHealth, playerStats, enemyStats, gameHistory) {
     const model = this.opponentModels.get(enemyId);
-    
+
+    // Extract enemy charges (most predictive feature: +5.4% lift)
+    const enemyCharges = enemyStats?.charges || { rock: 3, paper: 3, scissor: 3 };
+    const rockCharges = enemyCharges.rock ?? 3;
+    const paperCharges = enemyCharges.paper ?? 3;
+    const scissorCharges = enemyCharges.scissor ?? 3;
+    const maxCharges = Math.max(rockCharges, paperCharges, scissorCharges);
+
     return [
+      // Original features (0-14)
       turn / 100,                           // normalized turn
       playerHealth / 100,                   // normalized player health
       enemyHealth / 100,                    // normalized enemy health
@@ -490,7 +922,16 @@ export class MLDecisionEngine {
       playerStats?.shield || 0 / 100,      // normalized shield
       turn % 10 / 10,                      // turn cycle (0-9 normalized)
       Math.sin(turn / 10),                 // cyclic feature 1
-      Math.cos(turn / 10)                  // cyclic feature 2
+      Math.cos(turn / 10),                 // cyclic feature 2
+
+      // NEW: Enemy charge features (15-21) - +5.4% predictive lift
+      rockCharges / 3,                     // normalized rock charges
+      paperCharges / 3,                    // normalized paper charges
+      scissorCharges / 3,                  // normalized scissor charges
+      rockCharges === maxCharges && rockCharges > paperCharges && rockCharges > scissorCharges ? 1 : 0,  // rock highest
+      paperCharges === maxCharges && paperCharges > rockCharges && paperCharges > scissorCharges ? 1 : 0, // paper highest
+      scissorCharges === maxCharges && scissorCharges > rockCharges && scissorCharges > paperCharges ? 1 : 0, // scissor highest
+      turn === 1 ? 1 : 0                   // first turn indicator (for turn-1 biases)
     ];
   }
   
@@ -663,13 +1104,60 @@ export class MLDecisionEngine {
   
   // Get ML statistics for reporting
   getMLStats() {
+    // Compute Thompson Sampling statistics
+    const armStats = {};
+    for (const [strategy, arm] of this.bandit.arms.entries()) {
+      armStats[strategy] = {
+        plays: arm.plays,
+        wins: arm.wins,
+        losses: arm.losses,
+        value: arm.value,
+        // Show effective Beta distribution parameters
+        alpha: arm.wins + 1,
+        beta: arm.losses + 1
+      };
+    }
+
+    // Collect CTW stats
+    const ctwStats = {};
+    for (const [enemyId, ctw] of this.ctwModels.entries()) {
+      const stats = ctw.getStats();
+      ctwStats[enemyId] = {
+        nodes: stats.totalNodes,
+        depth: stats.actualDepth,
+        history: stats.historyLength,
+        prediction: stats.weightedPrediction
+      };
+    }
+
+    // Collect RNN stats
+    const rnnStats = {};
+    for (const [enemyId, rnn] of this.rnnModels.entries()) {
+      const stats = rnn.getStats();
+      rnnStats[enemyId] = {
+        hiddenSize: stats.hiddenSize,
+        historyLength: stats.historyLength,
+        hiddenNorm: stats.hiddenNorm,
+        prediction: stats.prediction
+      };
+    }
+
     return {
-      strategies: Object.fromEntries(this.bandit.arms),
+      strategies: armStats,
+      samplingMethod: 'thompson',
       totalOpponents: this.opponentModels.size,
       totalBattles: this.battleHistory.length,
       qStates: this.qLearning.states.size,
-      banditEpsilon: this.bandit.epsilon,
-      qLearningEpsilon: this.qLearning.epsilon
+      qTargetStates: this.qLearning.targetStates?.size || 0,
+      qUpdateCounter: this.qLearning.updateCounter,
+      qTargetUpdateFreq: this.qLearning.targetUpdateFreq,
+      qLearningEpsilon: this.qLearning.epsilon,
+      qLearningMethod: 'double_dqn',
+      iocaine: this.iocaine.getStats(),
+      ctw: ctwStats,
+      rnn: rnnStats,
+      bayesian: this.bayesian.getOverallStats(),
+      ensemble: this.ensemble.getStats()
     };
   }
 }
