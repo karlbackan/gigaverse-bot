@@ -478,5 +478,501 @@
       "accuracy": 34.18826633555797,
       "predictions": 25772
     }
-  ]
+  ],
+  "confidenceFallback": [
+    {
+      "threshold": 0.35,
+      "accuracy": 34.78477646667775,
+      "fallbackRate": 5.870034901113512
+    },
+    {
+      "threshold": 0.38,
+      "accuracy": 34.568721954462355,
+      "fallbackRate": 33.10287518697025
+    },
+    {
+      "threshold": 0.4,
+      "accuracy": 34.44573707827821,
+      "fallbackRate": 47.81784942662456
+    },
+    {
+      "threshold": 0.42,
+      "accuracy": 34.242978228352996,
+      "fallbackRate": 59.80388898121988
+    },
+    {
+      "threshold": 0.45,
+      "accuracy": 33.98371281369453,
+      "fallbackRate": 73.59149077613428
+    }
+  ],
+  "ngramEnsemble": {
+    "accuracy": 34.11010583247087
+  },
+  "ctwNgramHybrid": [
+    {
+      "ctw": 1,
+      "ngram": 0,
+      "accuracy": 34.904437427289345
+    },
+    {
+      "ctw": 0.8,
+      "ngram": 0.2,
+      "accuracy": 34.89446568057171
+    },
+    {
+      "ctw": 0.6,
+      "ngram": 0.4,
+      "accuracy": 34.718298155226854
+    },
+    {
+      "ctw": 0.5,
+      "ngram": 0.5,
+      "accuracy": 34.7216220707994
+    }
+  ],
+  "perOpponentOptimal": [
+    {
+      "enemyId": "3",
+      "ctwAcc": 37.5,
+      "freqAcc": 32.63888888888889,
+      "bestStrategy": "CTW",
+      "battles": 144
+    },
+    {
+      "enemyId": "13",
+      "ctwAcc": 37.28813559322034,
+      "freqAcc": 33.89830508474576,
+      "bestStrategy": "CTW",
+      "battles": 118
+    },
+    {
+      "enemyId": "28",
+      "ctwAcc": 36.59132559560171,
+      "freqAcc": 33.59804520464264,
+      "bestStrategy": "CTW",
+      "battles": 1637
+    },
+    {
+      "enemyId": "12",
+      "ctwAcc": 36.53846153846153,
+      "freqAcc": 30.76923076923077,
+      "bestStrategy": "CTW",
+      "battles": 208
+    },
+    {
+      "enemyId": "8",
+      "ctwAcc": 35.6,
+      "freqAcc": 30,
+      "bestStrategy": "CTW",
+      "battles": 250
+    },
+    {
+      "enemyId": "27",
+      "ctwAcc": 35.55622009569378,
+      "freqAcc": 33.672248803827756,
+      "bestStrategy": "CTW",
+      "battles": 3344
+    },
+    {
+      "enemyId": "25",
+      "ctwAcc": 35.26315789473684,
+      "freqAcc": 32.932330827067666,
+      "bestStrategy": "CTW",
+      "battles": 6650
+    },
+    {
+      "enemyId": "4",
+      "ctwAcc": 34.82142857142857,
+      "freqAcc": 24.107142857142858,
+      "bestStrategy": "CTW",
+      "battles": 224
+    },
+    {
+      "enemyId": "-1",
+      "ctwAcc": 34.598698481561826,
+      "freqAcc": 32.64642082429501,
+      "bestStrategy": "CTW",
+      "battles": 1844
+    },
+    {
+      "enemyId": "23",
+      "ctwAcc": 34.5260857689156,
+      "freqAcc": 34.11636164982245,
+      "bestStrategy": "CTW",
+      "battles": 3661
+    },
+    {
+      "enemyId": "24",
+      "ctwAcc": 34.2680687698214,
+      "freqAcc": 34.15122684026039,
+      "bestStrategy": "CTW",
+      "battles": 5991
+    },
+    {
+      "enemyId": "10",
+      "ctwAcc": 34.08360128617363,
+      "freqAcc": 30.86816720257235,
+      "bestStrategy": "CTW",
+      "battles": 311
+    },
+    {
+      "enemyId": "7",
+      "ctwAcc": 34.06113537117904,
+      "freqAcc": 35.80786026200873,
+      "bestStrategy": "FREQ",
+      "battles": 229
+    },
+    {
+      "enemyId": "29",
+      "ctwAcc": 33.9622641509434,
+      "freqAcc": 33.84433962264151,
+      "bestStrategy": "CTW",
+      "battles": 848
+    },
+    {
+      "enemyId": "26",
+      "ctwAcc": 33.25232887808829,
+      "freqAcc": 33.37383556095585,
+      "bestStrategy": "FREQ",
+      "battles": 2469
+    },
+    {
+      "enemyId": "11",
+      "ctwAcc": 32.95019157088122,
+      "freqAcc": 29.50191570881226,
+      "bestStrategy": "CTW",
+      "battles": 261
+    },
+    {
+      "enemyId": "5",
+      "ctwAcc": 32.89902280130293,
+      "freqAcc": 28.664495114006517,
+      "bestStrategy": "CTW",
+      "battles": 307
+    },
+    {
+      "enemyId": "2",
+      "ctwAcc": 32.53968253968254,
+      "freqAcc": 26.190476190476193,
+      "bestStrategy": "CTW",
+      "battles": 126
+    },
+    {
+      "enemyId": "15",
+      "ctwAcc": 32.075471698113205,
+      "freqAcc": 32.075471698113205,
+      "bestStrategy": "FREQ",
+      "battles": 53
+    },
+    {
+      "enemyId": "30",
+      "ctwAcc": 30.909090909090907,
+      "freqAcc": 34.24242424242424,
+      "bestStrategy": "FREQ",
+      "battles": 330
+    },
+    {
+      "enemyId": "1",
+      "ctwAcc": 29.850746268656714,
+      "freqAcc": 26.865671641791046,
+      "bestStrategy": "CTW",
+      "battles": 134
+    },
+    {
+      "enemyId": "9",
+      "ctwAcc": 29.268292682926827,
+      "freqAcc": 32.752613240418114,
+      "bestStrategy": "FREQ",
+      "battles": 287
+    },
+    {
+      "enemyId": "6",
+      "ctwAcc": 29.1044776119403,
+      "freqAcc": 30.970149253731343,
+      "bestStrategy": "FREQ",
+      "battles": 268
+    },
+    {
+      "enemyId": "14",
+      "ctwAcc": 27.27272727272727,
+      "freqAcc": 36.36363636363637,
+      "bestStrategy": "FREQ",
+      "battles": 88
+    }
+  ],
+  "recentWindow": [
+    {
+      "window": 10,
+      "accuracy": 32.753864051853085
+    },
+    {
+      "window": 20,
+      "accuracy": 33.84410835964766
+    },
+    {
+      "window": 50,
+      "accuracy": 34.32940003323915
+    },
+    {
+      "window": 100,
+      "accuracy": 34.03689546285524
+    },
+    {
+      "window": 200,
+      "accuracy": 34.27621738407844
+    },
+    {
+      "window": 500,
+      "accuracy": 34.56207412331727
+    },
+    {
+      "window": "all",
+      "accuracy": 34.904437427289345
+    }
+  ],
+  "patternStrength": [
+    {
+      "threshold": 0.33,
+      "accuracy": 34.904437427289345,
+      "coverage": 100,
+      "predictions": 30085
+    },
+    {
+      "threshold": 0.35,
+      "accuracy": 34.89529997528161,
+      "coverage": 94.12996509888649,
+      "predictions": 28319
+    },
+    {
+      "threshold": 0.4,
+      "accuracy": 35.77934900312122,
+      "coverage": 52.18215057337544,
+      "predictions": 15699
+    },
+    {
+      "threshold": 0.45,
+      "accuracy": 35.770925110132154,
+      "coverage": 26.40850922386571,
+      "predictions": 7945
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 36.50078811078586,
+      "coverage": 14.761509057669937,
+      "predictions": 4441
+    },
+    {
+      "threshold": 0.55,
+      "accuracy": 37.96356538711776,
+      "coverage": 10.217716470001662,
+      "predictions": 3074
+    },
+    {
+      "threshold": 0.6,
+      "accuracy": 38.84632717440289,
+      "coverage": 7.375768655476151,
+      "predictions": 2219
+    }
+  ],
+  "volatility": [
+    {
+      "enemyId": "15",
+      "firstAcc": 19.230769230769234,
+      "secondAcc": 44.44444444444444,
+      "volatility": 25.21367521367521,
+      "trend": "improving",
+      "battles": 54
+    },
+    {
+      "enemyId": "30",
+      "firstAcc": 37.57575757575757,
+      "secondAcc": 24.242424242424242,
+      "volatility": 13.333333333333329,
+      "trend": "degrading",
+      "battles": 331
+    },
+    {
+      "enemyId": "12",
+      "firstAcc": 42.30769230769231,
+      "secondAcc": 30.76923076923077,
+      "volatility": 11.538461538461537,
+      "trend": "degrading",
+      "battles": 209
+    },
+    {
+      "enemyId": "6",
+      "firstAcc": 24.62686567164179,
+      "secondAcc": 33.582089552238806,
+      "volatility": 8.955223880597014,
+      "trend": "improving",
+      "battles": 269
+    },
+    {
+      "enemyId": "2",
+      "firstAcc": 28.57142857142857,
+      "secondAcc": 36.507936507936506,
+      "volatility": 7.936507936507937,
+      "trend": "improving",
+      "battles": 127
+    },
+    {
+      "enemyId": "13",
+      "firstAcc": 33.89830508474576,
+      "secondAcc": 40.67796610169492,
+      "volatility": 6.779661016949163,
+      "trend": "improving",
+      "battles": 119
+    },
+    {
+      "enemyId": "9",
+      "firstAcc": 25.874125874125873,
+      "secondAcc": 32.63888888888889,
+      "volatility": 6.7647630147630196,
+      "trend": "improving",
+      "battles": 288
+    },
+    {
+      "enemyId": "29",
+      "firstAcc": 36.556603773584904,
+      "secondAcc": 31.367924528301888,
+      "volatility": 5.188679245283016,
+      "trend": "degrading",
+      "battles": 849
+    },
+    {
+      "enemyId": "14",
+      "firstAcc": 29.545454545454547,
+      "secondAcc": 25,
+      "volatility": 4.545454545454547,
+      "trend": "degrading",
+      "battles": 89
+    },
+    {
+      "enemyId": "8",
+      "firstAcc": 33.6,
+      "secondAcc": 37.6,
+      "volatility": 4,
+      "trend": "improving",
+      "battles": 251
+    },
+    {
+      "enemyId": "7",
+      "firstAcc": 32.45614035087719,
+      "secondAcc": 35.65217391304348,
+      "volatility": 3.196033562166285,
+      "trend": "improving",
+      "battles": 230
+    },
+    {
+      "enemyId": "26",
+      "firstAcc": 32.090761750405186,
+      "secondAcc": 34.41295546558704,
+      "volatility": 2.3221937151818537,
+      "trend": "improving",
+      "battles": 2470
+    },
+    {
+      "enemyId": "5",
+      "firstAcc": 32.02614379084967,
+      "secondAcc": 33.76623376623377,
+      "volatility": 1.7400899753840946,
+      "trend": "improving",
+      "battles": 308
+    },
+    {
+      "enemyId": "10",
+      "firstAcc": 34.83870967741935,
+      "secondAcc": 33.33333333333333,
+      "volatility": 1.5053763440860237,
+      "trend": "degrading",
+      "battles": 312
+    },
+    {
+      "enemyId": "27",
+      "firstAcc": 36.24401913875598,
+      "secondAcc": 34.868421052631575,
+      "volatility": 1.3755980861244055,
+      "trend": "degrading",
+      "battles": 3345
+    },
+    {
+      "enemyId": "25",
+      "firstAcc": 35.66917293233083,
+      "secondAcc": 34.85714285714286,
+      "volatility": 0.8120300751879697,
+      "trend": "degrading",
+      "battles": 6651
+    },
+    {
+      "enemyId": "23",
+      "firstAcc": 34.31693989071039,
+      "secondAcc": 34.73511742217368,
+      "volatility": 0.41817753146329295,
+      "trend": "improving",
+      "battles": 3662
+    },
+    {
+      "enemyId": "28",
+      "firstAcc": 36.79706601466993,
+      "secondAcc": 36.385836385836384,
+      "volatility": 0.41122962883354575,
+      "trend": "degrading",
+      "battles": 1638
+    },
+    {
+      "enemyId": "24",
+      "firstAcc": 34.45742904841402,
+      "secondAcc": 34.07877169559412,
+      "volatility": 0.3786573528199,
+      "trend": "degrading",
+      "battles": 5992
+    },
+    {
+      "enemyId": "11",
+      "firstAcc": 33.07692307692307,
+      "secondAcc": 32.82442748091603,
+      "volatility": 0.2524955960070443,
+      "trend": "degrading",
+      "battles": 262
+    },
+    {
+      "enemyId": "-1",
+      "firstAcc": 34.490238611713664,
+      "secondAcc": 34.70715835140998,
+      "volatility": 0.21691973969631562,
+      "trend": "improving",
+      "battles": 1845
+    },
+    {
+      "enemyId": "1",
+      "firstAcc": 29.850746268656714,
+      "secondAcc": 29.850746268656714,
+      "volatility": 0,
+      "trend": "stable",
+      "battles": 135
+    },
+    {
+      "enemyId": "3",
+      "firstAcc": 37.5,
+      "secondAcc": 37.5,
+      "volatility": 0,
+      "trend": "stable",
+      "battles": 145
+    },
+    {
+      "enemyId": "4",
+      "firstAcc": 34.82142857142857,
+      "secondAcc": 34.82142857142857,
+      "volatility": 0,
+      "trend": "stable",
+      "battles": 225
+    }
+  ],
+  "winRate": {
+    "winRate": 34.904437427289345,
+    "lossRate": 32.96991856406847,
+    "drawRate": 32.125644008642176,
+    "netAdvantage": 1.9345188632208732
+  }
 }

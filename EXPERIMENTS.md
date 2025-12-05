@@ -305,6 +305,74 @@
 
 ---
 
+## Round 4 Experiments (2024-12-05)
+
+### Experiment 20: Confidence-Based Fallback
+**Result**: 34.78% with threshold 0.35 - WORSE than pure CTW
+**Conclusion**: Fallback hurts. Trust CTW always.
+
+### Experiment 21: N-gram Ensemble
+**Result**: 34.11% - much worse than CTW
+**Conclusion**: N-grams not competitive with CTW.
+
+### Experiment 22: CTW + N-gram Hybrid
+**Result**: Pure CTW (1.0/0.0) best at 34.90%
+**Conclusion**: Adding n-grams dilutes CTW signal.
+
+### Experiment 23: Per-Opponent Optimal Strategy
+**Result**: CTW wins for 17/24 opponents (71%)
+**Key finding**: Some opponents (7/24) better predicted by frequency
+- Enemy 7: Freq 35.8% vs CTW 34.1%
+- Enemy 26: Freq 33.4% vs CTW 33.3%
+
+**Potential**: Could use frequency for specific opponents, but gains marginal.
+
+---
+
+## Round 5 Experiments (2024-12-05)
+
+### Experiment 24: Recent Window CTW
+**Result**: Using ALL history is best (34.90%)
+| Window | Accuracy |
+|--------|----------|
+| 10 | 32.75% |
+| 50 | 34.33% |
+| 100 | 34.04% |
+| all | **34.90%** |
+
+**Conclusion**: Don't limit history. All data is valuable.
+
+### Experiment 25: Pattern Strength Filter (KEY FINDING!)
+**Result**: Higher confidence = much higher accuracy!
+
+| Threshold | Accuracy | Coverage |
+|-----------|----------|----------|
+| 0.33 | 34.90% | 100% |
+| 0.40 | 35.78% | 52% |
+| 0.50 | 36.50% | 15% |
+| 0.55 | 37.96% | 10% |
+| **0.60** | **38.85%** | **7%** |
+
+**Key insight**: When CTW is confident (>60%), it's 38.85% accurate!
+Could use Nash equilibrium fallback for low-confidence rounds.
+
+### Experiment 26: Opponent Volatility
+**Result**: Average 4.45% volatility between halves
+- Enemy 15: 19% -> 44% (strategy improved)
+- Enemy 30: 38% -> 24% (strategy degraded)
+
+**Conclusion**: Some opponents adapt, but overall stable.
+
+### Experiment 27: Win Rate (Bottom Line)
+**Result**: **1.93% net advantage** over random
+- Win rate: 34.90%
+- Loss rate: 32.97%
+- Draw rate: 32.13%
+
+**This is the actual money metric!**
+
+---
+
 ## Experiment History
 
 | Date | Experiment | Result | Action |
