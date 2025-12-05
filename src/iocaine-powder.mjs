@@ -15,18 +15,16 @@
 
 export class IocainePowder {
   constructor() {
-    // Base predictors (7 predictors x 6 meta = 42 strategies)
+    // Base predictors (4 predictors x 6 meta = 24 strategies)
+    // Note: Tested 7 predictors but it hurt performance - extra predictors added noise
     this.predictors = {
       frequency: this.frequencyPredictor.bind(this),
       history: this.historyMatchPredictor.bind(this),
       markov: this.markovPredictor.bind(this),
-      markov2: this.markov2Predictor.bind(this),   // 2nd order Markov
-      markov3: this.markov3Predictor.bind(this),   // 3rd order Markov
-      decay: this.decayFrequencyPredictor.bind(this), // Recency-weighted
       random: this.randomPredictor.bind(this)
     };
 
-    // Track performance of each predictor x 6 meta-strategies = 42 total strategies
+    // Track performance of each predictor x 6 meta-strategies = 24 total strategies
     this.strategies = new Map();
     for (const predictor of Object.keys(this.predictors)) {
       for (let meta = 0; meta < 6; meta++) {
@@ -39,7 +37,7 @@ export class IocainePowder {
     this.enemyData = new Map();  // enemyId -> { ourHistory, theirHistory }
     this.maxHistory = 100;
 
-    console.log('🧪 [Iocaine] Initialized with 42 meta-strategies (7 predictors x 6 levels)');
+    console.log('🧪 [Iocaine] Initialized with 24 meta-strategies (4 predictors x 6 levels)');
   }
 
   // Move relationships

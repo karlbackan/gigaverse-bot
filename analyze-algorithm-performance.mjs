@@ -5,6 +5,7 @@
 
 import sqlite3 from 'sqlite3';
 import { MLDecisionEngine } from './src/ml-decision-engine.mjs';
+import { JointPatternCTW } from './src/joint-pattern-ctw.mjs';
 
 const DB_PATH = './data/battle-statistics.db';
 const MOVES = ['rock', 'paper', 'scissor'];
@@ -13,6 +14,13 @@ class AlgorithmAnalyzer {
   constructor() {
     this.db = null;
     this.engine = new MLDecisionEngine();
+    this.jointCTWModels = new Map();  // enemyId -> JointPatternCTW
+  }
+
+  ensureJointCTW(enemyId) {
+    if (!this.jointCTWModels.has(enemyId)) {
+      this.jointCTWModels.set(enemyId, new JointPatternCTW(4));
+    }
   }
 
   async connect() {
@@ -76,10 +84,10 @@ class AlgorithmAnalyzer {
     // Track stats per algorithm
     const stats = {
       ctw: { predictions: 0, correct: 0, wins: 0 },
+      jointctw: { predictions: 0, correct: 0, wins: 0 },
       iocaine: { predictions: 0, correct: 0, wins: 0 },
       bayesian: { predictions: 0, correct: 0, wins: 0 },
-      gru: { predictions: 0, correct: 0, wins: 0 },
-      charge_bias: { predictions: 0, correct: 0, wins: 0 },
+      rnn: { predictions: 0, correct: 0, wins: 0 },
       random: { predictions: 0, correct: 0, wins: 0 }
     };
 
@@ -98,6 +106,7 @@ class AlgorithmAnalyzer {
         this.engine.ensureCTWModel(enemyId);
         this.engine.ensureRNNModel(enemyId);
         this.engine.ensureOpponentModel(enemyId);
+        this.ensureJointCTW(enemyId);
       }
 
       battleCount++;
@@ -111,6 +120,15 @@ class AlgorithmAnalyzer {
         if (ctwModel && ctwModel.history.length >= 1) {
           const ctwProbs = ctwModel.predict();
           if (ctwProbs) predictions.ctw = this.argmax(ctwProbs);
+        }
+      } catch (e) {}
+
+      // Joint CTW prediction (tracks player-enemy pairs)
+      try {
+        const jointModel = this.jointCTWModels.get(enemyId);
+        if (jointModel && jointModel.history.length >= 1) {
+          const jointProbs = jointModel.predict();
+          if (jointProbs) predictions.jointctw = this.argmax(jointProbs);
         }
       } catch (e) {}
 
@@ -130,12 +148,12 @@ class AlgorithmAnalyzer {
         }
       } catch (e) {}
 
-      // GRU prediction (replaced RNN)
+      // RNN prediction
       try {
-        const gruModel = this.engine.rnnModels.get(enemyId);
-        if (gruModel && gruModel.history.length >= 1) {
-          const gruProbs = gruModel.predict();
-          if (gruProbs) predictions.gru = this.argmax(gruProbs);
+        const rnnModel = this.engine.rnnModels.get(enemyId);
+        if (rnnModel && rnnModel.history.length >= 1) {
+          const rnnProbs = rnnModel.predict();
+          if (rnnProbs) predictions.rnn = this.argmax(rnnProbs);
         }
       } catch (e) {}
 
@@ -162,6 +180,7 @@ class AlgorithmAnalyzer {
 
       // Now update models with actual result
       this.engine.ctwModels.get(enemyId)?.update(enemy_move);
+      this.jointCTWModels.get(enemyId)?.update(player_move, enemy_move);  // Joint patterns
       this.engine.iocaine.update(enemyId, player_move, enemy_move);
       this.engine.rnnModels.get(enemyId)?.update(player_move, enemy_move);
       this.engine.bayesian.update(enemyId, player_move, enemy_move);

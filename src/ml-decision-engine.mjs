@@ -8,7 +8,7 @@ import { IocainePowder } from './iocaine-powder.mjs';
 import { ContextTreeWeighting } from './context-tree-weighting.mjs';
 import { BayesianOpponentModel } from './bayesian-opponent-model.mjs';
 import { WeightedEnsemble } from './weighted-ensemble.mjs';
-import { SimpleGRU } from './simple-gru.mjs';
+import { SimpleRNN } from './simple-rnn.mjs';
 
 export class MLDecisionEngine {
   constructor() {
@@ -108,7 +108,7 @@ export class MLDecisionEngine {
     this.ctwModels = new Map();  // enemyId -> ContextTreeWeighting instance
 
     // Simple RNN instances (per opponent) for sequence prediction
-    this.rnnModels = new Map();  // enemyId -> SimpleGRU instance
+    this.rnnModels = new Map();  // enemyId -> SimpleRNN instance
 
     // Bayesian opponent modeling
     this.bayesian = new BayesianOpponentModel();
@@ -571,7 +571,7 @@ export class MLDecisionEngine {
   // Ensure RNN model exists for an opponent
   ensureRNNModel(enemyId) {
     if (!this.rnnModels.has(enemyId)) {
-      this.rnnModels.set(enemyId, new SimpleGRU(16));  // 16 hidden units, GRU architecture
+      this.rnnModels.set(enemyId, new SimpleRNN(16));  // 16 hidden units
       console.log(`🔬 [RNN] Created new model for opponent ${enemyId}`);
     }
   }
