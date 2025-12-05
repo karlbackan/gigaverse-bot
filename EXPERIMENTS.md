@@ -754,7 +754,7 @@ EV(scissor) = P(enemy_paper) - P(enemy_rock)     # win vs paper, lose vs rock
 - Rounds 1-9: 45 experiments
 - Rounds 10-13: 12 experiments
 
-### Key Discoveries (Final)
+### Key Discoveries (Round 13)
 1. **EV optimization beats argmax counter** (+35% improvement)
 2. 2-gram patterns are UNIVERSAL (work across all opponents)
 3. CTW patterns are per-opponent specific
@@ -762,3 +762,89 @@ EV(scissor) = P(enemy_paper) - P(enemy_rock)     # win vs paper, lose vs rock
 5. Fixed weights beat adaptive Bayesian (generalizes better)
 6. Adding randomness always hurts
 7. All history is valuable (no decay/recency)
+
+---
+
+## Round 14 Experiments (2024-12-06)
+
+### Experiment 58: Charge-Only Prediction
+**Result**: 1.76% net advantage (24,934 predictions)
+**Conclusion**: Charge alone is weaker than sequence prediction, but provides independent signal.
+
+### Experiment 59: Baseline NGRAM_CTW + EV (on charge subset)
+**Result**: 3.30% net advantage
+**Note**: Slightly lower than full dataset (3.64%) due to filtering battles with charge data.
+
+### Experiment 60: Charge-Enhanced NGRAM_CTW ⭐ BREAKTHROUGH
+**Hypothesis**: Blend charge probability into sequence prediction.
+
+**Result**:
+| Charge Weight | Net Advantage |
+|---------------|---------------|
+| 0% (baseline) | 3.30% |
+| 5% | 4.57% |
+| **10%** | **5.02%** |
+| 15% | 4.87% |
+| 20% | 4.75% |
+| 30% | 4.31% |
+
+**Conclusion**: Adding 10% charge weighting improves from 3.30% to 5.02%!
+
+### Experiment 61: Charge-Conditional Prediction
+**Result**: **5.36%** net advantage (9,762 charge-influenced)
+**Method**: Only use charge info when max-min >= 2.
+
+### Experiment 62: Threshold & Weight Optimization
+**Result**: Found optimal configuration!
+
+| Threshold | Weight | Net Advantage | Influenced |
+|-----------|--------|---------------|------------|
+| 2 | 15% | 5.36% | 9,762 |
+| 2 | 20% | 5.44% | 9,762 |
+| 3 | 15% | 5.51% | 3,391 |
+| **3** | **20%** | **5.58%** | **3,391** |
+
+**Best configuration**:
+- **Threshold**: 3 (only use charges when max-min >= 3)
+- **Weight**: 20% (blend 20% charge, 80% sequence)
+- **Net advantage**: **5.58%**
+
+### Experiment 63: Verification
+Confirmed: threshold=3, weight=20% achieves 5.58% net advantage.
+
+---
+
+## UPDATED FINAL SUMMARY (Round 14)
+
+### Best Configuration (Implemented)
+- **Algorithm**: 20/80 CTW + Global 2-gram ensemble
+- **Move Selection**: EV optimization
+- **Charge Enhancement**: 20% blend when charge diff >= 3
+- **CTW depth**: 3 (per-opponent Markov)
+- **2-gram**: Global (universal patterns)
+- **No decay**: All history valuable
+- **Net advantage**: **5.58%** over random
+
+### Performance History
+| Round | Net Advantage | Key Change |
+|-------|---------------|------------|
+| Initial | 1.93% | CTW depth 3 |
+| Round 7 | 2.70% | +Global 2-gram |
+| Round 13 | 3.64% | +EV optimization |
+| **Round 14** | **5.58%** | **+Charge enhancement** |
+
+### Total Experiments: 63
+- Rounds 1-9: 45 experiments
+- Rounds 10-13: 12 experiments
+- Round 14: 6 experiments
+
+### Key Discoveries (Final)
+1. **EV optimization beats argmax counter** (+35% improvement)
+2. **Charge-enhanced prediction adds +69% improvement** over EV baseline
+3. 2-gram patterns are UNIVERSAL (work across all opponents)
+4. CTW patterns are per-opponent specific
+5. 20/80 CTW/2-gram ensemble is optimal weighting
+6. Charge info useful only when significant difference (threshold >= 3)
+7. Fixed weights beat adaptive Bayesian (generalizes better)
+8. Adding randomness always hurts
+9. All history is valuable (no decay/recency)

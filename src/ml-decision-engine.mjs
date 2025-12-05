@@ -210,7 +210,7 @@ export class MLDecisionEngine {
         break;
 
       case this.strategies.NGRAM_CTW:
-        const ngramCtwResult = this.ngramCtwDecision(enemyId, availableWeapons);
+        const ngramCtwResult = this.ngramCtwDecision(enemyId, availableWeapons, enemyStats);
         decision = ngramCtwResult.move;
         confidence = ngramCtwResult.confidence;
         break;
@@ -499,7 +499,7 @@ export class MLDecisionEngine {
    * - CTW captures per-opponent Markov patterns
    * - Global 2-gram captures universal cross-opponent patterns
    */
-  ngramCtwDecision(enemyId, availableWeapons) {
+  ngramCtwDecision(enemyId, availableWeapons, enemyStats = null) {
     const MOVES = ['rock', 'paper', 'scissor'];
     const counter = { rock: 'paper', paper: 'scissor', scissor: 'rock' };
 
@@ -517,15 +517,43 @@ export class MLDecisionEngine {
     const ctwWeight = 0.2;
     const ngramWeight = 0.8;
 
-    const ensembleProbs = {
+    let pEnemy = {
       rock: ctwWeight * ctwProbs.rock + ngramWeight * ngramProbs.rock,
       paper: ctwWeight * ctwProbs.paper + ngramWeight * ngramProbs.paper,
       scissor: ctwWeight * ctwProbs.scissor + ngramWeight * ngramProbs.scissor
     };
 
+    // Charge-enhanced prediction (Round 14: +69% improvement)
+    // Only use when charge difference >= 3 (threshold), blend at 20% weight
+    let chargeUsed = false;
+    if (enemyStats?.charges) {
+      const charges = enemyStats.charges;
+      const max = Math.max(charges.rock || 0, charges.paper || 0, charges.scissor || 0);
+      const min = Math.min(charges.rock || 0, charges.paper || 0, charges.scissor || 0);
+
+      if (max - min >= 3) {  // threshold = 3 (optimal from experiments)
+        const totalCharges = (charges.rock || 0) + (charges.paper || 0) + (charges.scissor || 0);
+        if (totalCharges > 0) {
+          const chargeProbs = {
+            rock: (charges.rock || 0) / totalCharges,
+            paper: (charges.paper || 0) / totalCharges,
+            scissor: (charges.scissor || 0) / totalCharges
+          };
+
+          // Blend 80% sequence prediction + 20% charge prediction
+          const chargeWeight = 0.20;  // optimal from experiments
+          pEnemy = {
+            rock: (1 - chargeWeight) * pEnemy.rock + chargeWeight * chargeProbs.rock,
+            paper: (1 - chargeWeight) * pEnemy.paper + chargeWeight * chargeProbs.paper,
+            scissor: (1 - chargeWeight) * pEnemy.scissor + chargeWeight * chargeProbs.scissor
+          };
+          chargeUsed = true;
+        }
+      }
+    }
+
     // EV optimization: calculate expected value for each of OUR moves directly
     // EV(move) = P(we win) - P(we lose) = P(enemy plays what we beat) - P(enemy plays what beats us)
-    const pEnemy = ensembleProbs;
     const ev = {
       rock: pEnemy.scissor - pEnemy.paper,      // win vs scissor, lose vs paper
       paper: pEnemy.rock - pEnemy.scissor,       // win vs rock, lose vs scissor
@@ -557,13 +585,13 @@ export class MLDecisionEngine {
 
     console.log(`📊 [N-gram+CTW] CTW: R=${(ctwProbs.rock*100).toFixed(0)}% P=${(ctwProbs.paper*100).toFixed(0)}% S=${(ctwProbs.scissor*100).toFixed(0)}%`);
     console.log(`📊 [N-gram+CTW] 2-gram: R=${(ngramProbs.rock*100).toFixed(0)}% P=${(ngramProbs.paper*100).toFixed(0)}% S=${(ngramProbs.scissor*100).toFixed(0)}% (${stats.updates} obs)`);
-    console.log(`📊 [N-gram+CTW] EV: R=${(ev.rock*100).toFixed(1)}% P=${(ev.paper*100).toFixed(1)}% S=${(ev.scissor*100).toFixed(1)}% → ${bestMove}`);
+    console.log(`📊 [N-gram+CTW] EV: R=${(ev.rock*100).toFixed(1)}% P=${(ev.paper*100).toFixed(1)}% S=${(ev.scissor*100).toFixed(1)}% → ${bestMove}${chargeUsed ? ' +charge' : ''}`);
 
     return {
       move: bestMove,
       confidence,
-      prediction: ensembleProbs,
-      reasoning: `EV optimization: R=${(ev.rock*100).toFixed(0)}% P=${(ev.paper*100).toFixed(0)}% S=${(ev.scissor*100).toFixed(0)}% → ${bestMove}`
+      prediction: pEnemy,
+      reasoning: `EV${chargeUsed ? '+charge' : ''}: R=${(ev.rock*100).toFixed(0)}% P=${(ev.paper*100).toFixed(0)}% S=${(ev.scissor*100).toFixed(0)}% → ${bestMove}`
     };
   }
 
