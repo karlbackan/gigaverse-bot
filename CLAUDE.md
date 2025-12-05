@@ -1,5 +1,35 @@
 # Gigaverse Bot Project Instructions
 
+## Autonomous Improvement Mode
+
+**IMPORTANT:** Claude has full autonomy to improve the ML/prediction algorithms. Make executive decisions and implement improvements without asking for permission, BUT all changes must be:
+
+1. **Evidence-based** - Test against historical data before deploying
+2. **Measured** - Run `node analyze-algorithm-performance.mjs` to verify improvements
+3. **Documented** - Update this file with results
+4. **Committed** - Push changes after successful tests
+
+### Historical Data Available
+- **30,127 total battles** across 42 unique enemies
+- **~717 battles per enemy average**
+- Top enemies have 3,000-6,600 battles each
+- Use `analyze-algorithm-performance.mjs` to test algorithms
+
+### Current Best Performance (vs Random Baseline)
+| Algorithm | Accuracy | vs Random |
+|-----------|----------|-----------|
+| CTW | 34.4% | +1.0% |
+| Joint CTW | 34.4% | +1.0% |
+| Iocaine | 33.7% | +0.3% |
+| Bayesian | 33.7% | +0.3% |
+| RNN | 33.5% | +0.1% |
+
+### Improvement Principles
+- Simple algorithms often beat complex ones with limited data
+- Test before deploying - many "improvements" make things worse
+- Revert changes that don't show measurable improvement
+- Focus on CTW since it's the best performing algorithm
+
 ## Account Order
 
 The general order for accounts 1 to 5 is:
