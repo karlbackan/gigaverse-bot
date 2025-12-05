@@ -348,6 +348,7 @@ export class IocainePowder {
 
   /**
    * Get move probabilities (for integration with other systems)
+   * Returns our recommended moves (counter-moves)
    */
   getMoveProbabilities(enemyId) {
     const data = this.ensureEnemyData(enemyId);
@@ -377,6 +378,57 @@ export class IocainePowder {
     }
 
     return weights;
+  }
+
+  /**
+   * Get ENEMY move probabilities (what we predict they will play)
+   * Uses weighted average of base predictor outputs
+   */
+  getEnemyMoveProbabilities(enemyId) {
+    const data = this.ensureEnemyData(enemyId);
+
+    if (data.theirHistory.length < 3) {
+      return { rock: 1/3, paper: 1/3, scissor: 1/3 };
+    }
+
+    // Get raw predictions from base predictors (these predict enemy moves)
+    const enemyPredictions = [];
+
+    for (const [predictorName, predictorFn] of Object.entries(this.predictors)) {
+      const prediction = predictorFn(data.theirHistory, data.ourHistory);
+      if (prediction && prediction !== 'random') {
+        // Weight by how well the corresponding strategies perform
+        let weight = 0;
+        for (let meta = 0; meta < 6; meta++) {
+          const key = `${predictorName}.${meta}`;
+          const strategy = data.strategies.get(key);
+          if (strategy) {
+            weight += Math.max(0, strategy.score + 5);
+          }
+        }
+        enemyPredictions.push({ move: prediction, weight: Math.max(1, weight) });
+      }
+    }
+
+    if (enemyPredictions.length === 0) {
+      return { rock: 1/3, paper: 1/3, scissor: 1/3 };
+    }
+
+    // Aggregate predictions with weights
+    const probs = { rock: 0, paper: 0, scissor: 0 };
+    let totalWeight = 0;
+
+    for (const { move, weight } of enemyPredictions) {
+      probs[move] += weight;
+      totalWeight += weight;
+    }
+
+    // Normalize
+    for (const move of Object.keys(probs)) {
+      probs[move] = totalWeight > 0 ? probs[move] / totalWeight : 1/3;
+    }
+
+    return probs;
   }
 }
 

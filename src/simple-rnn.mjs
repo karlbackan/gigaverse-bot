@@ -23,12 +23,15 @@ export class SimpleRNN {
     // Hidden state (memory)
     this.hidden = new Array(this.hiddenSize).fill(0);
 
-    // Learning parameters
-    this.learningRate = 0.05;
+    // Learning parameters - lower rate for stability
+    this.learningRate = 0.01;
 
     // History for training
     this.history = [];
     this.maxHistory = 50;
+
+    // Minimum history before making confident predictions
+    this.minHistoryForPrediction = 5;
   }
 
   initMatrix(rows, cols) {
@@ -179,10 +182,15 @@ export class SimpleRNN {
     const input = this.createInput(last.our, last.their);
     const output = this.forward(input);
 
+    // Blend with uniform distribution based on history length
+    // More history = more confidence in RNN predictions
+    const historyWeight = Math.min(1, (this.history.length - 1) / this.minHistoryForPrediction);
+    const uniformWeight = 1 - historyWeight;
+
     return {
-      rock: output[0],
-      paper: output[1],
-      scissor: output[2]
+      rock: output[0] * historyWeight + (1/3) * uniformWeight,
+      paper: output[1] * historyWeight + (1/3) * uniformWeight,
+      scissor: output[2] * historyWeight + (1/3) * uniformWeight
     };
   }
 
