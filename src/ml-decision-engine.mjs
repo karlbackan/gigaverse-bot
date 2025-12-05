@@ -9,6 +9,7 @@ import { ContextTreeWeighting } from './context-tree-weighting.mjs';
 import { BayesianOpponentModel } from './bayesian-opponent-model.mjs';
 import { WeightedEnsemble } from './weighted-ensemble.mjs';
 import { SimpleRNN } from './simple-rnn.mjs';
+import { WSLSPredictor } from './wsls-predictor.mjs';
 
 export class MLDecisionEngine {
   constructor() {
@@ -113,10 +114,14 @@ export class MLDecisionEngine {
     // Bayesian opponent modeling
     this.bayesian = new BayesianOpponentModel();
 
+    // Win-Stay-Lose-Shift predictor for reactive behavior
+    this.wsls = new WSLSPredictor();
+    this.lastMoves = new Map();  // Track last moves per opponent for WSLS
+
     // Weighted ensemble for combining strategy predictions
     this.ensemble = new WeightedEnsemble(20);  // 20 round window
 
-    console.log('🤖 ML Decision Engine initialized with Thompson Sampling + hybrid approaches + Iocaine Powder + CTW + Bayesian + Ensemble + RNN');
+    console.log('🤖 ML Decision Engine initialized with EXP3 + CTW + Bayesian + Iocaine + WSLS + RNN');
   }
   
   // Initialize weight matrix with small random values
@@ -729,6 +734,10 @@ export class MLDecisionEngine {
 
     // Update Bayesian opponent model (always update for learning)
     this.bayesian.update(enemyId, playerAction, enemyAction);
+
+    // Update WSLS predictor (always update for learning)
+    this.wsls.update(enemyId, playerAction, enemyAction);
+    this.lastMoves.set(enemyId, { player: playerAction, enemy: enemyAction });
 
     // Record predictions from all strategies for ensemble learning
     // (even if ensemble was not the selected strategy)

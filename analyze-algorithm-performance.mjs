@@ -6,6 +6,8 @@
 import sqlite3 from 'sqlite3';
 import { MLDecisionEngine } from './src/ml-decision-engine.mjs';
 import { JointPatternCTW } from './src/joint-pattern-ctw.mjs';
+import { loadPopulationCTW, blendPredictions } from './src/population-ctw.mjs';
+import { WSLSPredictor } from './src/wsls-predictor.mjs';
 
 const DB_PATH = './data/battle-statistics.db';
 const MOVES = ['rock', 'paper', 'scissor'];
@@ -15,12 +17,22 @@ class AlgorithmAnalyzer {
     this.db = null;
     this.engine = new MLDecisionEngine();
     this.jointCTWModels = new Map();  // enemyId -> JointPatternCTW
+    this.populationCTW = loadPopulationCTW();  // Pre-trained on all data
+    this.opponentSampleCounts = new Map();  // enemyId -> sample count
+    this.wsls = new WSLSPredictor();  // Win-Stay-Lose-Shift predictor
+    this.lastMoves = new Map();  // Track last moves per enemy for WSLS
   }
 
   ensureJointCTW(enemyId) {
     if (!this.jointCTWModels.has(enemyId)) {
       this.jointCTWModels.set(enemyId, new JointPatternCTW(4));
     }
+  }
+
+  incrementSampleCount(enemyId) {
+    const count = this.opponentSampleCounts.get(enemyId) || 0;
+    this.opponentSampleCounts.set(enemyId, count + 1);
+    return count;
   }
 
   async connect() {
@@ -84,9 +96,12 @@ class AlgorithmAnalyzer {
     // Track stats per algorithm
     const stats = {
       ctw: { predictions: 0, correct: 0, wins: 0 },
+      popctw: { predictions: 0, correct: 0, wins: 0 },  // Population-blended CTW
       jointctw: { predictions: 0, correct: 0, wins: 0 },
       iocaine: { predictions: 0, correct: 0, wins: 0 },
       bayesian: { predictions: 0, correct: 0, wins: 0 },
+      wsls: { predictions: 0, correct: 0, wins: 0 },  // Win-Stay-Lose-Shift
+      ensemble: { predictions: 0, correct: 0, wins: 0 },  // Best combo
       rnn: { predictions: 0, correct: 0, wins: 0 },
       random: { predictions: 0, correct: 0, wins: 0 }
     };
@@ -123,6 +138,18 @@ class AlgorithmAnalyzer {
         }
       } catch (e) {}
 
+      // Population-blended CTW prediction
+      try {
+        const ctwModel = this.engine.ctwModels.get(enemyId);
+        const sampleCount = this.opponentSampleCounts.get(enemyId) || 0;
+        if (ctwModel && this.populationCTW) {
+          const opponentPred = ctwModel.history.length >= 1 ? ctwModel.predict() : { rock: 1/3, paper: 1/3, scissor: 1/3 };
+          const populationPred = this.populationCTW.predict();
+          const blended = blendPredictions(opponentPred, populationPred, sampleCount);
+          predictions.popctw = this.argmax(blended);
+        }
+      } catch (e) {}
+
       // Joint CTW prediction (tracks player-enemy pairs)
       try {
         const jointModel = this.jointCTWModels.get(enemyId);
@@ -148,6 +175,15 @@ class AlgorithmAnalyzer {
         }
       } catch (e) {}
 
+      // WSLS prediction (need last battle info)
+      try {
+        const lastMoveData = this.lastMoves.get(enemyId);
+        if (lastMoveData) {
+          const wslsProbs = this.wsls.predict(enemyId, lastMoveData.player, lastMoveData.enemy);
+          if (wslsProbs) predictions.wsls = this.argmax(wslsProbs);
+        }
+      } catch (e) {}
+
       // RNN prediction
       try {
         const rnnModel = this.engine.rnnModels.get(enemyId);
@@ -159,6 +195,42 @@ class AlgorithmAnalyzer {
 
       // Random baseline
       predictions.random = MOVES[Math.floor(Math.random() * 3)];
+
+      // Ensemble: confidence-weighted - use CTW primarily, blend when uncertain
+      try {
+        const ctwModel = this.engine.ctwModels.get(enemyId);
+        if (ctwModel && ctwModel.history.length >= 1) {
+          const ctwProbs = ctwModel.predict();
+          if (ctwProbs) {
+            // Calculate CTW confidence (max prob - 1/3)
+            const maxProb = Math.max(ctwProbs.rock, ctwProbs.paper, ctwProbs.scissor);
+            const confidence = maxProb - 1/3;  // 0 = uniform, ~0.67 = certain
+
+            if (confidence > 0.1) {
+              // High confidence: trust CTW
+              predictions.ensemble = this.argmax(ctwProbs);
+            } else {
+              // Low confidence: blend with other algorithms
+              const ensembleProbs = { rock: ctwProbs.rock, paper: ctwProbs.paper, scissor: ctwProbs.scissor };
+              let totalWeight = 1;
+
+              // Add WSLS signal
+              const lastMoveData = this.lastMoves.get(enemyId);
+              if (lastMoveData) {
+                const wslsProbs = this.wsls.predict(enemyId, lastMoveData.player, lastMoveData.enemy);
+                if (wslsProbs) {
+                  for (const move of MOVES) ensembleProbs[move] += wslsProbs[move];
+                  totalWeight += 1;
+                }
+              }
+
+              // Normalize and predict
+              for (const move of MOVES) ensembleProbs[move] /= totalWeight;
+              predictions.ensemble = this.argmax(ensembleProbs);
+            }
+          }
+        }
+      } catch (e) {}
 
       // Score predictions
       for (const [algo, predictedEnemyMove] of Object.entries(predictions)) {
@@ -184,7 +256,10 @@ class AlgorithmAnalyzer {
       this.engine.iocaine.update(enemyId, player_move, enemy_move);
       this.engine.rnnModels.get(enemyId)?.update(player_move, enemy_move);
       this.engine.bayesian.update(enemyId, player_move, enemy_move);
+      this.wsls.update(enemyId, player_move, enemy_move);  // WSLS
+      this.lastMoves.set(enemyId, { player: player_move, enemy: enemy_move });  // Track for WSLS
       this.engine.updateOpponentModel(enemyId, enemy_move, result, turn);
+      this.incrementSampleCount(enemyId);  // Track samples for population blending
 
       // Progress
       if (battleCount % 5000 === 0) {

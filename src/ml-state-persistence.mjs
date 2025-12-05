@@ -68,9 +68,13 @@ export class MLStatePersistence {
                 // Bayesian opponent models
                 bayesianState: this.serializeBayesian(mlEngine.bayesian),
 
+                // WSLS predictor
+                wslsState: this.serializeWSLS(mlEngine.wsls),
+                lastMoves: this.serializeMap(mlEngine.lastMoves),
+
                 // Metadata
                 saveTimestamp: Date.now(),
-                version: '1.3.0' // 1.3.0: Added CTW, RNN, Iocaine, Bayesian persistence
+                version: '1.4.0' // 1.4.0: Added WSLS persistence
             };
             
             // Backup existing state
@@ -105,8 +109,8 @@ export class MLStatePersistence {
             
             const state = JSON.parse(fs.readFileSync(this.stateFile, 'utf8'));
             
-            // Validate state version - support 1.0.0, 1.1.0, and 1.2.0
-            const supportedVersions = ['1.0.0', '1.1.0', '1.2.0'];
+            // Validate state version
+            const supportedVersions = ['1.0.0', '1.1.0', '1.2.0', '1.3.0', '1.4.0'];
             if (!state.version || !supportedVersions.includes(state.version)) {
                 console.log('⚠️ ML state version mismatch - starting fresh');
                 return false;
@@ -237,6 +241,17 @@ export class MLStatePersistence {
             // Restore Bayesian state
             if (state.bayesianState) {
                 this.deserializeBayesian(mlEngine, state.bayesianState);
+            }
+
+            // Restore WSLS state
+            if (state.wslsState) {
+                this.deserializeWSLS(mlEngine, state.wslsState);
+            }
+            if (state.lastMoves) {
+                mlEngine.lastMoves.clear();
+                for (const [enemyId, moves] of Object.entries(state.lastMoves)) {
+                    mlEngine.lastMoves.set(enemyId, moves);
+                }
             }
 
             const ageHours = (Date.now() - state.saveTimestamp) / (1000 * 60 * 60);
@@ -478,6 +493,18 @@ export class MLStatePersistence {
             }
         }
         console.log(`  Bayesian opponents loaded: ${Object.keys(bayesianData.opponents || {}).length}`);
+    }
+
+    // ==================== WSLS Serialization ====================
+    serializeWSLS(wsls) {
+        if (!wsls) return null;
+        return wsls.serialize();
+    }
+
+    deserializeWSLS(mlEngine, wslsData) {
+        if (!wslsData || !mlEngine.wsls) return;
+        mlEngine.wsls.deserialize(wslsData);
+        console.log(`  WSLS opponents loaded: ${mlEngine.wsls.opponentHistory?.size || 0}`);
     }
 }
 
