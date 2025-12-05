@@ -568,7 +568,8 @@ export class MLDecisionEngine {
   // Ensure CTW model exists for an opponent
   ensureCTWModel(enemyId) {
     if (!this.ctwModels.has(enemyId)) {
-      this.ctwModels.set(enemyId, new ContextTreeWeighting(6));  // depth 6 = optimal 50.9% expected
+      // Depth 3 empirically best (34.90%) - balances pattern length vs noise
+      this.ctwModels.set(enemyId, new ContextTreeWeighting(3));
       console.log(`🌳 [CTW] Created new model for opponent ${enemyId}`);
     }
   }

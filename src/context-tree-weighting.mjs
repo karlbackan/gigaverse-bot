@@ -96,10 +96,8 @@ export class ContextTreeWeighting {
     // Add to history
     this.history.push(symbol);
 
-    // Apply decay every 10 rounds for recency bias
-    if (this.history.length % 10 === 0) {
-      this.applyDecay();
-    }
+    // NOTE: Decay disabled - experiments showed no decay (1.0) performs best
+    // All historical data is valuable, recency bias hurts performance
 
     // Trim history to prevent unbounded growth (keep 10x maxDepth for patterns)
     if (this.history.length > this.maxDepth * 10) {

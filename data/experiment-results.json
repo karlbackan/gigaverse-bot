@@ -1,0 +1,482 @@
+{
+  "ctwDepth": [
+    {
+      "depth": 2,
+      "accuracy": 34.718298155226854,
+      "predictions": 30085
+    },
+    {
+      "depth": 3,
+      "accuracy": 34.904437427289345,
+      "predictions": 30085
+    },
+    {
+      "depth": 4,
+      "accuracy": 34.73159381751704,
+      "predictions": 30085
+    },
+    {
+      "depth": 5,
+      "accuracy": 34.55542629217218,
+      "predictions": 30085
+    },
+    {
+      "depth": 6,
+      "accuracy": 34.342695695529336,
+      "predictions": 30085
+    },
+    {
+      "depth": 7,
+      "accuracy": 34.20641515705501,
+      "predictions": 30085
+    },
+    {
+      "depth": 8,
+      "accuracy": 34.209739072627556,
+      "predictions": 30085
+    },
+    {
+      "depth": 10,
+      "accuracy": 34.18979557919229,
+      "predictions": 30085
+    }
+  ],
+  "perOpponent": [
+    {
+      "enemyId": "1177506788",
+      "accuracy": 100,
+      "battles": 30
+    },
+    {
+      "enemyId": "1508288751",
+      "accuracy": 100,
+      "battles": 30
+    },
+    {
+      "enemyId": "1850439519",
+      "accuracy": 100,
+      "battles": 30
+    },
+    {
+      "enemyId": "911662808",
+      "accuracy": 93.10344827586206,
+      "battles": 30
+    },
+    {
+      "enemyId": "100",
+      "accuracy": 85.18518518518519,
+      "battles": 28
+    },
+    {
+      "enemyId": "1668379949",
+      "accuracy": 77.77777777777779,
+      "battles": 19
+    },
+    {
+      "enemyId": "16",
+      "accuracy": 66.66666666666666,
+      "battles": 4
+    },
+    {
+      "enemyId": "101",
+      "accuracy": 60,
+      "battles": 6
+    },
+    {
+      "enemyId": "21",
+      "accuracy": 50,
+      "battles": 3
+    },
+    {
+      "enemyId": "31",
+      "accuracy": 48.148148148148145,
+      "battles": 28
+    },
+    {
+      "enemyId": "20",
+      "accuracy": 45.45454545454545,
+      "battles": 12
+    },
+    {
+      "enemyId": "32",
+      "accuracy": 43.75,
+      "battles": 17
+    },
+    {
+      "enemyId": "99",
+      "accuracy": 41.17647058823529,
+      "battles": 18
+    },
+    {
+      "enemyId": "5",
+      "accuracy": 38.43648208469055,
+      "battles": 308
+    },
+    {
+      "enemyId": "12",
+      "accuracy": 37.980769230769226,
+      "battles": 209
+    },
+    {
+      "enemyId": "4",
+      "accuracy": 36.607142857142854,
+      "battles": 225
+    },
+    {
+      "enemyId": "13",
+      "accuracy": 36.440677966101696,
+      "battles": 119
+    },
+    {
+      "enemyId": "30",
+      "accuracy": 36.36363636363637,
+      "battles": 331
+    },
+    {
+      "enemyId": "15",
+      "accuracy": 35.84905660377358,
+      "battles": 54
+    },
+    {
+      "enemyId": "28",
+      "accuracy": 35.55284056200366,
+      "battles": 1638
+    },
+    {
+      "enemyId": "8",
+      "accuracy": 35.199999999999996,
+      "battles": 251
+    },
+    {
+      "enemyId": "10",
+      "accuracy": 35.048231511254016,
+      "battles": 312
+    },
+    {
+      "enemyId": "27",
+      "accuracy": 34.77870813397129,
+      "battles": 3345
+    },
+    {
+      "enemyId": "6",
+      "accuracy": 34.701492537313435,
+      "battles": 269
+    },
+    {
+      "enemyId": "1611154793",
+      "accuracy": 34.48275862068966,
+      "battles": 30
+    },
+    {
+      "enemyId": "25",
+      "accuracy": 34.30075187969925,
+      "battles": 6651
+    },
+    {
+      "enemyId": "24",
+      "accuracy": 34.2680687698214,
+      "battles": 5992
+    },
+    {
+      "enemyId": "2",
+      "accuracy": 33.33333333333333,
+      "battles": 127
+    },
+    {
+      "enemyId": "26",
+      "accuracy": 33.33333333333333,
+      "battles": 2470
+    },
+    {
+      "enemyId": "33",
+      "accuracy": 33.33333333333333,
+      "battles": 16
+    },
+    {
+      "enemyId": "11",
+      "accuracy": 32.95019157088122,
+      "battles": 262
+    },
+    {
+      "enemyId": "23",
+      "accuracy": 32.9145042338159,
+      "battles": 3662
+    },
+    {
+      "enemyId": "29",
+      "accuracy": 32.90094339622642,
+      "battles": 849
+    },
+    {
+      "enemyId": "3",
+      "accuracy": 32.63888888888889,
+      "battles": 145
+    },
+    {
+      "enemyId": "7",
+      "accuracy": 32.314410480349345,
+      "battles": 230
+    },
+    {
+      "enemyId": "-1",
+      "accuracy": 32.21258134490238,
+      "battles": 1845
+    },
+    {
+      "enemyId": "9",
+      "accuracy": 29.965156794425084,
+      "battles": 288
+    },
+    {
+      "enemyId": "22",
+      "accuracy": 28.57142857142857,
+      "battles": 8
+    },
+    {
+      "enemyId": "1",
+      "accuracy": 28.35820895522388,
+      "battles": 135
+    },
+    {
+      "enemyId": "14",
+      "accuracy": 23.863636363636363,
+      "battles": 89
+    },
+    {
+      "enemyId": "17",
+      "accuracy": 16.666666666666664,
+      "battles": 7
+    },
+    {
+      "enemyId": "19",
+      "accuracy": 0,
+      "battles": 5
+    }
+  ],
+  "transitionMatrix": {
+    "transitions": {
+      "rock": {
+        "rock": 3360,
+        "paper": 3317,
+        "scissor": 3467
+      },
+      "paper": {
+        "rock": 3305,
+        "paper": 3195,
+        "scissor": 3247
+      },
+      "scissor": {
+        "rock": 3482,
+        "paper": 3230,
+        "scissor": 3482
+      }
+    },
+    "accuracy": 33.61506721682417
+  },
+  "antiRotation": {
+    "rotationStats": {
+      "clockwise": 10033,
+      "counter": 9990,
+      "other": 10020
+    },
+    "accuracy": 33.33222381253537
+  },
+  "recencyWeighting": [
+    {
+      "decay": 0.8,
+      "accuracy": 30.825816329927104
+    },
+    {
+      "decay": 0.9,
+      "accuracy": 31.105201927871036
+    },
+    {
+      "decay": 0.95,
+      "accuracy": 31.354495595811866
+    },
+    {
+      "decay": 0.98,
+      "accuracy": 32.65747050024929
+    },
+    {
+      "decay": 0.99,
+      "accuracy": 33.239155725444576
+    },
+    {
+      "decay": 1,
+      "accuracy": 33.634701678577365
+    }
+  ],
+  "conditionalPatterns": {
+    "conditionalCounts": {
+      "afterWin": {
+        "rock": 3289,
+        "paper": 3213,
+        "scissor": 3453
+      },
+      "afterLoss": {
+        "rock": 3503,
+        "paper": 3354,
+        "scissor": 3429
+      },
+      "afterDraw": {
+        "rock": 3355,
+        "paper": 3175,
+        "scissor": 3314
+      }
+    },
+    "accuracy": 34.01042362688761
+  },
+  "frequencyBias": {
+    "globalCounts": {
+      "rock": 10166,
+      "paper": 9754,
+      "scissor": 10207
+    },
+    "accuracy": 33.52077580981884,
+    "biases": [
+      {
+        "enemyId": "15",
+        "maxMove": "scissor",
+        "bias": 0.42592592592592593,
+        "total": 54
+      },
+      {
+        "enemyId": "14",
+        "maxMove": "paper",
+        "bias": 0.4044943820224719,
+        "total": 89
+      },
+      {
+        "enemyId": "7",
+        "maxMove": "scissor",
+        "bias": 0.3782608695652174,
+        "total": 230
+      },
+      {
+        "enemyId": "13",
+        "maxMove": "rock",
+        "bias": 0.37815126050420167,
+        "total": 119
+      },
+      {
+        "enemyId": "6",
+        "maxMove": "paper",
+        "bias": 0.37174721189591076,
+        "total": 269
+      },
+      {
+        "enemyId": "8",
+        "maxMove": "scissor",
+        "bias": 0.3665338645418327,
+        "total": 251
+      },
+      {
+        "enemyId": "3",
+        "maxMove": "scissor",
+        "bias": 0.36551724137931035,
+        "total": 145
+      },
+      {
+        "enemyId": "9",
+        "maxMove": "scissor",
+        "bias": 0.3645833333333333,
+        "total": 288
+      },
+      {
+        "enemyId": "12",
+        "maxMove": "paper",
+        "bias": 0.3588516746411483,
+        "total": 209
+      },
+      {
+        "enemyId": "30",
+        "maxMove": "paper",
+        "bias": 0.3564954682779456,
+        "total": 331
+      },
+      {
+        "enemyId": "4",
+        "maxMove": "scissor",
+        "bias": 0.35555555555555557,
+        "total": 225
+      },
+      {
+        "enemyId": "29",
+        "maxMove": "scissor",
+        "bias": 0.35217903415783275,
+        "total": 849
+      },
+      {
+        "enemyId": "11",
+        "maxMove": "paper",
+        "bias": 0.3511450381679389,
+        "total": 262
+      },
+      {
+        "enemyId": "10",
+        "maxMove": "paper",
+        "bias": 0.34935897435897434,
+        "total": 312
+      },
+      {
+        "enemyId": "5",
+        "maxMove": "rock",
+        "bias": 0.3474025974025974,
+        "total": 308
+      },
+      {
+        "enemyId": "2",
+        "maxMove": "rock",
+        "bias": 0.3464566929133858,
+        "total": 127
+      },
+      {
+        "enemyId": "23",
+        "maxMove": "scissor",
+        "bias": 0.3462588749317313,
+        "total": 3662
+      },
+      {
+        "enemyId": "27",
+        "maxMove": "rock",
+        "bias": 0.3458893871449925,
+        "total": 3345
+      },
+      {
+        "enemyId": "24",
+        "maxMove": "scissor",
+        "bias": 0.34579439252336447,
+        "total": 5992
+      },
+      {
+        "enemyId": "28",
+        "maxMove": "rock",
+        "bias": 0.34554334554334554,
+        "total": 1638
+      }
+    ]
+  },
+  "historyMatch": [
+    {
+      "windowSize": 2,
+      "accuracy": 33.349020135130594,
+      "predictions": 29749
+    },
+    {
+      "windowSize": 3,
+      "accuracy": 34.16626786080536,
+      "predictions": 29254
+    },
+    {
+      "windowSize": 4,
+      "accuracy": 34.13843468348117,
+      "predictions": 28071
+    },
+    {
+      "windowSize": 5,
+      "accuracy": 34.18826633555797,
+      "predictions": 25772
+    }
+  ]
+}
