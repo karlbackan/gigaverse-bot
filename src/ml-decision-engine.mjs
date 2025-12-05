@@ -27,20 +27,23 @@ export class MLDecisionEngine {
       CHARGE_BASED: 'charge_based'  // Exploits +5.4% correlation between enemy charges and move choice
     };
     
-    // Multi-Armed Bandit for strategy selection (Thompson Sampling)
+    // Multi-Armed Bandit for strategy selection (EXP3 - adversarial optimal)
+    const numStrategies = Object.keys(this.strategies).length;
     this.bandit = {
-      arms: new Map(), // strategy -> {plays, wins, losses, value, confidence}
-      decayRate: 0.995 // decay rate for old observations
+      arms: new Map(), // strategy -> {weight, plays, wins, losses, value}
+      gamma: 0.1,      // exploration parameter (10% uniform exploration)
+      totalPlays: 0,   // total plays across all arms for eta calculation
+      numArms: numStrategies
     };
 
-    // Initialize bandit arms for Thompson Sampling (Beta distribution parameters)
+    // Initialize bandit arms for EXP3 (exponential weights)
     Object.values(this.strategies).forEach(strategy => {
       this.bandit.arms.set(strategy, {
+        weight: 1.0,    // EXP3 weight (starts uniform)
         plays: 0,
-        wins: 0,      // successes (alpha - 1 in Beta distribution)
-        losses: 0,    // failures (beta - 1 in Beta distribution)
-        value: 0.5,   // running average for display
-        confidence: 0
+        wins: 0,        // track for statistics
+        losses: 0,
+        value: 0.5      // running average for display
       });
     });
     
@@ -216,42 +219,60 @@ export class MLDecisionEngine {
     };
   }
   
-  // Thompson Sampling strategy selection using Beta distribution
+  // EXP3 strategy selection (adversarial-optimal multi-armed bandit)
   selectStrategy(enemyId) {
-    const totalPlays = Array.from(this.bandit.arms.values()).reduce((sum, arm) => sum + arm.plays, 0);
+    const gamma = this.bandit.gamma;
+    const K = this.bandit.numArms;
 
     // Ensure each strategy is tried at least once
-    if (totalPlays < Object.keys(this.strategies).length) {
+    if (this.bandit.totalPlays < K) {
       for (const [strategy, arm] of this.bandit.arms.entries()) {
         if (arm.plays === 0) {
-          console.log(`🎰 [Thompson] Initial exploration: ${strategy}`);
+          console.log(`🎰 [EXP3] Initial exploration: ${strategy}`);
           return strategy;
         }
       }
     }
 
-    // Thompson Sampling: sample from Beta distribution for each arm
-    let bestStrategy = null;
-    let bestSample = -Infinity;
-    const samples = {};
+    // Calculate total weight for normalization
+    let totalWeight = 0;
+    for (const arm of this.bandit.arms.values()) {
+      totalWeight += arm.weight;
+    }
 
+    // EXP3 mixed policy: (1-γ) exploit + γ explore uniformly
+    const probabilities = new Map();
     for (const [strategy, arm] of this.bandit.arms.entries()) {
-      // Beta(wins + 1, losses + 1) - adding 1 for uniform prior
-      const alpha = arm.wins + 1;
-      const beta = arm.losses + 1;
-      const sample = this.sampleBeta(alpha, beta);
-      samples[strategy] = sample;
+      const exploitProb = (1 - gamma) * (arm.weight / totalWeight);
+      const exploreProb = gamma / K;
+      probabilities.set(strategy, exploitProb + exploreProb);
+    }
 
-      if (sample > bestSample) {
-        bestSample = sample;
-        bestStrategy = strategy;
+    // Sample from probability distribution
+    const rand = Math.random();
+    let cumProb = 0;
+    let selectedStrategy = null;
+
+    for (const [strategy, prob] of probabilities.entries()) {
+      cumProb += prob;
+      if (rand < cumProb) {
+        selectedStrategy = strategy;
+        break;
       }
     }
 
-    console.log(`🎰 [Thompson] Samples: ${Object.entries(samples).map(([s, v]) => `${s}:${v.toFixed(3)}`).join(' ')}`);
-    console.log(`🎰 [Thompson] Selected: ${bestStrategy} (sample=${bestSample.toFixed(3)})`);
+    // Store selection probability for importance weighting in update
+    if (selectedStrategy) {
+      this.bandit.lastSelectionProb = probabilities.get(selectedStrategy);
+    }
 
-    return bestStrategy || this.strategies.RANDOM;
+    const probStr = Array.from(probabilities.entries())
+      .map(([s, p]) => `${s.slice(0,4)}:${(p*100).toFixed(1)}%`)
+      .join(' ');
+    console.log(`🎰 [EXP3] Probs: ${probStr}`);
+    console.log(`🎰 [EXP3] Selected: ${selectedStrategy} (prob=${(this.bandit.lastSelectionProb*100).toFixed(1)}%)`);
+
+    return selectedStrategy || this.strategies.RANDOM;
   }
 
   // Sample from Beta(alpha, beta) distribution using gamma distribution method
@@ -731,27 +752,57 @@ export class MLDecisionEngine {
     this.qLearning.epsilon *= 0.999;
   }
   
-  // Update multi-armed bandit with result (Thompson Sampling)
+  // Update multi-armed bandit with result (EXP3 importance-weighted)
   updateBandit(strategy, result) {
     const arm = this.bandit.arms.get(strategy);
     if (!arm) return;
 
-    arm.plays++;
+    const gamma = this.bandit.gamma;
+    const K = this.bandit.numArms;
 
+    // Convert result to reward [0, 1]
+    let reward;
     if (result === 'win') {
+      reward = 1.0;
       arm.wins++;
     } else if (result === 'loss') {
+      reward = 0.0;
       arm.losses++;
-    } else if (result === 'tie') {
-      // Ties count as partial success (0.3 wins)
-      arm.wins += 0.3;
+    } else {
+      reward = 0.5;  // tie
+      arm.wins += 0.5;
+    }
+
+    arm.plays++;
+    this.bandit.totalPlays++;
+
+    // EXP3 importance-weighted update
+    // r̂ = r / P(arm) - dividing by selection probability to get unbiased estimate
+    const selectionProb = this.bandit.lastSelectionProb || (1 / K);
+    const estimatedReward = reward / selectionProb;
+
+    // Exponential weight update: w = w * exp(γ * r̂ / K)
+    // Using γ/K as learning rate ensures bounded regret
+    const eta = gamma / K;
+    arm.weight *= Math.exp(eta * estimatedReward);
+
+    // Prevent weight explosion by normalizing periodically
+    if (this.bandit.totalPlays % 100 === 0) {
+      let maxWeight = 0;
+      for (const a of this.bandit.arms.values()) {
+        maxWeight = Math.max(maxWeight, a.weight);
+      }
+      if (maxWeight > 1000) {
+        for (const a of this.bandit.arms.values()) {
+          a.weight /= maxWeight;
+        }
+      }
     }
 
     // Update running average for display purposes
     arm.value = arm.wins / Math.max(1, arm.plays);
-    arm.confidence = Math.sqrt(arm.plays / 10);
 
-    console.log(`🎰 [Thompson] Updated ${strategy}: wins=${arm.wins.toFixed(1)}, losses=${arm.losses}, plays=${arm.plays}, value=${arm.value.toFixed(3)}`);
+    console.log(`🎰 [EXP3] Updated ${strategy}: w=${arm.weight.toFixed(3)}, r̂=${estimatedReward.toFixed(2)}, plays=${arm.plays}, winRate=${(arm.value*100).toFixed(1)}%`);
   }
   
   // Update Q-Learning with Double DQN

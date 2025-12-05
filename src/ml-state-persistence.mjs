@@ -16,9 +16,11 @@ export class MLStatePersistence {
     async saveMLState(mlEngine) {
         try {
             const state = {
-                // Multi-Armed Bandit state (Thompson Sampling)
+                // Multi-Armed Bandit state (EXP3 - adversarial optimal)
                 banditArms: this.serializeMap(mlEngine.bandit.arms),
-                // Note: Thompson Sampling doesn't use epsilon
+                banditTotalPlays: mlEngine.bandit.totalPlays || 0,
+                banditGamma: mlEngine.bandit.gamma || 0.1,
+                banditNumArms: mlEngine.bandit.numArms || 11,
 
                 // Q-Learning state (Double DQN)
                 qLearningStates: this.serializeNestedMap(mlEngine.qLearning.states),
@@ -110,30 +112,32 @@ export class MLStatePersistence {
                 return false;
             }
 
-            // Restore Multi-Armed Bandit (Thompson Sampling)
+            // Restore Multi-Armed Bandit (EXP3)
             if (state.banditArms) {
                 mlEngine.bandit.arms.clear();
                 for (const [strategy, armData] of Object.entries(state.banditArms)) {
                     // Handle backward compatibility with v1.0.0 (rewards format)
                     if (armData.rewards !== undefined && armData.wins === undefined) {
-                        // Convert old format to new Thompson Sampling format
                         const plays = armData.plays || 0;
                         const rewards = armData.rewards || 0;
-                        // Estimate wins/losses from reward rate
                         const winRate = plays > 0 ? rewards / plays : 0.5;
                         armData.wins = plays * winRate;
                         armData.losses = plays * (1 - winRate);
                         delete armData.rewards;
-                        console.log(`🔄 [Thompson] Migrated ${strategy}: rewards=${rewards} -> wins=${armData.wins.toFixed(1)}, losses=${armData.losses.toFixed(1)}`);
+                        console.log(`🔄 [EXP3] Migrated old format ${strategy}`);
                     }
-                    // Ensure all required fields exist
+                    // Ensure all required fields exist (EXP3 format)
+                    armData.weight = armData.weight || 1.0;  // EXP3 weight
                     armData.wins = armData.wins || 0;
                     armData.losses = armData.losses || 0;
+                    armData.plays = armData.plays || 0;
                     armData.value = armData.value || 0.5;
-                    armData.confidence = armData.confidence || 0;
                     mlEngine.bandit.arms.set(strategy, armData);
                 }
-                // Note: Thompson Sampling doesn't use epsilon
+                // Restore EXP3-specific parameters
+                mlEngine.bandit.totalPlays = state.banditTotalPlays || 0;
+                mlEngine.bandit.gamma = state.banditGamma || 0.1;
+                mlEngine.bandit.numArms = state.banditNumArms || mlEngine.bandit.arms.size;
             }
             
             // Restore Q-Learning states (Double DQN)
