@@ -545,3 +545,57 @@ All findings documented and committed.
 3. Combining both captures complementary signals
 4. Patterns are temporally stable (historical data reliable)
 5. Most opponents (~56%) are near-random, but ~30% are exploitable
+
+---
+
+## Round 8-9 Experiments (2024-12-05)
+
+### Experiment 38-42: Outcome-Conditioned Patterns
+**Result**: Outcome-conditioned (1.71%) is WORSE than pure 2-gram (2.49%)
+
+| Model | Net Advantage |
+|-------|---------------|
+| Pure 2-gram | 2.49% |
+| Outcome-conditioned | 1.71% |
+| Combined 3-feature | 1.71% |
+| Max-confidence | 2.53% |
+
+**Conclusion**: Simple patterns beat complex features.
+
+### Experiment 43-45: Multi-Depth N-gram
+**Result**: Adding 4-gram doesn't improve
+
+| Configuration | Net Advantage |
+|---------------|---------------|
+| 20/80 CTW+2gram | **2.72%** |
+| 20/60/20 CTW+2g+4g | 2.61% |
+| Pure 2-gram | 2.49% |
+| 60/40 2g/4g | 2.52% |
+
+**Conclusion**: 20/80 CTW+2gram ensemble is optimal. Additional depth adds noise.
+
+---
+
+## FINAL RESULTS
+
+### Total Experiments: 45
+- Rounds 1-5: 28 experiments (baseline + CTW optimization)
+- Rounds 6-7: 9 experiments (2-gram discovery)
+- Rounds 8-9: 8 experiments (validation)
+
+### Best Configuration (Implemented)
+- **Algorithm**: 20/80 CTW + Global 2-gram ensemble
+- **CTW depth**: 3 (per-opponent Markov)
+- **2-gram**: Global (universal patterns)
+- **No decay**: All history valuable
+- **Net advantage**: 2.70% over random
+
+### Performance Summary
+| Metric | Value |
+|--------|-------|
+| Prediction accuracy | 35.05% |
+| Win rate | ~35.3% |
+| Loss rate | ~32.6% |
+| Net advantage | **2.70%** |
+| vs CTW alone | +40% improvement |
+| vs random | +2.70% edge |
