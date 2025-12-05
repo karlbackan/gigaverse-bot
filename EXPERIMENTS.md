@@ -371,6 +371,33 @@ Could use Nash equilibrium fallback for low-confidence rounds.
 
 **This is the actual money metric!**
 
+### Experiment 28: Nash Fallback Test
+**Result**: Nash fallback HURTS performance!
+
+| Threshold | Win Rate | Net Advantage | CTW Used |
+|-----------|----------|---------------|----------|
+| 0.33 (pure CTW) | 34.90% | **1.93%** | 100% |
+| 0.35 | 34.73% | 1.59% | 94% |
+| 0.40 | 34.79% | 1.69% | 52% |
+| 0.45 | 34.32% | 1.36% | 26% |
+| 0.50 | 33.28% | 0.08% | 15% |
+
+**Conclusion**: Pure CTW is optimal. Even low-confidence CTW beats random.
+The high accuracy at high confidence (38.85%) is offset by losing edge on low-confidence rounds.
+
+---
+
+## FINAL SUMMARY
+
+### Best Configuration (Implemented)
+- **CTW depth 3** (34.90% accuracy)
+- **No decay** (all history valuable)
+- **Pure CTW** (no fallback)
+- **Net advantage: 1.93%** over random
+
+### Experiments Completed: 28
+All findings documented and committed.
+
 ---
 
 ## Experiment History
