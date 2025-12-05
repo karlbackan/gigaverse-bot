@@ -974,5 +974,427 @@
     "lossRate": 32.96991856406847,
     "drawRate": 32.125644008642176,
     "netAdvantage": 1.9345188632208732
+  },
+  "round6": {
+    "botExploitation": {
+      "bots": [
+        {
+          "enemyId": "1177506788",
+          "battles": 30,
+          "repeatRate": 1,
+          "cycleScore": 0,
+          "altRate": 0,
+          "accuracy": 100,
+          "isBot": true
+        },
+        {
+          "enemyId": "1508288751",
+          "battles": 30,
+          "repeatRate": 1,
+          "cycleScore": 0,
+          "altRate": 0,
+          "accuracy": 100,
+          "isBot": true
+        },
+        {
+          "enemyId": "1850439519",
+          "battles": 30,
+          "repeatRate": 1,
+          "cycleScore": 0,
+          "altRate": 0,
+          "accuracy": 100,
+          "isBot": true
+        },
+        {
+          "enemyId": "911662808",
+          "battles": 30,
+          "repeatRate": 0,
+          "cycleScore": 1,
+          "altRate": 1,
+          "accuracy": 93.10344827586206,
+          "isBot": true
+        },
+        {
+          "enemyId": "1611154793",
+          "battles": 30,
+          "repeatRate": 0.2413793103448276,
+          "cycleScore": 0.5517241379310345,
+          "altRate": 0.7586206896551724,
+          "accuracy": 34.48275862068966,
+          "isBot": true
+        }
+      ],
+      "botBattles": 150,
+      "avgBotAcc": 85.51724137931035
+    },
+    "twoGram": {
+      "patterns": [
+        {
+          "pattern": "paper,scissor",
+          "nextMove": "rock",
+          "prob": 0.3700277520814061,
+          "count": 3243
+        },
+        {
+          "pattern": "paper,paper",
+          "nextMove": "rock",
+          "prob": 0.36705292828061387,
+          "count": 3193
+        },
+        {
+          "pattern": "paper,rock",
+          "nextMove": "scissor",
+          "prob": 0.36303030303030304,
+          "count": 3300
+        },
+        {
+          "pattern": "rock,scissor",
+          "nextMove": "scissor",
+          "prob": 0.3525844643372798,
+          "count": 3463
+        },
+        {
+          "pattern": "rock,rock",
+          "nextMove": "paper",
+          "prob": 0.35194029850746267,
+          "count": 3350
+        },
+        {
+          "pattern": "rock,paper",
+          "nextMove": "paper",
+          "prob": 0.34992458521870284,
+          "count": 3315
+        },
+        {
+          "pattern": "scissor,scissor",
+          "nextMove": "rock",
+          "prob": 0.3422490652861662,
+          "count": 3477
+        },
+        {
+          "pattern": "scissor,rock",
+          "nextMove": "rock",
+          "prob": 0.34215827338129495,
+          "count": 3475
+        },
+        {
+          "pattern": "scissor,paper",
+          "nextMove": "paper",
+          "prob": 0.3414936473504803,
+          "count": 3227
+        }
+      ],
+      "winRate": 35.319375561694905
+    },
+    "clustering": {
+      "random": [
+        {
+          "enemyId": "-1",
+          "battles": 1845,
+          "rockPct": 0.3344173441734417,
+          "paperPct": 0.3273712737127371,
+          "scissorPct": 0.3382113821138211,
+          "repeatRate": 0.3199566160520607,
+          "entropy": 1.5848313295886358,
+          "accuracy": 34.598698481561826
+        },
+        {
+          "enemyId": "1",
+          "battles": 135,
+          "rockPct": 0.34074074074074073,
+          "paperPct": 0.32592592592592595,
+          "scissorPct": 0.3333333333333333,
+          "repeatRate": 0.30597014925373134,
+          "entropy": 1.5847250005063938,
+          "accuracy": 29.850746268656714
+        },
+        {
+          "enemyId": "2",
+          "battles": 127,
+          "rockPct": 0.3464566929133858,
+          "paperPct": 0.33070866141732286,
+          "scissorPct": 0.3228346456692913,
+          "repeatRate": 0.38095238095238093,
+          "entropy": 1.5843385831021624,
+          "accuracy": 32.53968253968254
+        },
+        {
+          "enemyId": "4",
+          "battles": 225,
+          "rockPct": 0.3022222222222222,
+          "paperPct": 0.3422222222222222,
+          "scissorPct": 0.35555555555555557,
+          "repeatRate": 0.36607142857142855,
+          "entropy": 1.5815843715302838,
+          "accuracy": 34.82142857142857
+        },
+        {
+          "enemyId": "5",
+          "battles": 308,
+          "rockPct": 0.3474025974025974,
+          "paperPct": 0.3051948051948052,
+          "scissorPct": 0.3474025974025974,
+          "repeatRate": 0.31921824104234525,
+          "entropy": 1.5823537902158646,
+          "accuracy": 32.89902280130293
+        },
+        {
+          "enemyId": "6",
+          "battles": 269,
+          "rockPct": 0.2936802973977695,
+          "paperPct": 0.37174721189591076,
+          "scissorPct": 0.3345724907063197,
+          "repeatRate": 0.31343283582089554,
+          "entropy": 1.5783356831769426,
+          "accuracy": 29.1044776119403
+        },
+        {
+          "enemyId": "7",
+          "battles": 230,
+          "rockPct": 0.32608695652173914,
+          "paperPct": 0.2956521739130435,
+          "scissorPct": 0.3782608695652174,
+          "repeatRate": 0.3537117903930131,
+          "entropy": 1.5774684895050122,
+          "accuracy": 34.06113537117904
+        },
+        {
+          "enemyId": "9",
+          "battles": 288,
+          "rockPct": 0.3229166666666667,
+          "paperPct": 0.3125,
+          "scissorPct": 0.3645833333333333,
+          "repeatRate": 0.3344947735191638,
+          "entropy": 1.5817155311032134,
+          "accuracy": 29.268292682926827
+        },
+        {
+          "enemyId": "10",
+          "battles": 312,
+          "rockPct": 0.3076923076923077,
+          "paperPct": 0.34935897435897434,
+          "scissorPct": 0.34294871794871795,
+          "repeatRate": 0.3247588424437299,
+          "entropy": 1.5827565168916116,
+          "accuracy": 34.08360128617363
+        },
+        {
+          "enemyId": "11",
+          "battles": 262,
+          "rockPct": 0.33969465648854963,
+          "paperPct": 0.3511450381679389,
+          "scissorPct": 0.30916030534351147,
+          "repeatRate": 0.31800766283524906,
+          "entropy": 1.5829045834194764,
+          "accuracy": 32.95019157088122
+        },
+        {
+          "enemyId": "23",
+          "battles": 3662,
+          "rockPct": 0.3353358820316767,
+          "paperPct": 0.318405243036592,
+          "scissorPct": 0.3462588749317313,
+          "repeatRate": 0.3318765364654466,
+          "entropy": 1.5841072615747465,
+          "accuracy": 34.5260857689156
+        },
+        {
+          "enemyId": "24",
+          "battles": 5992,
+          "rockPct": 0.3366154873164219,
+          "paperPct": 0.3175901201602136,
+          "scissorPct": 0.34579439252336447,
+          "repeatRate": 0.34635286262727427,
+          "entropy": 1.5840623426980123,
+          "accuracy": 34.2680687698214
+        },
+        {
+          "enemyId": "26",
+          "battles": 2470,
+          "rockPct": 0.342914979757085,
+          "paperPct": 0.3331983805668016,
+          "scissorPct": 0.32388663967611336,
+          "repeatRate": 0.3264479546375051,
+          "entropy": 1.5845706919047728,
+          "accuracy": 33.25232887808829
+        },
+        {
+          "enemyId": "29",
+          "battles": 849,
+          "rockPct": 0.33568904593639576,
+          "paperPct": 0.3121319199057715,
+          "scissorPct": 0.35217903415783275,
+          "repeatRate": 0.31839622641509435,
+          "entropy": 1.583201983518313,
+          "accuracy": 33.9622641509434
+        },
+        {
+          "enemyId": "30",
+          "battles": 331,
+          "rockPct": 0.33534743202416917,
+          "paperPct": 0.3564954682779456,
+          "scissorPct": 0.3081570996978852,
+          "repeatRate": 0.3424242424242424,
+          "entropy": 1.5824111957176359,
+          "accuracy": 30.909090909090907
+        },
+        {
+          "enemyId": "1611154793",
+          "battles": 30,
+          "rockPct": 0.3333333333333333,
+          "paperPct": 0.3333333333333333,
+          "scissorPct": 0.3333333333333333,
+          "repeatRate": 0.2413793103448276,
+          "entropy": 1.584962500721156,
+          "accuracy": 34.48275862068966
+        }
+      ],
+      "biased": [
+        {
+          "enemyId": "14",
+          "battles": 89,
+          "rockPct": 0.2808988764044944,
+          "paperPct": 0.4044943820224719,
+          "scissorPct": 0.3146067415730337,
+          "repeatRate": 0.23863636363636365,
+          "entropy": 1.5676475589000578,
+          "accuracy": 27.27272727272727
+        },
+        {
+          "enemyId": "15",
+          "battles": 54,
+          "rockPct": 0.3888888888888889,
+          "paperPct": 0.18518518518518517,
+          "scissorPct": 0.42592592592592593,
+          "repeatRate": 0.2830188679245283,
+          "entropy": 1.504889875931267,
+          "accuracy": 32.075471698113205
+        }
+      ],
+      "patterned": [
+        {
+          "enemyId": "911662808",
+          "battles": 30,
+          "rockPct": 0.3333333333333333,
+          "paperPct": 0.3333333333333333,
+          "scissorPct": 0.3333333333333333,
+          "repeatRate": 0,
+          "entropy": 1.584962500721156,
+          "accuracy": 93.10344827586206
+        }
+      ],
+      "repeater": [
+        {
+          "enemyId": "1177506788",
+          "battles": 30,
+          "rockPct": 1,
+          "paperPct": 0,
+          "scissorPct": 0,
+          "repeatRate": 1,
+          "entropy": 0,
+          "accuracy": 100
+        },
+        {
+          "enemyId": "1508288751",
+          "battles": 30,
+          "rockPct": 0,
+          "paperPct": 1,
+          "scissorPct": 0,
+          "repeatRate": 1,
+          "entropy": 0,
+          "accuracy": 100
+        },
+        {
+          "enemyId": "1850439519",
+          "battles": 30,
+          "rockPct": 0,
+          "paperPct": 0,
+          "scissorPct": 1,
+          "repeatRate": 1,
+          "entropy": 0,
+          "accuracy": 100
+        }
+      ],
+      "other": [
+        {
+          "enemyId": "3",
+          "battles": 145,
+          "rockPct": 0.3586206896551724,
+          "paperPct": 0.27586206896551724,
+          "scissorPct": 0.36551724137931035,
+          "repeatRate": 0.3472222222222222,
+          "entropy": 1.573841688424032,
+          "accuracy": 37.5
+        },
+        {
+          "enemyId": "8",
+          "battles": 251,
+          "rockPct": 0.3107569721115538,
+          "paperPct": 0.32270916334661354,
+          "scissorPct": 0.3665338645418327,
+          "repeatRate": 0.292,
+          "entropy": 1.5812769274083212,
+          "accuracy": 35.6
+        },
+        {
+          "enemyId": "12",
+          "battles": 209,
+          "rockPct": 0.3253588516746411,
+          "paperPct": 0.3588516746411483,
+          "scissorPct": 0.3157894736842105,
+          "repeatRate": 0.35096153846153844,
+          "entropy": 1.5827711566269493,
+          "accuracy": 36.53846153846153
+        },
+        {
+          "enemyId": "13",
+          "battles": 119,
+          "rockPct": 0.37815126050420167,
+          "paperPct": 0.33613445378151263,
+          "scissorPct": 0.2857142857142857,
+          "repeatRate": 0.288135593220339,
+          "entropy": 1.575622387401713,
+          "accuracy": 37.28813559322034
+        },
+        {
+          "enemyId": "25",
+          "battles": 6651,
+          "rockPct": 0.33378439332431215,
+          "paperPct": 0.3277702601112615,
+          "scissorPct": 0.3384453465644264,
+          "repeatRate": 0.33338345864661656,
+          "entropy": 1.584838447269619,
+          "accuracy": 35.26315789473684
+        },
+        {
+          "enemyId": "27",
+          "battles": 3345,
+          "rockPct": 0.3458893871449925,
+          "paperPct": 0.31629297458893874,
+          "scissorPct": 0.33781763826606875,
+          "repeatRate": 0.32057416267942584,
+          "entropy": 1.5839428401369289,
+          "accuracy": 35.55622009569378
+        },
+        {
+          "enemyId": "28",
+          "battles": 1638,
+          "rockPct": 0.34554334554334554,
+          "paperPct": 0.3315018315018315,
+          "scissorPct": 0.322954822954823,
+          "repeatRate": 0.339034819792303,
+          "entropy": 1.584400917874871,
+          "accuracy": 36.59132559560171
+        }
+      ]
+    },
+    "temporalStability": {
+      "staticWinRate": 36.29032258064516,
+      "adaptiveWinRate": 35.945466637109284
+    },
+    "crossTransfer": {
+      "globalWinRate": 34.573763250883395,
+      "localWinRate": 35.36881625441696
+    }
   }
 }

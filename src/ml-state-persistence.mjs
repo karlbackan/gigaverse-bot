@@ -5,6 +5,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { GlobalNgramPredictor } from './global-ngram-predictor.mjs';
 
 export class MLStatePersistence {
     constructor(dbPath = './data/battle-statistics.db') {
@@ -72,9 +73,12 @@ export class MLStatePersistence {
                 wslsState: this.serializeWSLS(mlEngine.wsls),
                 lastMoves: this.serializeMap(mlEngine.lastMoves),
 
+                // Global N-gram predictor (universal patterns)
+                globalNgramState: mlEngine.globalNgram ? mlEngine.globalNgram.serialize() : null,
+
                 // Metadata
                 saveTimestamp: Date.now(),
-                version: '1.4.0' // 1.4.0: Added WSLS persistence
+                version: '1.5.0' // 1.5.0: Added Global N-gram persistence
             };
             
             // Backup existing state
@@ -251,6 +255,16 @@ export class MLStatePersistence {
                 mlEngine.lastMoves.clear();
                 for (const [enemyId, moves] of Object.entries(state.lastMoves)) {
                     mlEngine.lastMoves.set(enemyId, moves);
+                }
+            }
+
+            // Restore Global N-gram predictor
+            if (state.globalNgramState && mlEngine.globalNgram) {
+                try {
+                    mlEngine.globalNgram = GlobalNgramPredictor.deserialize(state.globalNgramState);
+                    console.log(`  Global N-gram restored: ${mlEngine.globalNgram.getStats().updates} observations`);
+                } catch (e) {
+                    console.log(`  Global N-gram restore failed: ${e.message} - using fresh predictor`);
                 }
             }
 

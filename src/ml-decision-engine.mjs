@@ -10,6 +10,7 @@ import { BayesianOpponentModel } from './bayesian-opponent-model.mjs';
 import { WeightedEnsemble } from './weighted-ensemble.mjs';
 import { SimpleRNN } from './simple-rnn.mjs';
 import { WSLSPredictor } from './wsls-predictor.mjs';
+import { GlobalNgramPredictor } from './global-ngram-predictor.mjs';
 
 export class MLDecisionEngine {
   constructor() {
@@ -25,7 +26,8 @@ export class MLDecisionEngine {
       CTW: 'ctw',  // Context Tree Weighting - compression-based prediction
       BAYESIAN: 'bayesian',  // Bayesian opponent modeling with type inference
       ENSEMBLE: 'ensemble',  // Weighted ensemble combining CTW, Bayesian, Iocaine, Neural
-      CHARGE_BASED: 'charge_based'  // Exploits +5.4% correlation between enemy charges and move choice
+      CHARGE_BASED: 'charge_based',  // Exploits +5.4% correlation between enemy charges and move choice
+      NGRAM_CTW: 'ngram_ctw'  // 20/80 CTW + Global 2-gram ensemble (2.70% net advantage, best performer)
     };
     
     // Multi-Armed Bandit for strategy selection (EXP3 - adversarial optimal)
@@ -118,10 +120,15 @@ export class MLDecisionEngine {
     this.wsls = new WSLSPredictor();
     this.lastMoves = new Map();  // Track last moves per opponent for WSLS
 
+    // Global 2-gram predictor (universal patterns across all opponents)
+    // Experiments show 2-gram achieves 2.50% net advantage (vs CTW 1.93%)
+    // 20/80 CTW/2-gram ensemble achieves 2.70% net - best configuration
+    this.globalNgram = new GlobalNgramPredictor(2, 5);  // depth=2, minObs=5
+
     // Weighted ensemble for combining strategy predictions
     this.ensemble = new WeightedEnsemble(20);  // 20 round window
 
-    console.log('🤖 ML Decision Engine initialized with EXP3 + CTW + Bayesian + Iocaine + WSLS + RNN');
+    console.log('🤖 ML Decision Engine initialized with EXP3 + CTW + Bayesian + Iocaine + WSLS + RNN + Global 2-gram');
   }
   
   // Initialize weight matrix with small random values
@@ -200,6 +207,12 @@ export class MLDecisionEngine {
         const chargeResult = this.chargeBasedDecision(enemyStats, availableWeapons);
         decision = chargeResult.move;
         confidence = chargeResult.confidence;
+        break;
+
+      case this.strategies.NGRAM_CTW:
+        const ngramCtwResult = this.ngramCtwDecision(enemyId, availableWeapons);
+        decision = ngramCtwResult.move;
+        confidence = ngramCtwResult.confidence;
         break;
 
       default:
@@ -480,6 +493,73 @@ export class MLDecisionEngine {
     return result;
   }
 
+  /**
+   * 20/80 CTW + Global 2-gram ensemble decision
+   * Experiments show this achieves 2.70% net advantage (vs CTW 1.93%, 2-gram 2.50%)
+   * - CTW captures per-opponent Markov patterns
+   * - Global 2-gram captures universal cross-opponent patterns
+   */
+  ngramCtwDecision(enemyId, availableWeapons) {
+    const MOVES = ['rock', 'paper', 'scissor'];
+    const counter = { rock: 'paper', paper: 'scissor', scissor: 'rock' };
+
+    // Ensure CTW model exists
+    this.ensureCTWModel(enemyId);
+    const ctw = this.ctwModels.get(enemyId);
+
+    // Get CTW probabilities
+    const ctwProbs = ctw.predict() || { rock: 1/3, paper: 1/3, scissor: 1/3 };
+
+    // Get global 2-gram probabilities
+    const ngramProbs = this.globalNgram.predict(enemyId) || { rock: 1/3, paper: 1/3, scissor: 1/3 };
+
+    // 20/80 CTW/2-gram weighted ensemble (empirically optimal)
+    const ctwWeight = 0.2;
+    const ngramWeight = 0.8;
+
+    const ensembleProbs = {
+      rock: ctwWeight * ctwProbs.rock + ngramWeight * ngramProbs.rock,
+      paper: ctwWeight * ctwProbs.paper + ngramWeight * ngramProbs.paper,
+      scissor: ctwWeight * ctwProbs.scissor + ngramWeight * ngramProbs.scissor
+    };
+
+    // Find predicted enemy move
+    let predicted = 'rock';
+    let maxProb = 0;
+    for (const [move, prob] of Object.entries(ensembleProbs)) {
+      if (prob > maxProb) {
+        maxProb = prob;
+        predicted = move;
+      }
+    }
+
+    // Counter the predicted move
+    let bestMove = counter[predicted];
+
+    // Filter by available weapons
+    if (!availableWeapons.includes(bestMove)) {
+      const available = MOVES.filter(m => availableWeapons.includes(m));
+      if (available.length > 0) {
+        bestMove = available.reduce((best, m) =>
+          ensembleProbs[counter[m]] > ensembleProbs[counter[best]] ? m : best, available[0]);
+      }
+    }
+
+    const confidence = maxProb;
+    const stats = this.globalNgram.getStats();
+
+    console.log(`📊 [N-gram+CTW] CTW: R=${(ctwProbs.rock*100).toFixed(0)}% P=${(ctwProbs.paper*100).toFixed(0)}% S=${(ctwProbs.scissor*100).toFixed(0)}%`);
+    console.log(`📊 [N-gram+CTW] 2-gram: R=${(ngramProbs.rock*100).toFixed(0)}% P=${(ngramProbs.paper*100).toFixed(0)}% S=${(ngramProbs.scissor*100).toFixed(0)}% (${stats.updates} obs)`);
+    console.log(`📊 [N-gram+CTW] Move: ${bestMove}, Conf: ${confidence.toFixed(2)} (20/80 ensemble)`);
+
+    return {
+      move: bestMove,
+      confidence,
+      prediction: ensembleProbs,
+      reasoning: `20/80 CTW+2gram: predicted ${predicted} (${(maxProb*100).toFixed(0)}%), countering with ${bestMove}`
+    };
+  }
+
   // Simple RNN decision (replaces old feedforward neural network)
   rnnDecision(enemyId, availableWeapons) {
     // Ensure RNN model exists for this opponent
@@ -739,6 +819,9 @@ export class MLDecisionEngine {
     // Update WSLS predictor (always update for learning)
     this.wsls.update(enemyId, playerAction, enemyAction);
     this.lastMoves.set(enemyId, { player: playerAction, enemy: enemyAction });
+
+    // Update Global N-gram predictor (always update for learning)
+    this.globalNgram.update(enemyId, enemyAction);
 
     // Record predictions from all strategies for ensemble learning
     // (even if ensemble was not the selected strategy)

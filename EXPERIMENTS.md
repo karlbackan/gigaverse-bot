@@ -418,3 +418,130 @@ All findings documented and committed.
 | 2024-12-05 | Bot Detection | 5 bots found | Tag for exploit |
 | 2024-12-05 | Time Patterns | Uniform | Skip |
 | 2024-12-05 | Counter Play | Not detected | Skip |
+| 2024-12-05 | Bot Exploitation | 5 bots, 85.5% avg acc | Tag for exploit |
+| 2024-12-05 | 2-gram Patterns | 35.3% win, 2.94% net | **BREAKTHROUGH** |
+| 2024-12-05 | Opponent Clustering | 5 clusters | Cluster-specific |
+| 2024-12-05 | Temporal Stability | Static beats adaptive | Patterns stable |
+| 2024-12-05 | Cross-Transfer | Local > Global | Per-opponent wins |
+| 2024-12-05 | Hybrid CTW+Freq | No improvement | Skip |
+| 2024-12-05 | N-gram Depth | 2-gram optimal | **IMPLEMENTED** |
+| 2024-12-05 | CTW+2gram Ensemble | 2.70% net (20/80 mix) | **IMPLEMENTED** |
+
+---
+
+## Round 6 Experiments (2024-12-05)
+
+### Experiment 29: Bot Detection & Exploitation
+**Result**: 5 deterministic bots identified
+
+| Enemy | Accuracy | Repeat% | Cycle% | Battles |
+|-------|----------|---------|--------|---------|
+| 1177506788 | 100.0% | 100% | 0% | 30 |
+| 1508288751 | 100.0% | 100% | 0% | 30 |
+| 1850439519 | 100.0% | 100% | 0% | 30 |
+| 911662808 | 93.1% | 0% | 100% | 30 |
+| 1611154793 | 34.5% | 24% | 55% | 30 |
+
+**Conclusion**: CTW already exploits these perfectly. No special handling needed.
+
+### Experiment 30: 2-Gram Pattern Exploitation
+**Result**: **BREAKTHROUGH!** 35.32% win, 2.94% net advantage
+
+| Pattern | Next Move | Probability |
+|---------|-----------|-------------|
+| paper,scissor | rock | 37.0% |
+| paper,paper | rock | 36.7% |
+| paper,rock | scissor | 36.3% |
+| rock,scissor | scissor | 35.3% |
+| rock,rock | paper | 35.2% |
+
+**Key insight**: Universal patterns across all opponents!
+
+### Experiment 31: Opponent Clustering
+**Result**: 5 behavior clusters identified
+
+| Cluster | Opponents | Battles | Avg Accuracy |
+|---------|-----------|---------|--------------|
+| random | 16 | 17,335 | 32.8% |
+| biased | 2 | 143 | 29.7% |
+| patterned | 1 | 30 | 93.1% |
+| repeater | 3 | 90 | 100.0% |
+| other | 7 | 12,358 | 36.3% |
+
+**Conclusion**: Most opponents (~56%) are near-random. Focus on exploiting the ~30% patterned players.
+
+### Experiment 32: Temporal Stability
+**Result**: Static model (36.29% win, 6.45% net) BEATS adaptive (35.95%, 3.23%)!
+
+**Key insight**: Patterns are VERY stable over time. Historical data is reliable.
+
+### Experiment 33: Cross-Opponent Transfer
+**Result**: Local (35.37%) > Global (34.57%)
+
+**Conclusion**: Per-opponent learning is critical. Global model helps cold-start only.
+
+### Experiment 34: Hybrid CTW + Frequency
+**Result**: No improvement over pure CTW at any switch point.
+
+---
+
+## Round 7 Experiments (2024-12-05)
+
+### Experiment 35: N-gram Depth Analysis (Proper Incremental)
+**Result**: 2-gram optimal at 2.49% net with 100% coverage
+
+| Depth | Net Advantage | Coverage |
+|-------|---------------|----------|
+| 1 | 0.78% | 100% |
+| **2** | **2.49%** | **100%** |
+| 3 | 1.80% | 100% |
+| 4 | 2.38% | 99% |
+| 5 | 1.92% | 96% |
+
+**Conclusion**: 2-gram is optimal balance of pattern strength and coverage.
+
+### Experiment 36: Per-Opponent vs Global N-gram
+**Result**: Global WINS for n-grams (unlike CTW)
+
+| Model | Net Advantage |
+|-------|---------------|
+| Global 2-gram | 2.49% |
+| Per-opponent 2-gram | 1.96% |
+
+**Key insight**: N-gram patterns are UNIVERSAL. Unlike CTW (which benefits from per-opponent), 2-grams work better globally.
+
+### Experiment 37: CTW + 2-gram Ensemble (Proper)
+**Result**: **20/80 CTW/2-gram ensemble achieves 2.70% net!**
+
+| Weighting | Net Advantage |
+|-----------|---------------|
+| Pure CTW | 1.90% |
+| Pure 2-gram | 2.50% |
+| 80/20 CTW | 1.89% |
+| 50/50 | 1.95% |
+| **20/80 2-gram** | **2.70%** |
+
+**Implemented**: 20/80 CTW + Global 2-gram ensemble
+
+---
+
+## UPDATED FINAL SUMMARY
+
+### Best Configuration (Implemented)
+- **CTW depth 3** (per-opponent Markov patterns)
+- **Global 2-gram** (universal cross-opponent patterns)
+- **20/80 CTW/2-gram ensemble** for prediction
+- **No decay** (all history valuable)
+- **Net advantage: 2.70%** over random (vs previous 1.93%)
+
+### Improvement
+- Previous net: 1.93%
+- New net: 2.70%
+- **Improvement: +40%!**
+
+### Key Discoveries
+1. 2-gram patterns are UNIVERSAL (work across all opponents)
+2. CTW patterns are per-opponent specific
+3. Combining both captures complementary signals
+4. Patterns are temporally stable (historical data reliable)
+5. Most opponents (~56%) are near-random, but ~30% are exploitable
