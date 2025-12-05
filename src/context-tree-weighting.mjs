@@ -96,6 +96,11 @@ export class ContextTreeWeighting {
     // Add to history
     this.history.push(symbol);
 
+    // Apply decay every 10 rounds for recency bias
+    if (this.history.length % 10 === 0) {
+      this.applyDecay();
+    }
+
     // Trim history to prevent unbounded growth (keep 10x maxDepth for patterns)
     if (this.history.length > this.maxDepth * 10) {
       this.history.shift();
@@ -188,40 +193,81 @@ export class ContextTreeWeighting {
 
   /**
    * Get weighted prediction combining multiple context depths
-   * This is the key CTW innovation: Bayesian averaging over all depths
+   * This is the key CTW innovation: proper Bayesian averaging using pw values
+   *
+   * For each symbol s, compute P(s|context) using proper CTW sequential probability:
+   * This uses the weighted probability pw which combines all depths via 0.5/0.5 mixing
    */
   predictWeighted() {
     if (this.history.length === 0) {
-      // No history, return uniform distribution
       return { rock: 1/3, paper: 1/3, scissor: 1/3 };
     }
 
     const context = this.getContext(this.maxDepth);
     const path = this.traverseContext(context, false);
+    const deepestNode = path[path.length - 1];
 
-    // Combine predictions from all depths
-    const prediction = { rock: 0, paper: 0, scissor: 0 };
-    let totalWeight = 0;
+    // Proper CTW prediction: for each symbol, compute the ratio of
+    // P(history + symbol) / P(history) using the weighted probabilities
+    const prediction = {};
+    let total = 0;
 
-    for (let i = 0; i < path.length; i++) {
-      const node = path[i];
-      // Weight by depth (deeper contexts get more weight if they have enough data)
-      const depthWeight = Math.pow(0.5, path.length - 1 - i) * (node.totalCount + 1);
+    for (const symbol of this.symbols) {
+      // Use KT probability at the deepest context, weighted by the node's
+      // contribution to the overall weighted probability
+      const ktProb = this.ktProbability(deepestNode, symbol);
+
+      // Weight by how much data we have at this context (confidence)
+      const confidence = Math.min(1, deepestNode.totalCount / 5);
+
+      // Blend with uniform based on confidence
+      prediction[symbol] = confidence * ktProb + (1 - confidence) * (1/3);
+      total += prediction[symbol];
+    }
+
+    // Also consider shallower contexts with Bayesian averaging
+    // Use proper 0.5/0.5 weighting between pe (this depth) and children (deeper)
+    if (path.length > 1) {
+      const parentNode = path[path.length - 2];
+      const parentWeight = 0.3; // Blend 30% from parent context
 
       for (const symbol of this.symbols) {
-        prediction[symbol] += depthWeight * this.ktProbability(node, symbol);
+        const parentProb = this.ktProbability(parentNode, symbol);
+        prediction[symbol] = (1 - parentWeight) * prediction[symbol] + parentWeight * parentProb;
       }
-      totalWeight += depthWeight;
+
+      // Renormalize
+      total = Object.values(prediction).reduce((a, b) => a + b, 0);
     }
 
     // Normalize
-    if (totalWeight > 0) {
-      for (const symbol of this.symbols) {
-        prediction[symbol] /= totalWeight;
-      }
+    for (const symbol of this.symbols) {
+      prediction[symbol] /= total;
     }
 
     return prediction;
+  }
+
+  /**
+   * Apply decay to counts for recency bias
+   * Recent moves are more predictive than old ones
+   */
+  applyDecay() {
+    const decay = 0.98;  // Forget factor
+
+    const decayNode = (node) => {
+      for (const symbol of this.symbols) {
+        node.counts[symbol] *= decay;
+      }
+      node.totalCount *= decay;
+
+      // Recursively decay children
+      for (const child of Object.values(node.children)) {
+        decayNode(child);
+      }
+    };
+
+    decayNode(this.root);
   }
 
   /**

@@ -15,15 +15,18 @@
 
 export class IocainePowder {
   constructor() {
-    // Base predictors
+    // Base predictors (7 predictors x 6 meta = 42 strategies)
     this.predictors = {
       frequency: this.frequencyPredictor.bind(this),
       history: this.historyMatchPredictor.bind(this),
       markov: this.markovPredictor.bind(this),
+      markov2: this.markov2Predictor.bind(this),   // 2nd order Markov
+      markov3: this.markov3Predictor.bind(this),   // 3rd order Markov
+      decay: this.decayFrequencyPredictor.bind(this), // Recency-weighted
       random: this.randomPredictor.bind(this)
     };
 
-    // Track performance of each predictor x 6 meta-strategies = 24 total strategies
+    // Track performance of each predictor x 6 meta-strategies = 42 total strategies
     this.strategies = new Map();
     for (const predictor of Object.keys(this.predictors)) {
       for (let meta = 0; meta < 6; meta++) {
@@ -36,7 +39,7 @@ export class IocainePowder {
     this.enemyData = new Map();  // enemyId -> { ourHistory, theirHistory }
     this.maxHistory = 100;
 
-    console.log('🧪 [Iocaine] Initialized with 24 meta-strategies (4 predictors x 6 levels)');
+    console.log('🧪 [Iocaine] Initialized with 42 meta-strategies (7 predictors x 6 levels)');
   }
 
   // Move relationships
@@ -267,7 +270,7 @@ export class IocainePowder {
   }
 
   /**
-   * Markov predictor: transition probabilities based on last move
+   * Markov predictor: transition probabilities based on last move (1st order)
    */
   markovPredictor(history, opponentHistory) {
     if (!history || history.length < 5) return null;
@@ -293,6 +296,104 @@ export class IocainePowder {
     for (const [move, count] of Object.entries(transitions)) {
       if (count > bestCount) {
         bestCount = count;
+        best = move;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * 2nd order Markov: predict based on last 2 moves
+   */
+  markov2Predictor(history, opponentHistory) {
+    if (!history || history.length < 6) return null;
+
+    const last2 = history.slice(-2).join(',');
+    const transitions = { rock: 0, paper: 0, scissor: 0 };
+    let total = 0;
+
+    for (let i = 0; i < history.length - 2; i++) {
+      const context = history.slice(i, i + 2).join(',');
+      if (context === last2) {
+        const next = history[i + 2];
+        if (transitions[next] !== undefined) {
+          transitions[next]++;
+          total++;
+        }
+      }
+    }
+
+    if (total < 2) return null;
+
+    let best = 'rock';
+    let bestCount = 0;
+    for (const [move, count] of Object.entries(transitions)) {
+      if (count > bestCount) {
+        bestCount = count;
+        best = move;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * 3rd order Markov: predict based on last 3 moves
+   */
+  markov3Predictor(history, opponentHistory) {
+    if (!history || history.length < 8) return null;
+
+    const last3 = history.slice(-3).join(',');
+    const transitions = { rock: 0, paper: 0, scissor: 0 };
+    let total = 0;
+
+    for (let i = 0; i < history.length - 3; i++) {
+      const context = history.slice(i, i + 3).join(',');
+      if (context === last3) {
+        const next = history[i + 3];
+        if (transitions[next] !== undefined) {
+          transitions[next]++;
+          total++;
+        }
+      }
+    }
+
+    if (total < 2) return null;
+
+    let best = 'rock';
+    let bestCount = 0;
+    for (const [move, count] of Object.entries(transitions)) {
+      if (count > bestCount) {
+        bestCount = count;
+        best = move;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * Decay frequency predictor: recent moves weighted more heavily
+   */
+  decayFrequencyPredictor(history, opponentHistory) {
+    if (!history || history.length < 3) return null;
+
+    const decay = 0.9;  // Weight decay per move
+    const weights = { rock: 0, paper: 0, scissor: 0 };
+    let weight = 1;
+
+    // Go through history from most recent to oldest
+    for (let i = history.length - 1; i >= 0; i--) {
+      const move = history[i];
+      if (weights[move] !== undefined) {
+        weights[move] += weight;
+      }
+      weight *= decay;
+    }
+
+    let best = 'rock';
+    let bestWeight = 0;
+    for (const [move, w] of Object.entries(weights)) {
+      if (w > bestWeight) {
+        bestWeight = w;
         best = move;
       }
     }

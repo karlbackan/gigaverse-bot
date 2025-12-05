@@ -9,9 +9,9 @@
 export class WeightedEnsemble {
   constructor(windowSize = 20) {
     this.windowSize = windowSize;
-    this.strategies = new Map();  // strategy -> { predictions: [], results: [], weight: 1.0 }
-    this.alpha = 0.1;  // Learning rate for weight updates
-    this.minWeight = 0.05;  // Minimum weight to prevent complete exclusion
+    this.strategies = new Map();  // strategy -> { predictions: [], results: [], weight: 1.0, cumulativeLoss: 0 }
+    this.eta = 0.15;  // Hedge learning rate (higher = more aggressive adaptation)
+    this.minWeight = 0.01;  // Minimum weight to prevent complete exclusion
   }
 
   /**
@@ -22,7 +22,8 @@ export class WeightedEnsemble {
       this.strategies.set(name, {
         predictions: [],
         results: [],
-        weight: 1.0
+        weight: 1.0,
+        cumulativeLoss: 0  // For Hedge algorithm
       });
       console.log(`[Ensemble] Registered strategy: ${name}`);
     }
@@ -48,6 +49,11 @@ export class WeightedEnsemble {
 
   /**
    * Update weights after seeing actual opponent move
+   * Uses the Hedge algorithm (multiplicative weights / exponential weights)
+   *
+   * Hedge update rule: w_t+1 = w_t * exp(-eta * loss_t)
+   * This has better theoretical guarantees than additive updates
+   *
    * @param {string} actualMove - The actual move the opponent made
    */
   updateWeights(actualMove) {
@@ -63,14 +69,18 @@ export class WeightedEnsemble {
 
       const lastPrediction = strategy.predictions[strategy.predictions.length - 1];
 
-      // Determine if prediction would have won/lost/tied
+      // Determine loss: 0 for win, 0.5 for tie, 1 for loss
+      let loss;
       let result;
       if (lastPrediction === winningMove) {
-        result = 1;  // Would have won
+        loss = 0;    // Won
+        result = 1;
       } else if (lastPrediction === losingMove) {
-        result = -1;  // Would have lost
+        loss = 1;    // Lost
+        result = -1;
       } else {
-        result = 0;  // Would have tied
+        loss = 0.5;  // Tied
+        result = 0;
       }
 
       strategy.results.push(result);
@@ -80,18 +90,31 @@ export class WeightedEnsemble {
         strategy.results.shift();
       }
 
-      // Update weight based on recent performance
-      const recentResults = strategy.results.slice(-this.windowSize);
-      if (recentResults.length >= 5) {
-        const avgResult = recentResults.reduce((a, b) => a + b, 0) / recentResults.length;
-        // Weight adjustment: good performance -> higher weight
-        // avgResult ranges from -1 to 1, so targetWeight ranges from minWeight to 1.5
-        const targetWeight = Math.max(this.minWeight, 0.5 + avgResult);
-        strategy.weight = strategy.weight * (1 - this.alpha) + targetWeight * this.alpha;
+      // Hedge algorithm: multiplicative weight update
+      // w_t+1 = w_t * exp(-eta * loss_t)
+      strategy.cumulativeLoss += loss;
+      strategy.weight *= Math.exp(-this.eta * loss);
+
+      // Ensure minimum weight to prevent complete exclusion
+      if (strategy.weight < this.minWeight) {
+        strategy.weight = this.minWeight;
       }
     }
 
-    console.log(`[Ensemble] Weights updated: ${this.getWeightsSummary()}`);
+    // Normalize weights so they sum to number of strategies
+    // This prevents all weights from collapsing to near-zero
+    const numStrategies = this.strategies.size;
+    const totalWeight = Array.from(this.strategies.values())
+      .reduce((sum, s) => sum + s.weight, 0);
+
+    if (totalWeight > 0) {
+      const scale = numStrategies / totalWeight;
+      for (const strategy of this.strategies.values()) {
+        strategy.weight *= scale;
+      }
+    }
+
+    console.log(`[Ensemble] Hedge weights: ${this.getWeightsSummary()}`);
   }
 
   /**
@@ -235,6 +258,7 @@ export class WeightedEnsemble {
       strategy.predictions = [];
       strategy.results = [];
       strategy.weight = 1.0;
+      strategy.cumulativeLoss = 0;
     }
     console.log('[Ensemble] Reset all strategy weights to 1.0');
   }
@@ -248,7 +272,8 @@ export class WeightedEnsemble {
       data[name] = {
         predictions: strategy.predictions.slice(-this.windowSize),
         results: strategy.results.slice(-this.windowSize),
-        weight: strategy.weight
+        weight: strategy.weight,
+        cumulativeLoss: strategy.cumulativeLoss || 0
       };
     }
     return data;
@@ -264,7 +289,8 @@ export class WeightedEnsemble {
       this.strategies.set(name, {
         predictions: savedStrategy.predictions || [],
         results: savedStrategy.results || [],
-        weight: savedStrategy.weight || 1.0
+        weight: savedStrategy.weight || 1.0,
+        cumulativeLoss: savedStrategy.cumulativeLoss || 0
       });
     }
     console.log(`[Ensemble] Loaded ${Object.keys(data).length} strategy states`);

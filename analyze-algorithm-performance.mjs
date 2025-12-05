@@ -78,7 +78,7 @@ class AlgorithmAnalyzer {
       ctw: { predictions: 0, correct: 0, wins: 0 },
       iocaine: { predictions: 0, correct: 0, wins: 0 },
       bayesian: { predictions: 0, correct: 0, wins: 0 },
-      rnn: { predictions: 0, correct: 0, wins: 0 },
+      gru: { predictions: 0, correct: 0, wins: 0 },
       charge_bias: { predictions: 0, correct: 0, wins: 0 },
       random: { predictions: 0, correct: 0, wins: 0 }
     };
@@ -130,12 +130,12 @@ class AlgorithmAnalyzer {
         }
       } catch (e) {}
 
-      // RNN prediction
+      // GRU prediction (replaced RNN)
       try {
-        const rnnModel = this.engine.rnnModels.get(enemyId);
-        if (rnnModel && rnnModel.history.length >= 1) {
-          const rnnProbs = rnnModel.predict();
-          if (rnnProbs) predictions.rnn = this.argmax(rnnProbs);
+        const gruModel = this.engine.rnnModels.get(enemyId);
+        if (gruModel && gruModel.history.length >= 1) {
+          const gruProbs = gruModel.predict();
+          if (gruProbs) predictions.gru = this.argmax(gruProbs);
         }
       } catch (e) {}
 

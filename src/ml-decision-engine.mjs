@@ -8,7 +8,7 @@ import { IocainePowder } from './iocaine-powder.mjs';
 import { ContextTreeWeighting } from './context-tree-weighting.mjs';
 import { BayesianOpponentModel } from './bayesian-opponent-model.mjs';
 import { WeightedEnsemble } from './weighted-ensemble.mjs';
-import { SimpleRNN } from './simple-rnn.mjs';
+import { SimpleGRU } from './simple-gru.mjs';
 
 export class MLDecisionEngine {
   constructor() {
@@ -108,7 +108,7 @@ export class MLDecisionEngine {
     this.ctwModels = new Map();  // enemyId -> ContextTreeWeighting instance
 
     // Simple RNN instances (per opponent) for sequence prediction
-    this.rnnModels = new Map();  // enemyId -> SimpleRNN instance
+    this.rnnModels = new Map();  // enemyId -> SimpleGRU instance
 
     // Bayesian opponent modeling
     this.bayesian = new BayesianOpponentModel();
@@ -571,7 +571,7 @@ export class MLDecisionEngine {
   // Ensure RNN model exists for an opponent
   ensureRNNModel(enemyId) {
     if (!this.rnnModels.has(enemyId)) {
-      this.rnnModels.set(enemyId, new SimpleRNN(16));  // 16 hidden units
+      this.rnnModels.set(enemyId, new SimpleGRU(16));  // 16 hidden units, GRU architecture
       console.log(`🔬 [RNN] Created new model for opponent ${enemyId}`);
     }
   }
@@ -796,6 +796,21 @@ export class MLDecisionEngine {
         for (const a of this.bandit.arms.values()) {
           a.weight /= maxWeight;
         }
+      }
+    }
+
+    // Fixed-Share: redistribute some weight for non-stationary opponents
+    // This helps when opponents change strategies over time
+    // Based on Herbster & Warmuth (1998) "Tracking the Best Expert"
+    const alpha = 0.05;  // Share rate (5% of weight redistributed)
+    if (this.bandit.totalPlays % 20 === 0) {
+      const arms = Array.from(this.bandit.arms.values());
+      const totalWeight = arms.reduce((sum, a) => sum + a.weight, 0);
+      const avgWeight = totalWeight / K;
+
+      for (const a of arms) {
+        // Keep (1-alpha) of own weight + alpha of average weight
+        a.weight = (1 - alpha) * a.weight + alpha * avgWeight;
       }
     }
 
