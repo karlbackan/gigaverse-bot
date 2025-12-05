@@ -523,40 +523,47 @@ export class MLDecisionEngine {
       scissor: ctwWeight * ctwProbs.scissor + ngramWeight * ngramProbs.scissor
     };
 
-    // Find predicted enemy move
-    let predicted = 'rock';
-    let maxProb = 0;
-    for (const [move, prob] of Object.entries(ensembleProbs)) {
-      if (prob > maxProb) {
-        maxProb = prob;
-        predicted = move;
+    // EV optimization: calculate expected value for each of OUR moves directly
+    // EV(move) = P(we win) - P(we lose) = P(enemy plays what we beat) - P(enemy plays what beats us)
+    const pEnemy = ensembleProbs;
+    const ev = {
+      rock: pEnemy.scissor - pEnemy.paper,      // win vs scissor, lose vs paper
+      paper: pEnemy.rock - pEnemy.scissor,       // win vs rock, lose vs scissor
+      scissor: pEnemy.paper - pEnemy.rock        // win vs paper, lose vs rock
+    };
+
+    // Pick move with highest expected value
+    let bestMove = 'rock';
+    let maxEV = -Infinity;
+    for (const [move, value] of Object.entries(ev)) {
+      if (value > maxEV) {
+        maxEV = value;
+        bestMove = move;
       }
     }
 
-    // Counter the predicted move
-    let bestMove = counter[predicted];
-
-    // Filter by available weapons
+    // Filter by available weapons - pick highest EV among available
     if (!availableWeapons.includes(bestMove)) {
       const available = MOVES.filter(m => availableWeapons.includes(m));
       if (available.length > 0) {
-        bestMove = available.reduce((best, m) =>
-          ensembleProbs[counter[m]] > ensembleProbs[counter[best]] ? m : best, available[0]);
+        bestMove = available.reduce((best, m) => ev[m] > ev[best] ? m : best, available[0]);
+        maxEV = ev[bestMove];
       }
     }
 
-    const confidence = maxProb;
+    // Confidence based on EV magnitude (0 = no edge, 0.67 = max edge)
+    const confidence = Math.abs(maxEV) / 0.67;
     const stats = this.globalNgram.getStats();
 
     console.log(`📊 [N-gram+CTW] CTW: R=${(ctwProbs.rock*100).toFixed(0)}% P=${(ctwProbs.paper*100).toFixed(0)}% S=${(ctwProbs.scissor*100).toFixed(0)}%`);
     console.log(`📊 [N-gram+CTW] 2-gram: R=${(ngramProbs.rock*100).toFixed(0)}% P=${(ngramProbs.paper*100).toFixed(0)}% S=${(ngramProbs.scissor*100).toFixed(0)}% (${stats.updates} obs)`);
-    console.log(`📊 [N-gram+CTW] Move: ${bestMove}, Conf: ${confidence.toFixed(2)} (20/80 ensemble)`);
+    console.log(`📊 [N-gram+CTW] EV: R=${(ev.rock*100).toFixed(1)}% P=${(ev.paper*100).toFixed(1)}% S=${(ev.scissor*100).toFixed(1)}% → ${bestMove}`);
 
     return {
       move: bestMove,
       confidence,
       prediction: ensembleProbs,
-      reasoning: `20/80 CTW+2gram: predicted ${predicted} (${(maxProb*100).toFixed(0)}%), countering with ${bestMove}`
+      reasoning: `EV optimization: R=${(ev.rock*100).toFixed(0)}% P=${(ev.paper*100).toFixed(0)}% S=${(ev.scissor*100).toFixed(0)}% → ${bestMove}`
     };
   }
 

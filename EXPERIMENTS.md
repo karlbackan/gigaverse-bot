@@ -599,3 +599,166 @@ All findings documented and committed.
 | Net advantage | **2.70%** |
 | vs CTW alone | +40% improvement |
 | vs random | +2.70% edge |
+
+---
+
+## Round 10 Experiments (2024-12-05)
+
+### Experiment 46-48: Per-Opponent 2-gram + CTW Variations
+**Result**: Variations of per-opponent 2-gram tested
+- Per-opponent 2-gram alone: 1.96%
+- Global 2-gram: 2.49%
+- 20/80 CTW+Global 2-gram: 2.70%
+
+**Conclusion**: Global 2-gram remains optimal. Per-opponent fragments the data too much.
+
+---
+
+## Round 11 Experiments (2024-12-05)
+
+### Experiment 49-51: Bayesian Model Averaging
+**Hypothesis**: Dynamically weight CTW and 2-gram based on recent prediction accuracy.
+
+**Result on same opponents** (data leakage):
+| Window | Net Advantage |
+|--------|---------------|
+| 5 | 2.22% |
+| 10 | 3.14% |
+| 20 | 3.14% |
+| 50 | 2.69% |
+| 100 | 2.67% |
+
+**Result on COMPLETELY NEW opponents**:
+| Model | Net Advantage |
+|-------|---------------|
+| Fixed 20/80 | **2.30%** |
+| Bayesian window 5 | 2.00% |
+| Bayesian window 10 | 1.66% |
+| Bayesian window 20 | 1.74% |
+| Bayesian window 50 | 2.13% |
+
+**Conclusion**: Bayesian averaging OVERFITS! On new opponents, fixed 20/80 (2.30%) beats all adaptive methods. Keep fixed weights.
+
+---
+
+## Round 12 Experiments (2024-12-05)
+
+### Experiment 52: Epsilon-Random Mix
+**Hypothesis**: Add randomness to prevent being exploited.
+
+**Result**: Adding randomness HURTS!
+| Epsilon | Net Advantage |
+|---------|---------------|
+| **0%** | **2.70%** |
+| 5% | 2.26% |
+| 10% | 2.17% |
+| 15% | 1.54% |
+| 20% | 1.44% |
+| 30% | 0.86% |
+
+**Conclusion**: Pure prediction is best. No randomness needed.
+
+### Experiment 53: Confidence-Based Randomness
+**Result**: Also hurts performance
+| Threshold | Net Advantage | Random% |
+|-----------|---------------|---------|
+| 0.33 | **2.61%** | 0% |
+| 0.35 | 2.18% | 5% |
+| 0.40 | 1.16% | 31% |
+| 0.45 | 0.49% | 56% |
+| 0.50 | 0.17% | 77% |
+
+**Conclusion**: Trust predictions even at low confidence.
+
+### Experiment 54: Cold-Start Strategy
+**Result**: Minimal difference
+| Strategy | Net Advantage |
+|----------|---------------|
+| Random | 2.68% |
+| Rock | 2.60% |
+| **Paper** | **2.73%** |
+| Scissor | 2.53% |
+
+**Conclusion**: Paper slightly better for cold-start (counters slight rock bias), but marginal.
+
+---
+
+## Round 13 Experiments (2024-12-06)
+
+### Experiment 55: Sampling vs Argmax
+**Result**: Sampling much worse
+| Method | Net Advantage |
+|--------|---------------|
+| **Argmax** | **2.70%** |
+| Sampling | 0.50% |
+
+**Conclusion**: Always use argmax, never sample.
+
+### Experiment 56: Temperature-Scaled Softmax
+**Result**: All temperatures worse
+| Temperature | Net Advantage |
+|-------------|---------------|
+| 0.1 | 0.42% |
+| 0.5 | 0.51% |
+| 1.0 | 0.33% |
+| 2.0 | 0.46% |
+| 5.0 | 0.26% |
+
+**Conclusion**: Temperature scaling not useful.
+
+### Experiment 57: Expected Value Optimization ⭐ BREAKTHROUGH
+**Hypothesis**: Instead of argmax(enemy_probs) → counter, calculate EV for each of OUR moves directly.
+
+**EV Formula**:
+```
+EV(rock) = P(enemy_scissor) - P(enemy_paper)     # win vs scissor, lose vs paper
+EV(paper) = P(enemy_rock) - P(enemy_scissor)     # win vs rock, lose vs scissor
+EV(scissor) = P(enemy_paper) - P(enemy_rock)     # win vs paper, lose vs rock
+```
+
+**Verification** (test-ev-verify.mjs):
+- 28.36% disagreements between argmax and EV methods
+- EV handles ties/near-ties better by considering full distribution
+
+**Result**: **3.64% net advantage!** (vs 2.70% for argmax)
+
+| Method | Net Advantage |
+|--------|---------------|
+| Argmax counter | 2.70% |
+| **EV optimization** | **3.64%** |
+
+**Improvement: +35% over argmax!**
+
+**Key insight**: EV optimization picks the move with highest expected payoff, which is NOT always the counter to the most likely enemy move. When enemy probabilities are close (e.g., 35% rock, 34% paper, 31% scissor), EV can find a better move.
+
+---
+
+## UPDATED FINAL SUMMARY (Round 13)
+
+### Best Configuration (Implemented)
+- **Algorithm**: 20/80 CTW + Global 2-gram ensemble
+- **Move Selection**: **EV optimization** (not argmax counter)
+- **CTW depth**: 3 (per-opponent Markov)
+- **2-gram**: Global (universal patterns)
+- **No decay**: All history valuable
+- **Net advantage**: **3.64%** over random
+
+### Performance History
+| Round | Net Advantage | Key Change |
+|-------|---------------|------------|
+| Initial | 1.93% | CTW depth 3 |
+| Round 7 | 2.70% | +Global 2-gram |
+| **Round 13** | **3.64%** | **+EV optimization** |
+
+### Total Experiments: 57
+- Rounds 1-9: 45 experiments
+- Rounds 10-13: 12 experiments
+
+### Key Discoveries (Final)
+1. **EV optimization beats argmax counter** (+35% improvement)
+2. 2-gram patterns are UNIVERSAL (work across all opponents)
+3. CTW patterns are per-opponent specific
+4. 20/80 CTW/2-gram ensemble is optimal weighting
+5. Fixed weights beat adaptive Bayesian (generalizes better)
+6. Adding randomness always hurts
+7. All history is valuable (no decay/recency)
