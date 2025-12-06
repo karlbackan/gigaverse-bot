@@ -914,9 +914,81 @@ Confirmed: threshold=3, weight=20% achieves 5.58% net advantage.
 - Rounds 1-14: 63 experiments
 - Round 15: 10 experiments (validation of negative results)
 
-### Key Discoveries (Final)
+### Key Discoveries (Round 15)
 1. **Charge is the only useful state feature** (+69% improvement)
 2. Health, shield, turn, player move patterns are too weak
 3. Sequence prediction (CTW + 2-gram) is the primary signal
 4. EV optimization properly handles probability distributions
 5. Combining weak signals dilutes rather than amplifies
+
+---
+
+## Round 16 Experiments (2024-12-06)
+
+### EXHAUSTIVE FEATURE AUDIT
+
+Every available feature in the database was tested. Results:
+
+| Feature | Samples | Rock% | Paper% | Scissor% | Useful? |
+|---------|---------|-------|--------|----------|---------|
+| **Enemy charges (diff≥3)** | 3,391 | varies | varies | varies | ✅ YES |
+| Enemy weapon attack | 29,797 | 33.3 | 33.3 | 33.3 | ❌ NO |
+| Enemy health % | 29,896 | ~33 | ~33 | ~33 | ❌ NO |
+| Enemy shield % | 29,896 | ~33 | ~33 | ~33 | ❌ NO |
+| Health difference | 29,794 | ~33 | ~33 | ~33 | ❌ NO |
+| Turn number | 30,127 | ~33 | ~33 | ~33 | ❌ NO |
+| Dungeon ID | 30,127 | ~33 | ~33 | ~33 | ❌ NO |
+| Hour of day | 30,127 | ~33 | ~33 | ~33 | ❌ NO |
+| Weekday/Weekend | 30,127 | ~33 | ~33 | ~33 | ❌ NO |
+| Our charges | 29,958 | ~33 | ~33 | ~33 | ❌ NO |
+| Our weapon attack | 29,896 | ~33 | ~33 | ~33 | ❌ NO |
+| Previous result | 30,085 | ~33 | ~33 | ~33 | ❌ NO |
+| Win/Lose streaks | 30,127 | ~33 | ~33 | ~33 | ❌ NO |
+| Player prev move | 30,085 | ~33 | ~33 | ~33 | ❌ NO |
+| Move repetition | 30,085 | 33.4% repeat rate | - | - | ❌ NO |
+
+### Experiment 74-77: Weapon Attack Analysis
+- Enemies use highest-attack weapon exactly 33.3% of time (random)
+- Attack-only prediction: -0.23% (worse than random)
+- Attack-enhanced: marginal at best (+0.15% at 5% weight)
+
+### Experiment 78-83: Remaining Features
+- Weekday vs Weekend: identical distributions
+- Our charges/stats: no influence on enemy behavior
+- Previous result: no influence
+- Streaks: no influence
+- Move repetition: 33.4% = exactly random
+
+---
+
+## FINAL SUMMARY (Complete)
+
+### Total Experiments: 83
+- Rounds 1-15: 73 experiments
+- Round 16: 10 experiments (exhaustive audit)
+
+### Best Configuration (Validated)
+- **Algorithm**: 20/80 CTW + Global 2-gram ensemble
+- **Move Selection**: EV optimization
+- **Charge Enhancement**: 20% blend when charge diff >= 3
+- **Net advantage**: **5.58%** on full data
+
+### What Works
+1. **Sequence patterns (CTW + 2-gram)** - Primary signal
+2. **Enemy charge state** - Only useful state feature
+
+### What Doesn't Work (Exhaustively Tested)
+- Health, shield, weapon attack/defense
+- Turn number, dungeon ID
+- Time of day, weekday/weekend
+- Our charges/stats
+- Previous result, streaks
+- Player move influence
+- Everything else
+
+### Key Insight
+The opponents are essentially **random number generators** for most features. The only exploitable patterns are:
+1. Sequential dependencies (what they played recently)
+2. Charge state preference (when charges differ by 3+)
+
+This is the ceiling. No amount of additional feature engineering will help because the data is fundamentally random.
