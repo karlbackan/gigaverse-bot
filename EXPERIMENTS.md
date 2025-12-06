@@ -838,7 +838,7 @@ Confirmed: threshold=3, weight=20% achieves 5.58% net advantage.
 - Rounds 10-13: 12 experiments
 - Round 14: 6 experiments
 
-### Key Discoveries (Final)
+### Key Discoveries (Round 14)
 1. **EV optimization beats argmax counter** (+35% improvement)
 2. **Charge-enhanced prediction adds +69% improvement** over EV baseline
 3. 2-gram patterns are UNIVERSAL (work across all opponents)
@@ -848,3 +848,75 @@ Confirmed: threshold=3, weight=20% achieves 5.58% net advantage.
 7. Fixed weights beat adaptive Bayesian (generalizes better)
 8. Adding randomness always hurts
 9. All history is valuable (no decay/recency)
+
+---
+
+## Round 15 Experiments (2024-12-06)
+
+### Experiment 64-65: Health & Shield Distribution
+**Result**: Near-uniform distribution across all levels
+
+| Health Level | Rock | Paper | Scissor | Samples |
+|--------------|------|-------|---------|---------|
+| Critical (<25%) | 32.8% | 33.0% | 34.1% | 2,841 |
+| Low (25-50%) | 33.7% | 32.0% | 34.3% | 4,123 |
+| Medium (50-75%) | 32.7% | 33.5% | 33.8% | 4,753 |
+| High (>75%) | 34.1% | 32.1% | 33.8% | 18,179 |
+
+**Conclusion**: No exploitable health or shield patterns.
+
+### Experiment 66-68: Health-Enhanced Prediction
+**Result**: Marginal improvement
+| Weight | Net Advantage |
+|--------|---------------|
+| 0% (baseline) | 5.95% |
+| 10% | 6.06% |
+
+**Improvement**: +0.11% - not worth the complexity.
+
+### Experiment 69-71: Turn & Player Move Patterns
+**Result**: Near-uniform distribution
+- Turn patterns: ~33% each across early/mid/late
+- Player response: ~33% regardless of our previous move
+- Joint patterns: Slight variation but not predictive
+
+### Experiment 72: Player-Move Enhanced Prediction
+**Result**: +0.12% (5.91% → 6.03%) - marginal
+
+### Experiment 73: Combined Weak Signals
+**Result**: Combining health + player signals doesn't stack
+| Config | Net Advantage |
+|--------|---------------|
+| Baseline (charge only) | 5.95% |
+| Health 10% | 6.06% |
+| Player 10% | 6.04% |
+| Both 10% | 6.02% |
+
+**Conclusion**: Weak signals dilute each other when combined.
+
+---
+
+## FINAL SUMMARY (Round 15)
+
+### Best Configuration (Unchanged from Round 14)
+- **Algorithm**: 20/80 CTW + Global 2-gram ensemble
+- **Move Selection**: EV optimization
+- **Charge Enhancement**: 20% blend when charge diff >= 3
+- **Net advantage**: **5.58%** over random
+
+### Not Worth Implementing
+- Health-based prediction (+0.11% marginal)
+- Player-move influence (+0.12% marginal)
+- Turn-based patterns (no signal)
+- Shield-based patterns (no signal)
+
+### Total Experiments: 73
+- Rounds 1-14: 63 experiments
+- Round 15: 10 experiments (validation of negative results)
+
+### Key Discoveries (Final)
+1. **Charge is the only useful state feature** (+69% improvement)
+2. Health, shield, turn, player move patterns are too weak
+3. Sequence prediction (CTW + 2-gram) is the primary signal
+4. EV optimization properly handles probability distributions
+5. Combining weak signals dilutes rather than amplifies
