@@ -413,7 +413,7 @@ export class MLDecisionEngine {
   
   // Anti-pattern strategy: counter opponent's patterns
   antiPatternDecision(enemyId, availableWeapons) {
-    const model = this.opponentModels.get(enemyId);
+    const model = this.opponentModels.get(String(enemyId));
     if (!model || model.moves.length < 3) {
       // Not enough data, random choice
       const available = availableWeapons || ['rock', 'paper', 'scissor'];
@@ -484,7 +484,7 @@ export class MLDecisionEngine {
     // Ensure CTW model exists for this opponent
     this.ensureCTWModel(enemyId);
 
-    const ctw = this.ctwModels.get(enemyId);
+    const ctw = this.ctwModels.get(String(enemyId));
     const result = ctw.getBestMove(availableWeapons);
 
     console.log(`🌳 [CTW] Prediction: R=${(result.prediction.rock * 100).toFixed(0)}% P=${(result.prediction.paper * 100).toFixed(0)}% S=${(result.prediction.scissor * 100).toFixed(0)}%`);
@@ -505,7 +505,7 @@ export class MLDecisionEngine {
 
     // Ensure CTW model exists
     this.ensureCTWModel(enemyId);
-    const ctw = this.ctwModels.get(enemyId);
+    const ctw = this.ctwModels.get(String(enemyId));
 
     // Get CTW probabilities
     const ctwProbs = ctw.predict() || { rock: 1/3, paper: 1/3, scissor: 1/3 };
@@ -600,7 +600,7 @@ export class MLDecisionEngine {
     // Ensure RNN model exists for this opponent
     this.ensureRNNModel(enemyId);
 
-    const rnn = this.rnnModels.get(enemyId);
+    const rnn = this.rnnModels.get(String(enemyId));
     const result = rnn.getBestMove(availableWeapons);
 
     console.log(`🔬 [RNN] Prediction: R=${(result.prediction.rock * 100).toFixed(0)}% P=${(result.prediction.paper * 100).toFixed(0)}% S=${(result.prediction.scissor * 100).toFixed(0)}%`);
@@ -682,39 +682,42 @@ export class MLDecisionEngine {
 
   // Ensure CTW model exists for an opponent
   ensureCTWModel(enemyId) {
-    if (!this.ctwModels.has(enemyId)) {
+    // Always use string keys for consistency with serialization
+    const key = String(enemyId);
+    if (!this.ctwModels.has(key)) {
       // Depth 3 empirically best (34.90%) - balances pattern length vs noise
-      this.ctwModels.set(enemyId, new ContextTreeWeighting(3));
-      console.log(`🌳 [CTW] Created new model for opponent ${enemyId}`);
+      this.ctwModels.set(key, new ContextTreeWeighting(3));
+      console.log(`🌳 [CTW] Created new model for opponent ${key}`);
     }
   }
 
   // Ensure RNN model exists for an opponent
   ensureRNNModel(enemyId) {
-    if (!this.rnnModels.has(enemyId)) {
-      this.rnnModels.set(enemyId, new SimpleRNN(16));  // 16 hidden units
-      console.log(`🔬 [RNN] Created new model for opponent ${enemyId}`);
+    const key = String(enemyId);
+    if (!this.rnnModels.has(key)) {
+      this.rnnModels.set(key, new SimpleRNN(16));  // 16 hidden units
+      console.log(`🔬 [RNN] Created new model for opponent ${key}`);
     }
   }
 
   // Update CTW model with observed enemy move
   updateCTW(enemyId, enemyAction) {
     this.ensureCTWModel(enemyId);
-    const ctw = this.ctwModels.get(enemyId);
+    const ctw = this.ctwModels.get(String(enemyId));
     ctw.update(enemyAction);
   }
 
   // Update RNN model with observed moves
   updateRNN(enemyId, playerAction, enemyAction) {
     this.ensureRNNModel(enemyId);
-    const rnn = this.rnnModels.get(enemyId);
+    const rnn = this.rnnModels.get(String(enemyId));
     rnn.update(playerAction, enemyAction);
   }
 
   // Bayesian opponent modeling decision
   bayesianDecision(enemyId, availableWeapons) {
     // Get our last move for opponent type inference
-    const model = this.opponentModels.get(enemyId);
+    const model = this.opponentModels.get(String(enemyId));
     const ourLastMove = model && model.moves.length > 0
       ? this.lastDecisionContext?.decision
       : null;
@@ -733,7 +736,7 @@ export class MLDecisionEngine {
 
     // Get CTW prediction
     this.ensureCTWModel(enemyId);
-    const ctw = this.ctwModels.get(enemyId);
+    const ctw = this.ctwModels.get(String(enemyId));
     const ctwPred = ctw.predict();
     if (ctwPred) {
       predictions.set('ctw', ctwPred);
@@ -741,7 +744,7 @@ export class MLDecisionEngine {
     }
 
     // Get Bayesian prediction
-    const model = this.opponentModels.get(enemyId);
+    const model = this.opponentModels.get(String(enemyId));
     const ourLastMove = model && model.moves.length > 0
       ? this.lastDecisionContext?.decision
       : null;
@@ -765,7 +768,7 @@ export class MLDecisionEngine {
 
     // Get RNN prediction (replaces old feedforward neural network)
     this.ensureRNNModel(enemyId);
-    const rnn = this.rnnModels.get(enemyId);
+    const rnn = this.rnnModels.get(String(enemyId));
     const rnnPred = rnn.predict();
     predictions.set('rnn', rnnPred);
     const rnnResult = rnn.getBestMove(availableWeapons);
@@ -788,14 +791,14 @@ export class MLDecisionEngine {
     try {
       // Record CTW prediction
       this.ensureCTWModel(enemyId);
-      const ctw = this.ctwModels.get(enemyId);
+      const ctw = this.ctwModels.get(String(enemyId));
       const ctwResult = ctw.getBestMove(availableWeapons);
       if (ctwResult && ctwResult.move) {
         this.ensemble.recordPrediction('ctw', ctwResult.move);
       }
 
       // Record Bayesian prediction
-      const model = this.opponentModels.get(enemyId);
+      const model = this.opponentModels.get(String(enemyId));
       const ourLastMove = model && model.moves.length > 0
         ? this.lastDecisionContext?.decision
         : null;
@@ -812,7 +815,7 @@ export class MLDecisionEngine {
 
       // Record RNN prediction (replaces old feedforward neural network)
       this.ensureRNNModel(enemyId);
-      const rnn = this.rnnModels.get(enemyId);
+      const rnn = this.rnnModels.get(String(enemyId));
       const rnnResult = rnn.getBestMove(availableWeapons);
       if (rnnResult && rnnResult.move) {
         this.ensemble.recordPrediction('rnn', rnnResult.move);
@@ -1047,7 +1050,7 @@ export class MLDecisionEngine {
   
   // Update opponent model
   updateOpponentModel(enemyId, enemyAction, result, turn) {
-    const model = this.opponentModels.get(enemyId);
+    const model = this.opponentModels.get(String(enemyId));
     
     model.moves.push(enemyAction);
     model.results.push(result);
@@ -1091,7 +1094,7 @@ export class MLDecisionEngine {
   // Utility methods
   
   extractFeatures(enemyId, turn, playerHealth, enemyHealth, playerStats, enemyStats, gameHistory) {
-    const model = this.opponentModels.get(enemyId);
+    const model = this.opponentModels.get(String(enemyId));
 
     // Extract enemy charges (most predictive feature: +5.4% lift)
     const enemyCharges = enemyStats?.charges || { rock: 3, paper: 3, scissor: 3 };
@@ -1130,8 +1133,9 @@ export class MLDecisionEngine {
   }
   
   ensureOpponentModel(enemyId) {
-    if (!this.opponentModels.has(enemyId)) {
-      this.opponentModels.set(enemyId, {
+    const key = String(enemyId);
+    if (!this.opponentModels.has(key)) {
+      this.opponentModels.set(key, {
         moves: [],
         results: [],
         totalBattles: 0,
@@ -1178,7 +1182,7 @@ export class MLDecisionEngine {
   }
   
   classifyOpponent(enemyId) {
-    const model = this.opponentModels.get(enemyId);
+    const model = this.opponentModels.get(String(enemyId));
     if (!model || model.totalBattles < 10) return 'unknown';
     
     // Simple opponent type classification
