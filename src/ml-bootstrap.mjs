@@ -154,6 +154,9 @@ class MLBootstrap {
     // Update Bayesian model
     this.mlEngine.bayesian.update(enemyIdStr, player_move, enemy_move);
 
+    // Update Global N-gram predictor
+    this.mlEngine.globalNgram.update(enemyIdStr, enemy_move);
+
     // Update Q-learning
     this.mlEngine.updateQLearning(features, player_move, result);
 

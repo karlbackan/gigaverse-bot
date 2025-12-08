@@ -114,7 +114,7 @@ export class MLStatePersistence {
             const state = JSON.parse(fs.readFileSync(this.stateFile, 'utf8'));
             
             // Validate state version
-            const supportedVersions = ['1.0.0', '1.1.0', '1.2.0', '1.3.0', '1.4.0'];
+            const supportedVersions = ['1.0.0', '1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0'];
             if (!state.version || !supportedVersions.includes(state.version)) {
                 console.log('⚠️ ML state version mismatch - starting fresh');
                 return false;
