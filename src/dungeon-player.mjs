@@ -141,63 +141,64 @@ export class DungeonPlayer {
         const todayResponse = await api.get('/game/dungeon/today');
         const todayData = todayResponse.data;
         
-        // Check Underhaul first (ID 3) - PRIMARY GAME MODE
-        // Try multiple ID formats: number 3, string "3", or "Dungeon#3"
+        // Check both dungeons availability first
+        // Underhaul (ID 3)
         const underhaulProgress = todayData?.dayProgressEntities?.find(e =>
           e.ID_CID === 3 || e.ID_CID === "3" || e.ID_CID === "Dungeon#3"
         );
         const underhaulInfo = todayData?.dungeonDataEntities?.find(d =>
           d.ID_CID === 3 || d.ID_CID === "3" || d.ID_CID === "Dungeon#3"
         );
-        
-        if (underhaulInfo) {
-          const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
-          const underhaulMaxRuns = 9; // Underhaul always has 9 attempts
-          
-          if (underhaulRunsToday < underhaulMaxRuns) {
-            console.log(`Dungetron Underhaul runs today: ${underhaulRunsToday}/${underhaulMaxRuns}`);
-            this.currentDungeonType = 3; // Use Underhaul
+        const underhaulRunsToday = underhaulProgress?.UINT256_CID || 0;
+        const underhaulMaxRuns = 9;
+        const underhaulAvailable = underhaulInfo && underhaulRunsToday < underhaulMaxRuns;
+
+        // Dungetron 5000 (ID 1)
+        const dungetron5000Progress = todayData?.dayProgressEntities?.find(e =>
+          e.ID_CID === 1 || e.ID_CID === "1" || e.ID_CID === "Dungeon#1"
+        );
+        const dungetron5000Info = todayData?.dungeonDataEntities?.find(d =>
+          d.ID_CID === 1 || d.ID_CID === "1" || d.ID_CID === "Dungeon#1"
+        );
+        const d5000RunsToday = dungetron5000Progress?.UINT256_CID || 0;
+        const d5000MaxRuns = isJuiced ? dungetron5000Info?.juicedMaxRunsPerDay : dungetron5000Info?.UINT256_CID;
+        const d5000Available = dungetron5000Info && d5000RunsToday < d5000MaxRuns;
+
+        console.log(`Dungetron 5000: ${d5000RunsToday}/${d5000MaxRuns || '?'} runs (${d5000Available ? 'available' : 'unavailable'})`);
+        console.log(`Underhaul: ${underhaulRunsToday}/${underhaulMaxRuns} runs (${underhaulAvailable ? 'available' : 'unavailable'})`);
+
+        // 50/50 random selection if both available
+        if (underhaulAvailable && d5000Available) {
+          const randomChoice = Math.random() < 0.5 ? 'underhaul' : 'd5000';
+          if (randomChoice === 'underhaul') {
+            console.log(`🎲 Random selection: Underhaul (50/50)`);
+            this.currentDungeonType = 3;
             this.decisionEngine.setDungeonType(this.currentDungeonType);
             return true;
           } else {
-            console.log(`⚠️  Dungetron Underhaul daily limit reached: ${underhaulRunsToday}/${underhaulMaxRuns}`);
+            console.log(`🎲 Random selection: Dungetron 5000 (50/50)`);
+            this.currentDungeonType = 1;
+            this.decisionEngine.setDungeonType(this.currentDungeonType);
+            return true;
           }
         }
-        
-        // Check if we should try Dungetron 5000 when Underhaul is full
-        console.log(`🔍 Auto-switch config value:`, config.autoSwitchToDungetron);
-        if (config.autoSwitchToDungetron) {
-          console.log(`🔍 Attempting to switch to Dungetron 5000...`);
-          
-          // Check Dungetron 5000 if Underhaul is full (ID 1)
-          // Try multiple ID formats: number 1, string "1", or "Dungeon#1"
-          const dungetron5000Progress = todayData?.dayProgressEntities?.find(e =>
-            e.ID_CID === 1 || e.ID_CID === "1" || e.ID_CID === "Dungeon#1"
-          );
-          const dungetron5000Info = todayData?.dungeonDataEntities?.find(d =>
-            d.ID_CID === 1 || d.ID_CID === "1" || d.ID_CID === "Dungeon#1"
-          );
-          
-          console.log(`🔍 Dungetron 5000 progress data:`, dungetron5000Progress ? 'Found' : 'Not found (assuming 0 runs)');
-          console.log(`🔍 Dungetron 5000 info data:`, dungetron5000Info ? 'Found' : 'Not found');
-          
-          if (dungetron5000Info) {
-            // Progress missing = 0 runs today (common for unused dungeons)
-            const runsToday = dungetron5000Progress?.UINT256_CID || 0;
-            const maxRuns = isJuiced ? dungetron5000Info.juicedMaxRunsPerDay : dungetron5000Info.UINT256_CID;
-            
-            if (runsToday < maxRuns) {
-              console.log(`✅ Switching to Dungetron 5000: ${runsToday}/${maxRuns} runs today`);
-              this.currentDungeonType = 1; // Switch to Dungetron 5000
-              this.decisionEngine.setDungeonType(this.currentDungeonType);
-              return true;
-            } else {
-              console.log(`⚠️  Dungetron 5000 also at daily limit: ${runsToday}/${maxRuns}`);
-            }
-          } else {
-            console.log(`⚠️  Cannot switch: Missing Dungetron 5000 info data (needed for max run limits)`);
-          }
-        } else {
+
+        // If only one is available, use that one
+        if (underhaulAvailable) {
+          console.log(`Using Underhaul (only option available)`);
+          this.currentDungeonType = 3;
+          this.decisionEngine.setDungeonType(this.currentDungeonType);
+          return true;
+        }
+
+        if (d5000Available && config.autoSwitchToDungetron) {
+          console.log(`Using Dungetron 5000 (only option available)`);
+          this.currentDungeonType = 1;
+          this.decisionEngine.setDungeonType(this.currentDungeonType);
+          return true;
+        }
+
+        if (!config.autoSwitchToDungetron) {
           console.log('ℹ️  Auto-switch to Dungetron 5000 is disabled');
         }
         
