@@ -497,26 +497,21 @@ export class DecisionEngine {
       
       // DEFENSIVE STRATEGY: When ML confidence is low, play defensively
       let scoringResult;
-      const defensiveCheck = DefensiveMLStrategy.calculateDefensiveMove(
-        prediction.predictions, 
+      // DISABLED: Defensive play override - always trust ML predictions
+      // const defensiveCheck = DefensiveMLStrategy.calculateDefensiveMove(
+      //   prediction.predictions,
+      //   weights,
+      //   availableWeapons,
+      //   scaledConfidence
+      // );
+
+      // Always use unified scoring - trust ML predictions directly
+      scoringResult = UnifiedScoring.calculateUnifiedScores(
+        prediction.predictions,
         weights,
         availableWeapons,
-        scaledConfidence
+        weaponCharges
       );
-      
-      if (defensiveCheck) {
-        // Use defensive play when confidence is too low
-        scoringResult = defensiveCheck;
-        console.log(`🛡️ ${defensiveCheck.reasoning}`);
-      } else {
-        // Normal unified scoring when confidence is acceptable
-        scoringResult = UnifiedScoring.calculateUnifiedScores(
-          prediction.predictions, 
-          weights,
-          availableWeapons,
-          weaponCharges
-        );
-      }
       
       // Best move is now guaranteed to be available
       if (scoringResult.bestMove) {
